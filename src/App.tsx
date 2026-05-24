@@ -5,6 +5,7 @@ import Pages from '@/pages/Pages';
 import Leads from '@/pages/Leads';
 import Blog from '@/pages/Blog';
 import SEO from '@/pages/SEO';
+import SearchConsole from '@/pages/SearchConsole';
 import Stub from '@/pages/Stub';
 
 export default function App() {
@@ -63,12 +64,7 @@ export default function App() {
             todo={['Google Ads API OAuth', 'Campaign list w/ key metrics', 'Keyword performance + bid editor', 'Ad-copy A/B testing UI']}
           />
         } />
-        <Route path="/google/search-console" element={
-          <Stub title="Search Console" meta="Queries · clicks · impressions · rank"
-            description="Search performance per site. Track rank changes, find quick-win keywords, surface page issues."
-            todo={['Search Console API integration', 'Top queries + position tracker', 'Coverage / index issues feed', 'Rich result performance']}
-          />
-        } />
+        <Route path="/google/search-console" element={<SearchConsole />} />
         <Route path="/google/calendar" element={
           <Stub title="Calendar" meta="Content + ops calendar"
             description="Unified content calendar — blog posts, social drops, email campaigns, and ops events all in one timeline."
