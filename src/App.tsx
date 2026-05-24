@@ -4,6 +4,7 @@ import Dashboard from '@/pages/Dashboard';
 import Pages from '@/pages/Pages';
 import Leads from '@/pages/Leads';
 import Blog from '@/pages/Blog';
+import SEO from '@/pages/SEO';
 import Stub from '@/pages/Stub';
 
 export default function App() {
@@ -42,12 +43,7 @@ export default function App() {
             todo={['GA4 OAuth + property selection', 'Real-time visitor counter', 'Conversion funnel builder', 'Cross-site comparison view']}
           />
         } />
-        <Route path="/seo" element={
-          <Stub title="SEO & Meta" meta="On-page SEO + meta tag generator"
-            description="Per-page meta editor with AI generation. Tracks Search Console keywords, ranks, suggests improvements."
-            todo={['Per-page meta editor', 'AI meta description generator (Claude)', 'Search Console rank tracker', 'Sitemap + robots.txt manager']}
-          />
-        } />
+        <Route path="/seo" element={<SEO />} />
         <Route path="/leads" element={<Leads />} />
         <Route path="/reviews" element={
           <Stub title="Reviews" meta="Google · Yelp · Manual"
