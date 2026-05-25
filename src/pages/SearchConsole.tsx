@@ -18,6 +18,8 @@ interface GscData {
   totalRows: number;
   quickWins: number;
   rows: GscRow[];
+  isDemo?: boolean;
+  demoMessage?: string;
 }
 
 type SortKey = 'clicks' | 'impressions' | 'ctr' | 'position';
@@ -44,12 +46,9 @@ export default function SearchConsole() {
   const [search, setSearch] = useState('');
   const [quickWinsOnly, setQuickWinsOnly] = useState(false);
 
-  // Check connection status on mount
+  // Check connection status on mount — always treat as connected (demo fallback handles missing GSC access)
   useEffect(() => {
-    fetch('/api/gsc-data?type=status')
-      .then((r) => r.json())
-      .then((d) => setConnected(d.connected))
-      .catch(() => setConnected(false));
+    setConnected(true);
   }, []);
 
   const fetchData = useCallback(async () => {
@@ -102,78 +101,7 @@ export default function SearchConsole() {
     { clicks: 0, impressions: 0 }
   );
 
-  // --- Not connected / needs GSC permission ---
-  if (connected === false) {
-    return (
-      <div>
-        <PageHead title="Search Console" meta="Live rankings · queries · clicks · impressions" />
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="text-5xl mb-6">🔑</div>
-          <h2 className="text-xl font-bold text-white mb-3">One Permission Needed</h2>
-          <p className="text-white/50 text-sm max-w-md mb-8">
-            JARVIS uses a dedicated service account to read your Search Console data automatically — no passwords, no token expiry, always on. You just need to grant it access once.
-          </p>
-          <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 max-w-lg text-left w-full">
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">Two-minute setup</h3>
-            {[
-              {
-                step: '1',
-                title: 'Open Search Console',
-                desc: 'Go to search.google.com/search-console and select totalpropertysolution.net',
-                link: 'https://search.google.com/search-console',
-                linkText: 'Open Search Console →',
-              },
-              {
-                step: '2',
-                title: 'Settings → Users and permissions',
-                desc: 'Click Settings in the left sidebar, then "Users and permissions"',
-              },
-              {
-                step: '3',
-                title: 'Add user',
-                desc: 'Click "Add user" and enter this exact email:',
-                code: 'jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com',
-              },
-              {
-                step: '4',
-                title: 'Set permission to Full, click Add',
-                desc: 'That\'s it — come back here and refresh. Data loads instantly.',
-              },
-            ].map((item) => (
-              <div key={item.step} className="flex gap-4 py-3 border-t border-white/5 first:border-0">
-                <div className="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
-                  {item.step}
-                </div>
-                <div className="flex-1">
-                  <div className="text-sm font-medium text-white/90">{item.title}</div>
-                  <div className="text-xs text-white/40 mt-0.5">{item.desc}</div>
-                  {item.code && (
-                    <div className="mt-2 bg-black/30 border border-white/10 rounded px-3 py-1.5 font-mono text-xs text-emerald-400 select-all break-all">
-                      {item.code}
-                    </div>
-                  )}
-                  {item.link && (
-                    <a href={item.link} target="_blank" rel="noreferrer"
-                      className="inline-block mt-2 text-xs text-indigo-400 hover:underline">
-                      {item.linkText}
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-          <button
-            onClick={() => { setConnected(null); fetchData(); }}
-            className="mt-6 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition"
-          >
-            I added it — load data
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // --- Loading state ---
+  // --- Loading state (initial) ---
   if (connected === null) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -223,6 +151,20 @@ export default function SearchConsole() {
           </span>
         </div>
       </div>
+
+      {data?.isDemo && (
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-3 text-sm text-amber-300 mb-5 flex items-center justify-between gap-4">
+          <span>⚡ <strong>Demo Mode</strong> — {data.demoMessage}</span>
+          <a
+            href="https://search.google.com/search-console"
+            target="_blank"
+            rel="noreferrer"
+            className="shrink-0 text-xs text-amber-400 underline hover:text-amber-200"
+          >
+            Connect Live Data →
+          </a>
+        </div>
+      )}
 
       {error && (
         <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-5 py-3 text-sm text-red-300 mb-5">
