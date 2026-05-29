@@ -6,6 +6,7 @@ import Leads from '@/pages/Leads';
 import Blog from '@/pages/Blog';
 import SEO from '@/pages/SEO';
 import SearchConsole from '@/pages/SearchConsole';
+import SeoReport from '@/pages/SeoReport';
 import Stub from '@/pages/Stub';
 
 export default function App() {
@@ -65,6 +66,7 @@ export default function App() {
           />
         } />
         <Route path="/google/search-console" element={<SearchConsole />} />
+        <Route path="/google/seo-report" element={<SeoReport />} />
         <Route path="/google/calendar" element={
           <Stub title="Calendar" meta="Content + ops calendar"
             description="Unified content calendar — blog posts, social drops, email campaigns, and ops events all in one timeline."

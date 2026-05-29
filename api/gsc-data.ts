@@ -1,20 +1,27 @@
 // api/gsc-data.ts
-// Fetches Google Search Console data using a service account (no user OAuth needed)
-// Service account email must be added as a user in GSC: jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com
+// Fetches Google Search Console data using OAuth2 user credentials (crcp183@gmail.com)
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { google } from 'googleapis';
 
 function getAuth() {
-  const saJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
-  if (!saJson) throw new Error('GOOGLE_SERVICE_ACCOUNT_JSON not set');
+  // OAuth2 path — uses stored refresh token for crcp183@gmail.com
+  const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
+  const refreshToken = process.env.GOOGLE_OAUTH_REFRESH_TOKEN;
 
+  if (clientId && clientSecret && refreshToken) {
+    const oauth2Client = new google.auth.OAuth2(clientId, clientSecret);
+    oauth2Client.setCredentials({ refresh_token: refreshToken });
+    return oauth2Client;
+  }
+
+  // Fallback: service account
+  const saJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+  if (!saJson) throw new Error('No auth credentials configured');
   const sa = JSON.parse(saJson);
   const auth = new google.auth.GoogleAuth({
     credentials: sa,
-    scopes: [
-      'https://www.googleapis.com/auth/webmasters.readonly',
-      'https://www.googleapis.com/auth/analytics.readonly',
-    ],
+    scopes: ['https://www.googleapis.com/auth/webmasters.readonly'],
   });
   return auth;
 }

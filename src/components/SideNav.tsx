@@ -35,6 +35,7 @@ const GROUPS: Group[] = [
       { to: '/google/business', label: 'Business Profile', ico: 'G' },
       { to: '/google/ads', label: 'Google Ads', ico: '$' },
       { to: '/google/search-console', label: 'Search Console', ico: '📊' },
+      { to: '/google/seo-report', label: 'SEO Report', ico: '📈', badge: 'NEW' },
       { to: '/google/calendar', label: 'Calendar', ico: '📅' },
     ],
   },
