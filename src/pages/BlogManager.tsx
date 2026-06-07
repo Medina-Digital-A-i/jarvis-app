@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHead from '@/components/PageHead';
 import { Panel, PanelHead } from '@/components/Panel';
 
@@ -19,6 +20,7 @@ interface BlogIndex {
 export default function BlogManager() {
   const [index, setIndex] = useState<BlogIndex | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('/blog-index.json', { cache: 'no-store' })
@@ -40,6 +42,22 @@ export default function BlogManager() {
       <PageHead
         title="Blog Manager"
         meta="Published posts · target keywords · content calendar"
+        actions={
+          <button
+            className="btn btn-primary"
+            onClick={() =>
+              navigate('/chat', {
+                state: {
+                  prefill: index?.nextScheduledTopic
+                    ? `Write me a new blog post for TPS Pro on: "${index.nextScheduledTopic}". Make it locally optimized for Albany, NY and ready to publish.`
+                    : 'Write me a new, locally-optimized blog post for TPS Pro about commercial cleaning in Albany, NY. Suggest a target keyword first, then write the full post.',
+                },
+              })
+            }
+          >
+            ✦ New Post
+          </button>
+        }
       />
 
       {/* Stats row */}

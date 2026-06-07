@@ -1,43 +1,60 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SiteSwitcher from './SiteSwitcher';
+import { useSiteHealth } from '@/lib/store';
 
 export default function TopBar() {
   const [clock, setClock] = useState(formatNow());
+  const [health] = useSiteHealth();
+  const navigate = useNavigate();
+  const score = health?.score ?? 92;
+  const scoreColor = score >= 80 ? 'text-success' : score >= 60 ? 'text-amber' : 'text-alert';
   useEffect(() => {
     const id = setInterval(() => setClock(formatNow()), 1000);
     return () => clearInterval(id);
   }, []);
+
   return (
-    <header className="sticky top-0 z-20 flex items-center gap-6 px-7 py-3.5 border-b border-line backdrop-blur"
-      style={{ background: 'linear-gradient(180deg, rgba(17,23,58,0.85), rgba(17,23,58,0.4))' }}
-    >
-      <div className="flex items-center gap-3 font-mono text-[22px] font-bold text-amber tracking-[0.18em]"
-        style={{ textShadow: '0 0 14px rgba(255,165,0,0.45)' }}
+    <header className="sticky top-0 z-20 flex items-center gap-5 px-6 py-3 border-b border-line backdrop-blur-md bg-bg-deep/80">
+      <div
+        className="flex items-center gap-2.5 text-[20px] font-bold tracking-[0.18em] text-white"
+        style={{ textShadow: '0 0 14px rgba(59,130,246,0.5)' }}
       >
         <div className="reactor" />
-        <span>JARVIS</span>
+        <span className="font-mono">JARVIS</span>
       </div>
 
       <SiteSwitcher />
 
       <div className="flex-1" />
 
-      <div className="hidden md:flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-soft">
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-line">
-          <span className="led" />
-          <span>System Online</span>
+      {/* Site health score + last crawl */}
+      <div className="hidden lg:flex items-center gap-3">
+        <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg border border-line bg-bg-mid/60">
+          <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-ink-dim">Health</span>
+          <span className="font-mono text-[15px] font-bold text-success leading-none">92</span>
+          <span className="font-mono text-[10px] text-ink-dim">/100</span>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-line">
-          <span className="led" style={{ background: '#00D9FF', boxShadow: '0 0 10px #00D9FF' }} />
-          <span>{clock}</span>
+        <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-line bg-bg-mid/60 font-mono text-[10px] text-ink-soft">
+          <span className="led" />
+          <span>Last crawl {clock}</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-2.5 px-2 py-1 pl-3.5 border border-line rounded-full text-[12px]">
-        <div className="w-7 h-7 rounded-full grid place-items-center font-mono font-extrabold text-bg-deep text-[13px]"
-          style={{ background: 'linear-gradient(135deg, #FFA500, #FFD700)' }}
-        >M</div>
-        <span>Miguel</span>
+      {/* Quick actions */}
+      <div className="hidden md:flex items-center gap-2">
+        <button className="btn" onClick={() => navigate('/')} title="Refresh rankings">⟳ Refresh</button>
+        <button className="btn btn-primary" onClick={() => navigate('/chat')}>✦ Ask JARVIS</button>
+      </div>
+
+      <div className="flex items-center gap-2.5 px-2 py-1 pl-3 border border-line rounded-full text-[12px] text-ink">
+        <div
+          className="w-7 h-7 rounded-full grid place-items-center font-mono font-extrabold text-white text-[13px]"
+          style={{ background: 'linear-gradient(135deg, #3B82F6, #1D4ED8)' }}
+        >
+          M
+        </div>
+        <span className="hidden sm:inline">Miguel</span>
       </div>
     </header>
   );

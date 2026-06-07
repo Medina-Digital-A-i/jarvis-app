@@ -5,75 +5,88 @@
 @layer base {
   html { scroll-behavior: smooth; }
   body {
-    @apply bg-bg-deep text-ink font-grid;
-    font-feature-settings: "tnum" 1;
-    -webkit-font-smoothing: antialiased;
+    @apply bg-bg-deep text-ink font-sans antialiased;
+    font-feature-settings: "tnum" 1, "cv11" 1;
   }
+  /* Subtle command-center ambience: faint blue glows on a charcoal field. */
   body::before {
     content: "";
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background:
-      radial-gradient(900px 600px at 10% -10%, rgba(255, 165, 0, 0.08), transparent 60%),
-      radial-gradient(900px 600px at 90% 110%, rgba(0, 217, 255, 0.08), transparent 60%),
-      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,217,255,0.025) 3px 4px);
+      radial-gradient(1100px 700px at 12% -8%, rgba(59, 130, 246, 0.10), transparent 55%),
+      radial-gradient(1000px 650px at 92% 108%, rgba(59, 130, 246, 0.06), transparent 55%);
   }
-  body::after {
-    content: "";
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%);
-  }
+  /* Thin custom scrollbars to match the terminal feel */
+  * { scrollbar-width: thin; scrollbar-color: #30363D transparent; }
+  *::-webkit-scrollbar { width: 9px; height: 9px; }
+  *::-webkit-scrollbar-thumb { background: #283143; border-radius: 9999px; border: 2px solid transparent; background-clip: padding-box; }
+  *::-webkit-scrollbar-thumb:hover { background: #374151; background-clip: padding-box; }
 }
 
 @layer components {
   .panel {
-    @apply border border-line rounded-md overflow-hidden;
-    background: linear-gradient(180deg, rgba(17,23,58,0.6), rgba(10,14,39,0.7));
+    @apply border border-line rounded-xl overflow-hidden;
+    background: linear-gradient(180deg, #161B22, #12161D);
+    box-shadow: theme(boxShadow.card);
   }
   .panel-head {
-    @apply px-5 py-3 border-b border-line flex items-center justify-between gap-3;
-    background: rgba(0, 217, 255, 0.03);
+    @apply px-5 py-3.5 border-b border-line flex items-center justify-between gap-3;
+    background: rgba(255, 255, 255, 0.015);
   }
   .panel-title {
-    @apply font-mono text-xs uppercase tracking-[0.16em] text-cyan flex items-center gap-2;
-    text-shadow: 0 0 8px rgba(0,217,255,0.4);
+    @apply font-mono text-[11px] uppercase tracking-[0.16em] text-blue flex items-center gap-2;
   }
   .panel-title::before {
     content: ""; width: 6px; height: 6px;
-    background: theme(colors.cyan.DEFAULT);
+    background: theme(colors.blue.DEFAULT);
     border-radius: 9999px;
-    box-shadow: 0 0 8px theme(colors.cyan.DEFAULT);
+    box-shadow: 0 0 8px theme(colors.blue.DEFAULT);
   }
-  .panel-meta { @apply font-mono text-[10px] text-ink-dim tracking-[0.1em]; }
+  .panel-meta { @apply font-mono text-[10px] text-ink-dim tracking-[0.08em]; }
 
   .btn {
-    @apply inline-flex items-center gap-2 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.12em];
-    @apply cursor-pointer rounded border border-line text-ink-soft transition-all;
-  }
-  .btn:hover {
-    @apply text-cyan border-cyan;
-    box-shadow: 0 0 12px rgba(0, 217, 255, 0.2);
+    @apply inline-flex items-center gap-2 px-3.5 py-2 font-medium text-[12px];
+    @apply cursor-pointer rounded-lg border border-line text-ink-soft transition-all;
+    @apply hover:text-ink hover:border-line-strong hover:bg-white/[0.03];
   }
   .btn-primary {
-    @apply text-bg-deep border-0 font-bold;
-    background: linear-gradient(135deg, theme(colors.amber.DEFAULT), #FF8800);
-    box-shadow: theme(boxShadow.glow-amber);
+    @apply text-white border-0 font-semibold;
+    background: linear-gradient(135deg, #3B82F6, #2563EB);
+    box-shadow: 0 4px 16px -4px rgba(59, 130, 246, 0.5);
   }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 22px theme(colors.amber.glow); }
+  .btn-primary:hover {
+    @apply text-white;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px -4px rgba(59, 130, 246, 0.6);
+  }
 
   .led {
     @apply w-2 h-2 rounded-full bg-success animate-led-pulse;
     box-shadow: 0 0 10px theme(colors.success);
   }
 
+  /* Arc-reactor mark next to the JARVIS wordmark */
   .reactor {
-    @apply w-8 h-8 rounded-full border-2 border-cyan relative;
+    @apply w-7 h-7 rounded-full border-2 border-blue relative;
     background:
-      radial-gradient(circle at center, theme(colors.cyan.DEFAULT) 0%, theme(colors.cyan.DEFAULT) 18%, transparent 20%);
-    box-shadow: 0 0 16px theme(colors.cyan.glow), inset 0 0 12px theme(colors.cyan.glow);
+      radial-gradient(circle at center, theme(colors.blue.DEFAULT) 0%, theme(colors.blue.DEFAULT) 16%, transparent 18%);
+    box-shadow: 0 0 16px theme(colors.blue.glow), inset 0 0 12px theme(colors.blue.glow);
   }
   .reactor::after {
     content: ""; position: absolute; inset: 4px; border-radius: 9999px;
-    border: 1px solid rgba(0,217,255,0.3);
+    border: 1px solid rgba(59,130,246,0.35);
     @apply animate-pulse;
   }
+
+  /* Chat markdown-ish prose */
+  .chat-prose { @apply text-[14px] leading-relaxed text-ink/90; }
+  .chat-prose p { @apply mb-3 last:mb-0; }
+  .chat-prose strong { @apply text-white font-semibold; }
+  .chat-prose ul { @apply list-disc pl-5 mb-3 space-y-1; }
+  .chat-prose ol { @apply list-decimal pl-5 mb-3 space-y-1; }
+  .chat-prose h1, .chat-prose h2, .chat-prose h3 { @apply text-white font-semibold mb-2 mt-1; }
+  .chat-prose code { @apply font-mono text-[12.5px] px-1.5 py-0.5 rounded bg-white/[0.06] text-blue-soft; }
+  .chat-prose pre { @apply font-mono text-[12.5px] p-3 rounded-lg bg-black/40 border border-line overflow-x-auto mb-3; }
+  .chat-prose pre code { @apply bg-transparent p-0 text-ink/90; }
+  .chat-prose a { @apply text-blue underline underline-offset-2; }
 }

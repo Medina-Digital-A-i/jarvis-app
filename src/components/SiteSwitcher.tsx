@@ -4,30 +4,29 @@ import { useActiveSite } from '@/lib/store';
 export default function SiteSwitcher() {
   const [active, setActive] = useActiveSite();
   return (
-    <div className="flex items-center gap-1.5 p-1 border border-line rounded-md bg-cyan/[0.04]">
+    <div className="flex items-center gap-1 p-1 border border-line rounded-lg bg-bg-mid/60">
       {SITES.map((s) => {
         const isActive = s.id === active;
         return (
           <button
             key={s.id}
             onClick={() => setActive(s.id)}
-            className={`flex items-center gap-2 px-4 py-2 font-mono text-[12px] tracking-[0.12em] uppercase rounded transition-all ${
+            className={`flex items-center gap-2 px-3.5 py-1.5 font-mono text-[11px] tracking-[0.1em] uppercase rounded-md transition-all ${
               isActive
-                ? 'text-amber bg-amber/[0.12]'
-                : 'text-ink-soft hover:text-ink hover:bg-cyan/[0.08]'
+                ? 'text-white bg-blue/15 border border-blue/40'
+                : 'text-ink-soft border border-transparent hover:text-ink hover:bg-white/[0.04]'
             }`}
-            style={isActive ? { boxShadow: '0 0 18px rgba(255,165,0,0.45), inset 0 0 8px rgba(255,165,0,0.2)', textShadow: '0 0 8px rgba(255,165,0,0.45)' } : {}}
           >
             <span
               className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-success' : 'bg-ink-dim'}`}
-              style={isActive ? { boxShadow: '0 0 8px #00FF88' } : {}}
+              style={isActive ? { boxShadow: '0 0 8px #22C55E' } : {}}
             />
             <span>{s.name}</span>
           </button>
         );
       })}
-      <button className="flex items-center gap-2 px-4 py-2 font-mono text-[12px] tracking-[0.12em] uppercase rounded text-ink-soft hover:text-ink hover:bg-cyan/[0.08] transition-all">
-        <span className="w-1.5 h-1.5 rounded-full bg-amber" style={{ boxShadow: '0 0 8px #FFA500' }} />
+      <button className="flex items-center gap-2 px-3.5 py-1.5 font-mono text-[11px] tracking-[0.1em] uppercase rounded-md text-ink-soft border border-transparent hover:text-blue hover:bg-blue/[0.06] transition-all">
+        <span className="w-1.5 h-1.5 rounded-full bg-blue" style={{ boxShadow: '0 0 8px #3B82F6' }} />
         <span>+ Add Site</span>
       </button>
     </div>
