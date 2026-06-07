@@ -5,62 +5,37 @@ type Group = { label: string; items: Item[] };
 
 const GROUPS: Group[] = [
   {
-    label: 'Overview',
+    label: 'SEO Command Center',
     items: [
-      { to: '/', label: 'Dashboard', ico: '⌬', badge: 'LIVE' },
-      { to: '/quick-actions', label: 'Quick Actions', ico: '⊞' },
-    ],
-  },
-  {
-    label: 'Content',
-    items: [
-      { to: '/pages', label: 'Pages', ico: '≡', badge: '14' },
-      { to: '/blog', label: 'Blog', ico: '✎', badge: '7' },
-      { to: '/photos', label: 'Photos', ico: '▣' },
-      { to: '/testimonials', label: 'Testimonials', ico: '★' },
-    ],
-  },
-  {
-    label: 'Growth',
-    items: [
-      { to: '/analytics', label: 'Analytics', ico: '↗' },
-      { to: '/seo', label: 'SEO & Meta', ico: '⊕' },
-      { to: '/leads', label: 'Leads / CRM', ico: '⌕', badge: '23' },
-      { to: '/reviews', label: 'Reviews', ico: '★' },
-    ],
-  },
-  {
-    label: 'Google',
-    items: [
-      { to: '/google/business', label: 'Business Profile', ico: 'G' },
-      { to: '/google/ads', label: 'Google Ads', ico: '$' },
-      { to: '/google/search-console', label: 'Search Console', ico: '📊' },
-      { to: '/google/seo-report', label: 'SEO Report', ico: '📈', badge: 'NEW' },
-      { to: '/google/calendar', label: 'Calendar', ico: '📅' },
-    ],
-  },
-  {
-    label: 'Outreach',
-    items: [
-      { to: '/email', label: 'Email Campaigns', ico: '✉' },
-      { to: '/social', label: 'Social Media', ico: '@' },
-      { to: '/automations', label: 'Automations', ico: '⟳' },
+      { to: '/', label: 'Rankings', ico: '📊', badge: 'LIVE' },
+      { to: '/seo-health', label: 'SEO Health', ico: '⊕' },
+      { to: '/agent-activity', label: 'Agent Activity', ico: '🤖' },
+      { to: '/blog-manager', label: 'Blog Manager', ico: '✎' },
+      { to: '/competitors', label: 'Competitors', ico: '🏁' },
     ],
   },
   {
     label: 'System',
     items: [
       { to: '/settings', label: 'Settings', ico: '⚙' },
-      { to: '/integrations', label: 'Integrations', ico: '⚡' },
     ],
   },
 ];
 
 export default function SideNav() {
   return (
-    <aside className="border-r border-line p-6 overflow-y-auto"
+    <aside
+      className="border-r border-line p-6 overflow-y-auto"
       style={{ background: 'linear-gradient(180deg, rgba(17,23,58,0.4), rgba(10,14,39,0.8))' }}
     >
+      {/* Service account reminder */}
+      <div className="mb-6 px-3 py-2.5 rounded-lg border border-amber/20 bg-amber/[0.05]">
+        <div className="font-mono text-[9px] tracking-[0.18em] uppercase text-amber/70 mb-1">GSC Access Needed</div>
+        <div className="text-[10px] text-white/40 leading-relaxed">
+          Grant service account in Search Console to activate live rankings.
+        </div>
+      </div>
+
       {GROUPS.map((group) => (
         <div key={group.label} className="mb-6">
           <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink-dim px-2.5 pb-2 mb-2 border-b border-dashed border-line">
@@ -103,6 +78,16 @@ export default function SideNav() {
           ))}
         </div>
       ))}
+
+      {/* Bottom info */}
+      <div className="mt-4 pt-4 border-t border-line/50">
+        <div className="font-mono text-[9px] tracking-widest uppercase text-white/15 px-2">
+          TPS Pro LLC · SEO Engine
+        </div>
+        <div className="font-mono text-[9px] text-white/15 px-2 mt-0.5">
+          v2.0 · jarvis-app-orpin.vercel.app
+        </div>
+      </div>
     </aside>
   );
 }

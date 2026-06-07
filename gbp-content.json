@@ -1,0 +1,122 @@
+{
+  "place_id": "ChIJvc3_d6UX3okRmUZU54fUi9E",
+  "business_name": "Total Property Solutions Pro LLC",
+  
+  "description": "Total Property Solutions Pro LLC delivers commercial cleaning and property maintenance across Albany, the Capital Region of New York. We specialize in janitorial contracts for office buildings and medical facilities, make-ready cleaning for apartment turnovers, post-construction cleanup, and student housing turnover for large multi-unit properties. Property managers across Albany, Troy, Saratoga Springs, and Schenectady rely on us to keep their buildings clean, rent-ready, and inspection-ready — under one contract. Locally owned, fully insured and bonded, available 24/7. Call (518) 948-7156 for a free quote.",
+
+  "primary_category": "Commercial Cleaning Service",
+  "secondary_categories": ["Janitorial Service", "Building Maintenance", "Property Maintenance"],
+
+  "services": [
+    {
+      "name": "Commercial Cleaning",
+      "description": "Professional commercial cleaning services for offices, medical facilities, retail stores, restaurants, and professional buildings across Albany and the Capital Region. TPS Pro provides scheduled janitorial cleaning — daily, weekly, or monthly — tailored to your facility's size and traffic. Our crews are trained in commercial cleaning protocols, arrive uniformed, and use commercial-grade equipment and EPA-approved products. We serve businesses of all sizes, from small professional offices to multi-floor office buildings. All work is fully insured and bonded. Contact us for a free walkthrough and custom quote for your Albany-area commercial property."
+    },
+    {
+      "name": "Janitorial Services",
+      "description": "Ongoing janitorial contracts for commercial properties throughout Albany, Saratoga Springs, Troy, and Schenectady. TPS Pro provides reliable scheduled cleaning that keeps your building consistently clean, professionally maintained, and always ready for tenants, clients, or inspectors. Services include restroom sanitation and restocking, floor care (sweeping, mopping, buffing), trash removal, common area maintenance, and kitchen/break room cleaning. We assign consistent crews to your building so your team sees the same faces every visit. Monthly contracts with flexible scheduling — we work around your business hours. Fully insured, bonded, and background-checked."
+    },
+    {
+      "name": "Make-Ready Cleaning",
+      "description": "Apartment make-ready cleaning (also called unit turnover cleaning) between tenant move-outs and move-ins. TPS Pro specializes in high-volume make-ready cleaning for property managers and landlords across Albany, Saratoga Springs, Clifton Park, and the Capital Region. We deep-clean every unit — scrubbing kitchens and bathrooms, cleaning appliances inside and out, washing windows, cleaning carpets or hard floors, and performing a final walkthrough to ensure the unit is move-in ready. We work fast without cutting corners. Volume pricing available for property managers with multiple units. We coordinate directly with your leasing office."
+    },
+    {
+      "name": "Post-Construction Cleaning",
+      "description": "Post-construction and post-renovation cleaning for residential and commercial projects throughout Albany and the Capital Region. After contractors finish, TPS Pro removes construction dust, paint overspray, adhesive residue, and debris — leaving the space clean and ready for occupancy. We handle both mid-construction cleanup (clearing debris between phases) and final construction clean (the detail work that makes a freshly built or renovated space ready for tenants, clients, or a first showing). We work with general contractors, property managers, and homeowners. Available for same-day or next-day mobilization on most residential projects."
+    },
+    {
+      "name": "Student Housing Turnover",
+      "description": "High-volume student housing turnover cleaning for large multi-unit properties in Albany and the Capital Region. TPS Pro is the trusted cleaning partner for The Coda (153 units) and Mayflower student housing, with specialized experience in the fast-paced summer turnover window that student housing properties require. We handle mass unit turnovers — dozens of units cleaned in a coordinated schedule — with crews that know student housing standards and can move fast without sacrificing quality. Property managers: call us before your summer turnover season to lock in your schedule. We book out early."
+    },
+    {
+      "name": "Renovation Cleaning",
+      "description": "Mid-renovation and post-renovation cleaning for residential and commercial renovation projects across Albany, Saratoga County, Troy, and Schenectady. TPS Pro works directly with your contractor or project manager to schedule cleanup between phases and a final detail clean after all trades are done. We bring HEPA vacuums for fine construction dust, commercial floor scrubbers, and the specialized solvents to remove paint overspray and adhesive residue. Our goal: from 'renovation done' to 'tenant-ready' or 'guest-ready' as fast as possible. We serve homeowners, landlords, property managers, and renovation contractors."
+    },
+    {
+      "name": "Airbnb & Short-Term Rental Cleaning",
+      "description": "Professional Airbnb and short-term rental turnover cleaning in Saratoga Springs, Lake George, Albany, Clifton Park, and Malta. TPS Pro keeps your short-term rental at 5-star status with consistent, thorough turnovers that cover: full bedroom and bathroom cleaning, hotel-style linen resets, kitchen sanitization, trash removal, supply restocking, and damage documentation. We specialize in same-day turnovers and back-to-back booking windows — critical during Saratoga racing season. We sync with your Airbnb or VRBO booking calendar to automate scheduling. Volume pricing for hosts managing multiple listings."
+    },
+    {
+      "name": "Floor Care Services",
+      "description": "Professional commercial floor care throughout Albany and the Capital Region — including VCT strip, wax, and buff; LVT deep cleaning and maintenance; carpet hot water extraction; and ceramic tile scrubbing and grout cleaning. TPS Pro's floor care crews are trained on all commercial floor types and use commercial-grade machines. We schedule all floor care after hours to avoid disrupting your business operations. VCT floors in medical offices, schools, and retail stores are our specialty. We offer one-time floor restoration and ongoing maintenance programs. Call (518) 948-7156 for a square footage quote."
+    },
+    {
+      "name": "Facility Maintenance",
+      "description": "Property and facility maintenance services for property managers and portfolio owners across Albany, Saratoga County, Troy, and Schenectady — light handyman work, supply restocking, exterior care, and inspection prep under one contract. TPS Pro consolidates all your maintenance needs so you deal with one company instead of five. We handle: light fixture and bulb replacement, door hardware and hinges, minor drywall patching, caulking and weatherstripping, common area upkeep, restroom supply restocking, exterior sweeping and appearance maintenance, and inspection preparation. Designed for property managers running 5+ units across one or multiple buildings."
+    }
+  ],
+
+  "qa": [
+    {
+      "question": "Do you offer commercial cleaning contracts in Albany, NY?",
+      "answer": "Yes. TPS Pro provides commercial cleaning contracts for offices, medical facilities, retail stores, and professional buildings throughout Albany and the Capital Region. We offer daily, weekly, and monthly janitorial contracts tailored to your facility's size and schedule. Call (518) 948-7156 for a free walkthrough and quote."
+    },
+    {
+      "question": "Do you specialize in cleaning for property managers?",
+      "answer": "Yes — this is one of our core specialties. TPS Pro provides make-ready unit cleaning, building common area maintenance, facility maintenance, and inspection prep for property managers with single buildings and multi-property portfolios across Albany, Saratoga County, Troy, and Schenectady. We offer volume pricing and direct leasing office coordination."
+    },
+    {
+      "question": "Are you available for post-construction cleaning in Albany?",
+      "answer": "Yes. TPS Pro handles both mid-construction cleanup and final post-construction detail cleaning for residential and commercial projects throughout the Capital Region. We typically mobilize same-day or next-day for residential jobs. Call (518) 948-7156 to schedule."
+    },
+    {
+      "question": "Do you clean student housing and apartment complexes?",
+      "answer": "Yes. TPS Pro is the cleaning partner for The Coda (153 units) and Mayflower student housing in Albany, with specialized experience in high-volume summer turnover cleaning. We handle mass unit turnovers on coordinated schedules. Call early to lock in your summer turnover schedule."
+    },
+    {
+      "question": "Are you insured and bonded?",
+      "answer": "Yes. TPS Pro is fully insured and bonded. We provide liability documentation before every job. All crew members are background-checked and uniformed. We carry commercial general liability insurance appropriate for the size of projects we service."
+    },
+    {
+      "question": "Do you offer Airbnb cleaning in Saratoga Springs?",
+      "answer": "Yes. TPS Pro provides short-term rental turnover cleaning in Saratoga Springs, Lake George, Albany, Clifton Park, Malta, and surrounding areas. We specialize in same-day turnovers and back-to-back booking windows — especially during Saratoga racing season when turnovers happen daily."
+    },
+    {
+      "question": "What is make-ready cleaning?",
+      "answer": "Make-ready cleaning (also called apartment turnover cleaning) is a deep clean of a rental unit between tenant move-out and move-in. TPS Pro cleans every surface, appliance, window, floor, and fixture to make the unit rent-ready. We serve landlords and property managers across Albany and the Capital Region with fast, thorough make-ready service."
+    },
+    {
+      "question": "Do you offer VCT floor stripping and waxing?",
+      "answer": "Yes. TPS Pro provides commercial VCT strip, wax, and buff service for offices, medical facilities, schools, and retail stores throughout the Capital Region. We also service LVT, carpet, and ceramic tile floors. All floor care is scheduled after hours to avoid business disruption. Call (518) 948-7156 for a square footage quote."
+    },
+    {
+      "question": "What areas do you serve?",
+      "answer": "TPS Pro serves the full Albany Capital Region including Albany, Troy, Schenectady, Saratoga Springs, Clifton Park, Cohoes, Latham, Colonie, Guilderland, Bethlehem, Delmar, Watervliet, Lake George, and surrounding communities. We are based in Albany, NY and locally owned."
+    },
+    {
+      "question": "How do I get a quote?",
+      "answer": "Call us at (518) 948-7156 or visit totalpropertysolution.net to request a free quote. For commercial cleaning contracts, we schedule a free walkthrough of your facility. For make-ready and turnover cleaning, we quote by unit size and scope. For post-construction, we quote by square footage and scope. Most quotes are provided within 24 hours."
+    }
+  ],
+
+  "hours": {
+    "monday": "Open 24 hours",
+    "tuesday": "Open 24 hours", 
+    "wednesday": "Open 24 hours",
+    "thursday": "Open 24 hours",
+    "friday": "Open 24 hours",
+    "saturday": "Open 24 hours",
+    "sunday": "Open 24 hours"
+  },
+
+  "critical_fixes_needed": [
+    "Address shows Stillwater NY instead of Albany NY — needs correction in GBP dashboard",
+    "Primary category is Home Cleaning — must change to Commercial Cleaning Service",
+    "Two conflicting Yelp listings — one needs to be claimed and one removed/merged",
+    "Zero Google reviews — review request agent now running Fridays"
+  ],
+
+  "citation_priority": [
+    {"directory": "Angi (Angie's List)", "url": "https://pro.angi.com", "priority": 1},
+    {"directory": "HomeAdvisor", "url": "https://pro.homeadvisor.com", "priority": 1},
+    {"directory": "BBB", "url": "https://bbb.org", "priority": 1},
+    {"directory": "Thumbtack", "url": "https://thumbtack.com", "priority": 2},
+    {"directory": "Bing Places", "url": "https://bingplaces.com", "priority": 2},
+    {"directory": "Apple Maps", "url": "https://mapsconnect.apple.com", "priority": 2},
+    {"directory": "YellowPages", "url": "https://yellowpages.com", "priority": 3},
+    {"directory": "Manta", "url": "https://manta.com", "priority": 3},
+    {"directory": "LinkedIn Company Page", "url": "https://linkedin.com/company/add", "priority": 2},
+    {"directory": "Albany Chamber of Commerce", "url": "https://albanychamber.com", "priority": 1},
+    {"directory": "Yelp — fix conflicting listings", "url": "https://biz.yelp.com", "priority": 1}
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "business": {
+    "name": "Total Property Solutions Pro LLC",
+    "dba": "TPS Pro LLC",
+    "phone": "(518) 948-7156",
+    "address": "Albany, NY 12205",
+    "address_note": "Full street address not found in CREDENTIALS_MASTER.md — update this field with the exact street address before using for citations",
+    "website": "https://totalpropertysolution.net",
+    "email": "crcp183@gmail.com",
+    "owner": "Miguel Medina",
+    "category": "Commercial Cleaning Service",
+    "secondary_categories": [
+      "Janitorial Service",
+      "Property Maintenance Service",
+      "Post Construction Cleaning"
+    ],
+    "description_short": "Commercial cleaning and janitorial services in Albany NY and the Capital Region. Specializing in make-ready cleaning, post-construction cleanup, and ongoing property maintenance for property managers and business owners.",
+    "description_long": "Total Property Solutions Pro LLC provides commercial cleaning, janitorial services, make-ready cleaning, post-construction cleaning, and property maintenance throughout Albany NY and the Capital Region. We work with property managers, commercial landlords, and business owners who need reliable, professional cleaning done right the first time. From routine janitorial contracts to one-time deep cleans and construction site cleanouts, TPS Pro delivers consistent results with no surprises.",
+    "hours": {
+      "monday": "7:00 AM - 6:00 PM",
+      "tuesday": "7:00 AM - 6:00 PM",
+      "wednesday": "7:00 AM - 6:00 PM",
+      "thursday": "7:00 AM - 6:00 PM",
+      "friday": "7:00 AM - 6:00 PM",
+      "saturday": "8:00 AM - 4:00 PM",
+      "sunday": "Closed"
+    },
+    "service_area": [
+      "Albany, NY",
+      "Troy, NY",
+      "Schenectady, NY",
+      "Cohoes, NY",
+      "Watervliet, NY",
+      "Capital Region, NY"
+    ],
+    "year_founded": 2023,
+    "employees": "1-5"
+  },
+  "citations": [
+    {
+      "directory": "Google Business Profile",
+      "url": "https://business.google.com",
+      "status": "listed_needs_fixes",
+      "issues": [
+        "Wrong address (Stillwater vs Albany)",
+        "Wrong category (Home vs Commercial)"
+      ],
+      "priority": 1,
+      "action": "Login and correct address + category",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "Yelp",
+      "url": "https://biz.yelp.com",
+      "status": "listed_conflicting",
+      "issues": [
+        "Two conflicting listings need to be merged"
+      ],
+      "priority": 1,
+      "action": "Contact Yelp support to merge duplicate listings",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "Angi",
+      "url": "https://pro.angi.com/business/register",
+      "status": "not_listed",
+      "issues": [],
+      "priority": 1,
+      "action": "Manual signup required — no public API for new registrations. Use citation-signup-info.md",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "HomeAdvisor",
+      "url": "https://pro.homeadvisor.com",
+      "status": "not_listed",
+      "issues": [],
+      "priority": 1,
+      "action": "Manual signup required — no public business registration API. Use citation-signup-info.md",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "BBB (Better Business Bureau)",
+      "url": "https://www.bbb.org/bbb-accreditation/",
+      "status": "not_listed",
+      "issues": [],
+      "priority": 1,
+      "action": "Manual accreditation application. Annual fee required. Strongly recommended for credibility.",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "Albany Chamber of Commerce",
+      "url": "https://albanychamber.com/membership",
+      "status": "not_listed",
+      "issues": [],
+      "priority": 1,
+      "action": "Manual membership application. Strong local SEO signal for Albany area.",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "Thumbtack",
+      "url": "https://www.thumbtack.com/pro/",
+      "status": "not_listed",
+      "issues": [],
+      "priority": 2,
+      "action": "Manual signup — lead-gen platform with good SEO value. Use citation-signup-info.md",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "Bing Places for Business",
+      "url": "https://www.bingplaces.com",
+      "status": "not_listed",
+      "issues": [],
+      "priority": 2,
+      "action": "Bing Places API exists (partner-level only, contact partneronbp@microsoft.com). For single listings, manual signup at bingplaces.com is the standard approach.",
+      "api_notes": "API available via POST /CreateBusinesses but requires partner onboarding with Microsoft. Not feasible for single-location submission.",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "Apple Maps Connect (Apple Business)",
+      "url": "https://businessconnect.apple.com",
+      "status": "not_listed",
+      "issues": [],
+      "priority": 2,
+      "action": "Manual signup at businessconnect.apple.com — API access is enterprise/partner-only (Yext, PinMeTo). Standard businesses use the web portal.",
+      "api_notes": "Apple Business Connect API exists but is restricted to certified third-party integration partners (Yext, PinMeTo). Not accessible for direct submission.",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "LinkedIn Company Page",
+      "url": "https://linkedin.com/company/add/show",
+      "status": "not_listed",
+      "issues": [],
+      "priority": 2,
+      "action": "Manual creation — LinkedIn does not allow automated company page creation via API. Login with personal account and create company page.",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "Facebook Business Page",
+      "url": "https://www.facebook.com/pages/create",
+      "status": "check_exists",
+      "issues": [
+        "Need to verify whether a page exists and if it has correct NAP info"
+      ],
+      "priority": 2,
+      "action": "Search Facebook for 'Total Property Solutions Pro' to check if page exists. If not, create via pages/create.",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "YellowPages",
+      "url": "https://www.yellowpages.com/add-listing",
+      "status": "not_listed",
+      "issues": [],
+      "priority": 3,
+      "action": "Manual signup via yellowpages.com/add-listing",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "Manta",
+      "url": "https://www.manta.com/business-owner",
+      "status": "not_listed",
+      "issues": [],
+      "priority": 3,
+      "action": "Manual signup via manta.com/business-owner",
+      "last_checked": "2026-05-31"
+    },
+    {
+      "directory": "Foursquare",
+      "url": "https://foursquare.com/add-place",
+      "status": "not_listed",
+      "issues": [],
+      "priority": 3,
+      "action": "Manual submission at foursquare.com/add-place",
+      "last_checked": "2026-05-31"
+    }
+  ],
+  "api_research_notes": {
+    "bing_places": "Bing Places API exists (PDF docs at bpprodpublicstorage.blob.core.windows.net/bingplacesapi/BingPlaces_API_v1.0.pdf). Requires partner onboarding — not a public API for individual businesses. Contact: partneronbp@microsoft.com. The CreateBusinesses endpoint supports 1-1000 locations per call but requires authenticated PUID credentials provisioned by Microsoft.",
+    "apple_maps": "Apple Business Connect API exists but is restricted to certified integration partners (Yext, PinMeTo, etc.). Standard businesses use the web portal at businessconnect.apple.com. As of April 2026, Apple merged Apple Business Connect + Apple Business Manager into 'Apple Business' at businessconnect.apple.com.",
+    "angi": "No public API for new business registration. Angi does have a lead delivery API for existing partners but this requires an established account. Manual signup at signup.angi.com/pro required first.",
+    "homeadvisor": "HomeAdvisor's API is lead-delivery focused (Webhooks/API for receiving leads), not for submitting a new business listing. Manual registration at pro.homeadvisor.com required first.",
+    "bbb": "No API — fully manual application process. Accreditation fee varies by business size. High SEO authority value.",
+    "citation_automation": "For future automation at scale, consider using Yext or BrightLocal — both have APIs that push listings to 50+ directories simultaneously. Yext starts at ~$199/year but handles Bing, Apple Maps, YP, Foursquare, and many others automatically."
+  },
+  "stats": {
+    "total_directories": 14,
+    "listed_with_issues": 2,
+    "not_listed": 10,
+    "check_exists": 1,
+    "priority_1_pending": 4,
+    "priority_2_pending": 5,
+    "priority_3_pending": 3
+  },
+  "last_updated": "2026-06-04"
+}

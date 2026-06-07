@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-06-04",
+  "status": "ready_for_manual_posting",
+  "reason": "No /tmp/gmb_refresh_token.txt present and no usable GMB API account/location auth in sandbox. Falling back to manual queue per task STEP 3.",
+  "post_angle": "Week 1 — Service Spotlight (Post-Construction Cleaning)",
+  "post": {
+    "languageCode": "en-US",
+    "summary": "The drywall's up, the paint's dry, the final inspection passed — and the space still can't open. The culprit? A fine layer of construction dust coating every surface, vent, and fixture, ready to recirculate through the HVAC the moment it kicks on. For Albany property managers and general contractors, that gap between \"construction complete\" and \"tenant-ready\" is exactly where move-in dates slip and first impressions get ruined.\n\nThat's the problem TPS Pro's post-construction cleaning solves. We handle the detail work that turns a finished build into an occupancy-ready space: removing drywall dust, paint overspray, and adhesive residue; cleaning inside cabinets, light fixtures, and window tracks; and wiping down vents so your air handler isn't blowing grit across a freshly built suite. Whether it's a renovated office on Wolf Road or a new multi-unit build across the Capital Region, we get it show-ready — not just swept.\n\nWe mobilize fast (often same-day or next-day on residential projects) and coordinate directly with your GC or leasing office so the handoff is clean. No dust, no delays, no surprises.\n\nGot a project wrapping up in Albany or the Capital Region? Call (518) 948-7156 for a free post-construction cleaning quote.",
+    "callToAction": {
+      "actionType": "CALL",
+      "url": "https://totalpropertysolution.net/contact.html"
+    },
+    "topicType": "STANDARD"
+  },
+  "word_count": 210,
+  "manual_posting_instructions": "Log in to business.google.com, select the Total Property Solutions Pro LLC profile, go to Posts > Add update, paste the 'summary' text, set the button to 'Call now', and publish. Takes ~60 seconds."
+}

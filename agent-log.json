@@ -1,0 +1,111 @@
+[
+  {
+    "timestamp": "2026-06-01T11:11:38.781352+00:00",
+    "agent": "tps-seo-agent",
+    "status": "blocked",
+    "actions": [
+      "Attempted GSC API pull \u2014 service account jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com still has no Search Console permission (per CREDENTIALS_MASTER.md pending items)",
+      "Attempted to access /Users/miguelmedina/Projects/Active/tpspro-website/ \u2014 folder NOT mounted in this scheduled-task sandbox, so file edits / git / netlify deploy cannot run",
+      "Not Tuesday \u2014 no weekly blog post scheduled today",
+      "Wrote this status entry and SMS report so Miguel knows the agent is hot but blocked on access"
+    ],
+    "pages_edited": [],
+    "keywords_targeted": [],
+    "deployed": false,
+    "blockers": [
+      "GSC service account needs Search Console user permission (Settings \u2192 Users \u2192 Add jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com as Full)",
+      "Mount /Users/miguelmedina/Projects/Active/tpspro-website/ in the scheduled task config so the agent can read/write site files",
+      "Confirm netlify-cli auth token is reachable from the scheduled task environment"
+    ]
+  },
+  {
+    "timestamp": "2026-06-01T11:39:24.748144+00:00",
+    "agent": "tps-rank-tracker",
+    "status": "blocked",
+    "actions": [
+      "STEP 1 GSC pull: no usable credentials in this environment. CREDENTIALS_MASTER.md contains only a service account (jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com) which is still marked 'NEEDS GSC PERMISSION', and no OAuth client_id/client_secret/refresh_token. The service-account key file (~/Documents/Businesses/Jarvis/seo/credentials/jarvis-service-account.json) is NOT mounted in this sandbox. gcloud CLI not present.",
+      "STEP 2 compare: rank-history.json does not exist yet and no prior snapshot found.",
+      "STEP 3 movements: none computable without data. Did NOT fabricate rankings.",
+      "STEP 4 snapshot: skipped writing rank-history.json to avoid persisting fake/empty data as a baseline.",
+      "STEP 5 SMS: not sent. Today is Monday (not Friday) and there are no real movements to report. Per the task rules SMS only fires on Fridays or on genuine urgent drops / milestone gains.",
+      "STEP 6 SEO flag: not set (no detected drops)."
+    ],
+    "blockers": [
+      "Grant Search Console access: search.google.com/search-console -> Settings -> Users and permissions -> Add jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com as Full.",
+      "OR add Google OAuth client_id/client_secret/refresh_token for sc-domain:totalpropertysolution.net to CREDENTIALS_MASTER.md so the STEP 1 token flow works.",
+      "Mount the service-account key file (or its folder) into the scheduled-task sandbox so the agent can read it."
+    ]
+  },
+  {
+    "timestamp": "2026-06-02T11:40:47.135499+00:00",
+    "agent": "tps-rank-tracker",
+    "status": "blocked",
+    "actions": [
+      "STEP 1 GSC pull: still no usable credentials. CREDENTIALS_MASTER.md has only the service account jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com (marked 'NEEDS GSC PERMISSION') and NO OAuth client_id/client_secret/refresh_token, which the task's token flow requires. Service-account key file (~/Documents/Businesses/Jarvis/seo/credentials/jarvis-service-account.json) is NOT mounted in this sandbox; gcloud CLI not present here.",
+      "STEP 2 compare: rank-history.json still does not exist; no prior snapshot to compare against.",
+      "STEP 3 movements: none computable. Did NOT fabricate rankings.",
+      "STEP 4 snapshot: skipped \u2014 refused to persist empty/fake data as the baseline.",
+      "STEP 5 SMS: not sent. Today is Tuesday (not Friday) and there are zero real movements. Per task rules SMS fires only on Fridays or on genuine urgent drops / milestone gains.",
+      "STEP 6 SEO flag: not set (no detected drops)."
+    ],
+    "blockers": [
+      "Grant Search Console access: search.google.com/search-console -> Settings -> Users and permissions -> Add jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com as Full.",
+      "OR add Google OAuth client_id/client_secret/refresh_token for sc-domain:totalpropertysolution.net to CREDENTIALS_MASTER.md so STEP 1's token flow works.",
+      "Mount the service-account key file (or its folder) into the scheduled-task sandbox so the agent can read it."
+    ],
+    "note": "This is the 2nd consecutive blocked rank-tracker run (also blocked 2026-06-01). Pipeline cannot produce data until GSC access is provisioned."
+  },
+  {
+    "timestamp": "2026-06-03T11:40:43.523043+00:00",
+    "agent": "tps-rank-tracker",
+    "status": "blocked",
+    "actions": [
+      "STEP 1 GSC pull: still no usable credentials. CREDENTIALS_MASTER.md has only the service account jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com (still marked 'NEEDS GSC PERMISSION') and NO OAuth client_id/client_secret/refresh_token, which the task's token flow requires. Service-account key file (~/Documents/Businesses/Jarvis/seo/credentials/jarvis-service-account.json) is NOT mounted in this sandbox; gcloud CLI not present.",
+      "STEP 2 compare: rank-history.json still does not exist; no prior snapshot.",
+      "STEP 3 movements: none computable. Did NOT fabricate rankings.",
+      "STEP 4 snapshot: skipped - refused to persist empty/fake data as baseline.",
+      "STEP 5 SMS: not sent. Today is Wednesday (not Friday) and there are zero real movements.",
+      "STEP 6 SEO flag: not set (no detected drops)."
+    ],
+    "blockers": [
+      "Grant Search Console access: search.google.com/search-console -> Settings -> Users and permissions -> Add jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com as Full.",
+      "OR add Google OAuth client_id/client_secret/refresh_token for sc-domain:totalpropertysolution.net to CREDENTIALS_MASTER.md.",
+      "Mount the service-account key file (or its folder) into the scheduled-task sandbox."
+    ],
+    "note": "3rd consecutive blocked rank-tracker run (also 2026-06-01, 2026-06-02). Pipeline cannot produce data until GSC access is provisioned. This is now a recurring failure - needs a one-time human action to unblock."
+  },
+  {
+    "timestamp": "2026-06-04T11:40:12.459553+00:00",
+    "agent": "tps-rank-tracker",
+    "status": "blocked",
+    "actions": [
+      "STEP 1 GSC pull: BLOCKED. CREDENTIALS_MASTER.md still has NO OAuth client_id/client_secret/refresh_token (the token flow the task requires). Only auth present is service account jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com, still marked 'NEEDS GSC PERMISSION'. Verified this run: no OAuth creds in file, service-account key file NOT mounted in sandbox, gcloud CLI not present. No way to authenticate to GSC.",
+      "STEP 2 compare: rank-history.json still does not exist; no prior snapshot.",
+      "STEP 3 movements: none computable. Did NOT fabricate rankings.",
+      "STEP 4 snapshot: skipped - refused to persist empty/fake data as baseline.",
+      "STEP 5 SMS: not sent. Today is Thursday (not Friday) and there are zero real rank movements. SMS triggers are Friday-weekly or genuine urgent drops/milestone gains - none apply. (Infra-failure alerting is not a defined SMS trigger, so no SMS fired.)",
+      "STEP 6 SEO flag: not set (no detected drops)."
+    ],
+    "blockers": [
+      "ONE-TIME HUMAN ACTION NEEDED. Either: (A) add Google OAuth client_id/client_secret/refresh_token for sc-domain:totalpropertysolution.net to CREDENTIALS_MASTER.md, OR (B) grant the service account GSC access + mount its key file into this sandbox.",
+      "Per the 2026-05-25 hold, granting the service account GSC access is a Miguel-confirmed action and needs his explicit typed go-ahead."
+    ],
+    "note": "4th consecutive blocked rank-tracker run (2026-06-01, 02, 03, 04). Recurring failure that only a one-time human credential action can unblock. Escalated to Miguel."
+  },
+  {
+    "timestamp": "2026-06-04T14:10:00+00:00",
+    "agent": "tps-gbp-post-scheduler",
+    "status": "success_queued",
+    "actions": [
+      "STEP1: Day 4 of month -> Week 1 = Service Spotlight angle.",
+      "STEP2: Wrote 210-word GBP post spotlighting Post-Construction Cleaning (pain point: construction dust delaying occupancy). Local keywords: Albany, Capital Region, Wolf Road. CALL CTA.",
+      "STEP3: No /tmp/gmb_refresh_token.txt and no usable GMB account/location auth -> saved post to gbp-post-queue.json for manual posting (fallback path).",
+      "STEP4: Wrote 3 Q&A answers (medical offices, PM contracts, same-day) to gbp-qa-queue.json.",
+      "STEP6: Citation check \u2014 priority-1 not_listed: Angi, HomeAdvisor, BBB, Albany Chamber. Reminders included in SMS. Updated last_updated to 2026-06-04.",
+      "STEP5/7: Refresh-token auth not yet configured (noted). SMS sent via Twilio REST API (SID SM6b9af74a95a99bdd4d9fe4412b34fbd6, status queued)."
+    ],
+    "blockers": [
+      "GMB refresh token /tmp/gmb_refresh_token.txt not present \u2014 post requires manual publishing until OAuth refresh token is added."
+    ]
+  }
+]
