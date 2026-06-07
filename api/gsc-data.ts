@@ -4,26 +4,29 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { google } from 'googleapis';
 
 function getAuth() {
-  // OAuth2 path — uses stored refresh token for crcp183@gmail.com
+  // Prefer the service account (granted access in Search Console). The OAuth
+  // refresh token below can go stale (invalid_grant); the service account is
+  // the durable path, so it takes priority.
+  const saJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+  if (saJson) {
+    const sa = JSON.parse(saJson);
+    return new google.auth.GoogleAuth({
+      credentials: sa,
+      scopes: ['https://www.googleapis.com/auth/webmasters.readonly'],
+    });
+  }
+
+  // Fallback: OAuth2 user credentials (crcp183@gmail.com).
   const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
   const refreshToken = process.env.GOOGLE_OAUTH_REFRESH_TOKEN;
-
   if (clientId && clientSecret && refreshToken) {
     const oauth2Client = new google.auth.OAuth2(clientId, clientSecret);
     oauth2Client.setCredentials({ refresh_token: refreshToken });
     return oauth2Client;
   }
 
-  // Fallback: service account
-  const saJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
-  if (!saJson) throw new Error('No auth credentials configured');
-  const sa = JSON.parse(saJson);
-  const auth = new google.auth.GoogleAuth({
-    credentials: sa,
-    scopes: ['https://www.googleapis.com/auth/webmasters.readonly'],
-  });
-  return auth;
+  throw new Error('No auth credentials configured');
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

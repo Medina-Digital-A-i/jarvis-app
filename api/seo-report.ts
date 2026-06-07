@@ -19,6 +19,15 @@ const TARGET_KEYWORDS = [
 ];
 
 function getAuth() {
+  // Prefer the service account (durable); fall back to OAuth only if no SA set.
+  const saJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+  if (saJson) {
+    const sa = JSON.parse(saJson);
+    return new google.auth.GoogleAuth({
+      credentials: sa,
+      scopes: ['https://www.googleapis.com/auth/webmasters.readonly'],
+    });
+  }
   const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
   const refreshToken = process.env.GOOGLE_OAUTH_REFRESH_TOKEN;
@@ -27,13 +36,7 @@ function getAuth() {
     oauth2Client.setCredentials({ refresh_token: refreshToken });
     return oauth2Client;
   }
-  const saJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
-  if (!saJson) throw new Error('No auth credentials configured');
-  const sa = JSON.parse(saJson);
-  return new google.auth.GoogleAuth({
-    credentials: sa,
-    scopes: ['https://www.googleapis.com/auth/webmasters.readonly'],
-  });
+  throw new Error('No auth credentials configured');
 }
 
 async function fetchGscRows(days: number, siteUrl: string) {
