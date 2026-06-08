@@ -18,8 +18,8 @@ interface GscData {
   rows: GscRow[];
   totalRows: number;
   quickWins: number;
-  isDemo?: boolean;
-  demoMessage?: string;
+  source?: 'live' | 'timeout' | 'awaiting';
+  message?: string;
 }
 
 const posBadge = (pos: number) =>
@@ -88,23 +88,30 @@ export default function Rankings() {
         }
       />
 
-      {/* Demo mode banner */}
-      {data?.isDemo && (
+      {/* Awaiting-data banner — shown when GSC access isn't granted yet or timed out */}
+      {data && (data.source === 'awaiting' || data.source === 'timeout') && (
         <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-3 text-sm text-amber-300 mb-5 flex items-center justify-between gap-4">
-          <span>⚡ <strong>Demo Mode</strong> — {data.demoMessage}</span>
-          <span className="text-xs text-amber-400/70">Grant GSC access to the service account to activate live data</span>
+          <span>
+            {data.source === 'timeout' ? '⏳ ' : '🔌 '}
+            <strong>{data.source === 'timeout' ? 'Connecting' : 'Awaiting Live Data'}</strong>
+            {' — '}{data.message ?? 'Google Search Console is not returning data yet.'}
+          </span>
+          <span className="text-xs text-amber-400/70">No data is fabricated — values show “--” until GSC responds</span>
         </div>
       )}
 
       {/* KPI row */}
       {!loading && data && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          {[
-            { label: 'Keywords Tracked', value: data.totalRows, color: 'text-white' },
-            { label: 'Total Clicks', value: totalClicks.toLocaleString(), color: 'text-emerald-400' },
-            { label: 'Total Impressions', value: totalImpressions.toLocaleString(), color: 'text-sky-400' },
-            { label: '⚡ Opportunities', value: opportunities.length, color: 'text-amber-400' },
-          ].map((kpi) => (
+          {(() => {
+            const hasData = (data.rows?.length ?? 0) > 0;
+            return [
+              { label: 'Keywords Tracked', value: hasData ? data.totalRows : '--', color: 'text-white' },
+              { label: 'Total Clicks', value: hasData ? totalClicks.toLocaleString() : '--', color: 'text-emerald-400' },
+              { label: 'Total Impressions', value: hasData ? totalImpressions.toLocaleString() : '--', color: 'text-sky-400' },
+              { label: '⚡ Opportunities', value: hasData ? opportunities.length : '--', color: 'text-amber-400' },
+            ];
+          })().map((kpi) => (
             <div key={kpi.label} className="rounded-xl border border-white/8 bg-white/[0.03] px-4 py-4">
               <div className="text-xs text-white/40 uppercase tracking-wide mb-1">{kpi.label}</div>
               <div className={`text-2xl font-bold ${kpi.color}`}>{kpi.value}</div>

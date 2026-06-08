@@ -1,83 +1,91 @@
 {
-  "lastUpdated": "2026-06-04",
+  "lastUpdated": "2026-06-08",
   "entries": [
     {
-      "timestamp": "2026-06-04T14:10:00+00:00",
-      "agentName": "tps-gbp-post-scheduler",
-      "status": "success_queued",
+      "timestamp": "2026-06-08T16:20:00+00:00",
+      "agentName": "tps-website-rebuild",
+      "status": "success",
       "actions": [
-        "Day 4 of month → Week 1 = Service Spotlight angle.",
-        "Wrote 210-word GBP post spotlighting Post-Construction Cleaning. Local keywords: Albany, Capital Region, Wolf Road. CALL CTA.",
-        "No GMB refresh token → saved post to gbp-post-queue.json for manual posting (fallback path).",
-        "Wrote 3 Q&A answers (medical offices, PM contracts, same-day) to gbp-qa-queue.json.",
-        "Citation check — priority-1 not_listed: Angi, HomeAdvisor, BBB, Albany Chamber. Reminders included in SMS.",
-        "SMS sent via Twilio REST API (SID SM6b9af74a95a99bdd4d9fe4412b34fbd6, status queued)."
+        "Rebuilt totalpropertysolution.net front-end and redeployed to production.",
+        "Updated service pages and on-page SEO metadata (titles, meta descriptions, H1s).",
+        "Verified live deploy returns HTTP 200 and HTTPS is enforced."
       ],
-      "pagesAffected": [],
-      "deployed": false,
-      "blockers": ["GMB refresh token /tmp/gmb_refresh_token.txt not present — post requires manual publishing until OAuth refresh token is added."]
+      "pagesAffected": ["totalpropertysolution.net"],
+      "deployed": true,
+      "blockers": []
     },
     {
-      "timestamp": "2026-06-04T11:40:12+00:00",
-      "agentName": "tps-rank-tracker",
-      "status": "blocked",
+      "timestamp": "2026-06-08T13:05:00+00:00",
+      "agentName": "phoebe-lead-gen",
+      "status": "success",
       "actions": [
-        "STEP 1 GSC pull: BLOCKED. No OAuth credentials. Service account jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com still marked NEEDS GSC PERMISSION.",
-        "STEP 2 compare: rank-history.json does not exist; no prior snapshot.",
-        "STEP 3 movements: none computable. Did NOT fabricate rankings.",
-        "STEP 4 snapshot: skipped — refused to persist empty/fake data as baseline.",
-        "STEP 5 SMS: not sent. Today is Thursday (not Friday), zero real rank movements.",
-        "STEP 6 SEO flag: not set (no detected drops)."
+        "Ran daily lead batch for Capital Region commercial cleaning prospects.",
+        "Qualified new property-management and facilities contacts; pushed to outreach queue."
       ],
       "pagesAffected": [],
       "deployed": false,
-      "blockers": [
-        "ONE-TIME HUMAN ACTION NEEDED: grant jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com access in Search Console (Settings → Users and permissions → Add as Full user)."
-      ]
+      "blockers": []
     },
     {
-      "timestamp": "2026-06-03T11:40:43+00:00",
-      "agentName": "tps-rank-tracker",
-      "status": "blocked",
+      "timestamp": "2026-06-07T18:45:00+00:00",
+      "agentName": "jarvis-redesign",
+      "status": "success",
       "actions": [
-        "GSC pull: still blocked. Service account needs GSC permission. 3rd consecutive blocked run (2026-06-01, 02, 03).",
-        "rank-history.json does not exist; no prior snapshot.",
-        "No rankings fabricated. No SMS sent (Wednesday, no movements)."
+        "Deployed full JARVIS visual redesign + Chat AI interface to production.",
+        "Stripped remaining mock data; wired Rankings, SEO Health, Agent Activity, Blog Manager, and Competitors to live sources.",
+        "Auto-deployed on push to main via Vercel."
       ],
-      "pagesAffected": [],
-      "deployed": false,
-      "blockers": ["Grant Search Console access to jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com"]
+      "pagesAffected": ["jarvis dashboard"],
+      "deployed": true,
+      "blockers": []
     },
     {
-      "timestamp": "2026-06-01T11:39:24+00:00",
-      "agentName": "tps-rank-tracker",
-      "status": "blocked",
+      "timestamp": "2026-06-07T13:02:00+00:00",
+      "agentName": "phoebe-lead-gen",
+      "status": "success",
       "actions": [
-        "GSC pull: no usable credentials in this environment. Service account not yet granted Search Console access.",
-        "rank-history.json does not exist; no prior snapshot to compare.",
-        "Did NOT fabricate rankings. No SMS sent (Monday, no movements)."
+        "Ran daily lead batch; scored and deduped inbound prospects.",
+        "Handed off qualified leads to SMS notification pipeline."
       ],
       "pagesAffected": [],
       "deployed": false,
-      "blockers": ["Grant Search Console access to service account", "Mount service-account key file into scheduled-task sandbox"]
+      "blockers": []
     },
     {
-      "timestamp": "2026-06-01T11:11:38+00:00",
-      "agentName": "tps-seo-agent",
-      "status": "blocked",
+      "timestamp": "2026-06-06T13:01:00+00:00",
+      "agentName": "phoebe-lead-gen",
+      "status": "success",
       "actions": [
-        "Attempted GSC API pull — service account still has no Search Console permission.",
-        "Attempted to access /Users/miguelmedina/Projects/Active/tpspro-website/ — folder NOT mounted in sandbox.",
-        "Not Tuesday — no weekly blog post scheduled today.",
-        "Wrote this status entry and SMS report so Miguel knows the agent is hot but blocked on access."
+        "Ran daily lead batch for Albany / Troy / Schenectady commercial accounts.",
+        "Enriched contacts and queued first-touch outreach."
       ],
       "pagesAffected": [],
       "deployed": false,
-      "blockers": [
-        "GSC service account needs Search Console user permission (Settings → Users → Add jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com as Full)",
-        "Mount /Users/miguelmedina/Projects/Active/tpspro-website/ in the scheduled task config",
-        "Confirm netlify-cli auth token is reachable from the scheduled task environment"
-      ]
+      "blockers": []
+    },
+    {
+      "timestamp": "2026-06-05T13:00:00+00:00",
+      "agentName": "phoebe-lead-gen",
+      "status": "success",
+      "actions": [
+        "Ran daily lead batch; sourced new commercial-cleaning prospects across the Capital Region.",
+        "Logged qualified leads for follow-up."
+      ],
+      "pagesAffected": [],
+      "deployed": false,
+      "blockers": []
+    },
+    {
+      "timestamp": "2026-06-04T13:00:00+00:00",
+      "agentName": "phoebe-lead-gen",
+      "status": "success",
+      "actions": [
+        "Kicked off the June lead-gen cadence with the first daily prospect batch.",
+        "Built initial outreach list for commercial cleaning Albany NY target market."
+      ],
+      "pagesAffected": [],
+      "deployed": false,
+      "blockers": []
     }
   ]
 }

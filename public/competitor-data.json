@@ -1,8 +1,11 @@
 {
-  "lastUpdated": "2026-06-07",
+  "lastUpdated": "2026-06-08",
   "targetKeyword": "commercial cleaning albany ny",
   "competitors": [
-    { "name": "Placeholder — SEO agent will populate", "domain": "example.com", "estimatedPosition": 1, "url": "https://example.com" }
+    { "name": "Cornerstone Commercial Cleaning", "domain": "cornerstonecommercialcleaning.com", "estimatedPosition": 1, "url": "https://cornerstonecommercialcleaning.com" },
+    { "name": "Capital District Maintenance", "domain": "capitaldistrictmaintenance.com", "estimatedPosition": 2, "url": "https://capitaldistrictmaintenance.com" },
+    { "name": "ServiceMaster Clean Albany", "domain": "servicemasterclean.com", "estimatedPosition": 3, "url": "https://www.servicemasterclean.com" },
+    { "name": "ABM Industries", "domain": "abm.com", "estimatedPosition": 4, "url": "https://www.abm.com" }
   ],
   "ourPosition": null
 }

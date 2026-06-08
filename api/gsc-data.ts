@@ -63,11 +63,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const startDate = new Date(Date.now() - parseInt(days) * 86400000).toISOString().split('T')[0];
   const dimension = type === 'pages' ? 'page' : 'query';
 
+  // Empty/awaiting payload helper — keeps the UI in an "awaiting data" state
+  // (never fabricated rows) when GSC is slow or not yet granting access.
+  const emptyPayload = (source: string, message?: string) => ({
+    site: siteUrl,
+    startDate,
+    endDate,
+    dimension,
+    totalRows: 0,
+    quickWins: 0,
+    rows: [] as never[],
+    source,
+    ...(message ? { message } : {}),
+  });
+
   try {
     const auth = getAuth();
     const sc = google.webmasters({ version: 'v3', auth });
 
-    const r = await sc.searchanalytics.query({
+    // 5-second timeout: if GSC is slow, surface "connecting" instead of hanging.
+    const queryPromise = sc.searchanalytics.query({
       siteUrl,
       requestBody: {
         startDate,
@@ -77,6 +92,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         startRow: 0,
       },
     });
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('gsc_timeout')), 5000)
+    );
+
+    let r;
+    try {
+      r = await Promise.race([queryPromise, timeout]);
+    } catch (e: unknown) {
+      if (String(e).includes('gsc_timeout')) {
+        return res.json(emptyPayload('timeout', 'Google Search Console took too long to respond — still connecting.'));
+      }
+      throw e;
+    }
 
     const rows = (r.data.rows || []).map((row) => ({
       key: row.keys?.[0] ?? '',
@@ -95,47 +123,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       totalRows: rows.length,
       quickWins: rows.filter((r) => r.isQuickWin).length,
       rows,
+      source: 'live',
     });
   } catch (e: unknown) {
     const msg = String(e);
-    // If permission denied, return realistic demo data so the dashboard is immediately usable
+    // No fabricated data. If access isn't granted yet, return an empty
+    // "awaiting" payload so the UI shows a connect prompt, not fake rankings.
     if (msg.includes('403') || msg.includes('Permission') || msg.includes('permission') || msg.includes('not_connected')) {
-      const demoQueries = [
-        { key: 'commercial cleaning albany ny', clicks: 34, impressions: 412, ctr: 8.3, position: 3.2, isQuickWin: false },
-        { key: 'property maintenance albany', clicks: 22, impressions: 289, ctr: 7.6, position: 4.1, isQuickWin: false },
-        { key: 'office cleaning service troy ny', clicks: 18, impressions: 340, ctr: 5.3, position: 6.8, isQuickWin: false },
-        { key: 'janitorial services schenectady', clicks: 14, impressions: 198, ctr: 7.1, position: 5.2, isQuickWin: false },
-        { key: 'building maintenance capital region', clicks: 11, impressions: 267, ctr: 4.1, position: 9.3, isQuickWin: true },
-        { key: 'commercial cleaning saratoga springs', clicks: 9, impressions: 183, ctr: 4.9, position: 8.7, isQuickWin: true },
-        { key: 'tps pro llc cleaning', clicks: 8, impressions: 44, ctr: 18.2, position: 2.1, isQuickWin: false },
-        { key: 'floor cleaning service albany', clicks: 7, impressions: 156, ctr: 4.5, position: 11.4, isQuickWin: true },
-        { key: 'total property solution', clicks: 6, impressions: 38, ctr: 15.8, position: 1.9, isQuickWin: false },
-        { key: 'cleaning company clifton park ny', clicks: 6, impressions: 211, ctr: 2.8, position: 14.6, isQuickWin: true },
-        { key: 'commercial floor waxing albany', clicks: 5, impressions: 142, ctr: 3.5, position: 13.2, isQuickWin: true },
-        { key: 'property upkeep colonie ny', clicks: 4, impressions: 98, ctr: 4.1, position: 16.8, isQuickWin: true },
-        { key: 'post construction cleaning ny', clicks: 4, impressions: 176, ctr: 2.3, position: 18.1, isQuickWin: true },
-        { key: 'restaurant cleaning service troy', clicks: 3, impressions: 89, ctr: 3.4, position: 15.9, isQuickWin: true },
-        { key: 'medical office cleaning capital region', clicks: 3, impressions: 124, ctr: 2.4, position: 19.3, isQuickWin: true },
-      ];
-      const demoPages = [
-        { key: 'https://tpsprollc.com/', clicks: 48, impressions: 621, ctr: 7.7, position: 4.8, isQuickWin: false },
-        { key: 'https://tpsprollc.com/services', clicks: 31, impressions: 445, ctr: 7.0, position: 6.1, isQuickWin: false },
-        { key: 'https://tpsprollc.com/contact', clicks: 19, impressions: 287, ctr: 6.6, position: 7.4, isQuickWin: false },
-        { key: 'https://tpsprollc.com/about', clicks: 12, impressions: 198, ctr: 6.1, position: 9.8, isQuickWin: true },
-        { key: 'https://tpsprollc.com/commercial-cleaning', clicks: 8, impressions: 341, ctr: 2.3, position: 13.5, isQuickWin: true },
-      ];
-      const rows = dimension === 'page' ? demoPages : demoQueries;
-      return res.json({
-        site: siteUrl,
-        startDate,
-        endDate,
-        dimension,
-        totalRows: rows.length,
-        quickWins: rows.filter((r) => r.isQuickWin).length,
-        rows,
-        isDemo: true,
-        demoMessage: 'Demo data — add the service account to GSC to see your live rankings',
-      });
+      return res.json(emptyPayload('awaiting', 'Grant the service account access in Google Search Console to see live rankings.'));
     }
     return res.status(500).json({ error: msg });
   }
