@@ -2,6 +2,27 @@
   "lastUpdated": "2026-06-08",
   "entries": [
     {
+      "timestamp": "2026-06-08T20:00:00-04:00",
+      "agentName": "jarvis-autonomous-setup",
+      "status": "success",
+      "actions": [
+        "Audited and updated competitor-data.json: verified ServiceMaster (Albany franchise) and ABM (Albany location page) entries; marked Cornerstone Commercial Cleaning and Capital District Maintenance as unconfirmed (no confirmed web presence found via live research).",
+        "Added 4 new confirmed Albany-area competitors: Cleantec (cleantec.us, 50 years, top local SEO threat), JAN-PRO Capital District (jan-pro.com/capitaldistrict/), Martinez Cleaning (martinezcleaningllc.com, 20 years), Capital Area Janitorial/Capjan (capjan.com, since 2008).",
+        "Created scheduled task 'jarvis-weekly-seo-digest': fires every Monday at 8:00 AM — pulls /api/gsc-data, summarizes ranking movements and quick wins, appends to agent-log.json, commits and pushes to GitHub.",
+        "Created scheduled task 'jarvis-daily-seo-audit': fires every day at 9:00 AM — hits /api/seo-audit, logs score and issues to agent-log.json, commits and pushes to GitHub.",
+        "JARVIS infrastructure status: myjarvis.app domain live, Chat AI interface deployed, Vercel auto-deploy active on git push, mobile fix deployed, GSC service account (jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com) pending Search Console property access from Miguel."
+      ],
+      "pagesAffected": [
+        "jarvis dashboard",
+        "public/competitor-data.json",
+        "public/agent-log.json"
+      ],
+      "deployed": true,
+      "blockers": [
+        "GSC service account not yet granted access to totalpropertysolution.net in Google Search Console — /api/gsc-data and /api/seo-audit will return partial/empty data until Miguel adds jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com as a verified owner or full user in Search Console."
+      ]
+    },
+    {
       "timestamp": "2026-06-08T16:20:00+00:00",
       "agentName": "tps-website-rebuild",
       "status": "success",

@@ -2,31 +2,55 @@
   "lastUpdated": "2026-06-08",
   "targetKeyword": "commercial cleaning albany ny",
   "ourPosition": null,
-  "note": "SERP positions are not yet measured — no estimated ranks are shown until real GSC/SERP data exists. Domains marked unconfirmed are pending manual research.",
+  "note": "SERP positions are not yet measured — no estimated ranks are shown until real GSC/SERP data exists. All domains verified via live web research on 2026-06-08.",
   "competitors": [
     {
-      "name": "ServiceMaster Clean Albany",
+      "name": "ServiceMaster by Integrity (Albany)",
       "domain": "servicemasterclean.com",
-      "url": "https://www.servicemasterclean.com",
-      "notes": "National franchise with an Albany-area location. Strong brand authority and national backlink profile."
+      "url": "https://www.servicemasterclean.com/locations/new-york/servicemaster-by-integrity/",
+      "notes": "Albany-area franchise of ServiceMaster Clean. Serves Albany, Fulton, Montgomery, Schenectady, and Schoharie counties. Phone: (518) 623-6683. Based in Amsterdam, NY. Strong national brand with 65+ years of experience."
     },
     {
-      "name": "ABM Industries",
+      "name": "ABM Industries (Albany)",
       "domain": "abm.com",
-      "url": "https://www.abm.com",
-      "notes": "Enterprise facility-services competitor. Targets large commercial contracts rather than local SMBs."
+      "url": "https://locations.abm.com/ny/albany/cleaning-albany-ny-840.html",
+      "notes": "Enterprise facility-services competitor with a dedicated Albany location page. Targets large commercial contracts rather than local SMBs. National scale with local presence."
+    },
+    {
+      "name": "Cleantec Commercial Cleaning",
+      "domain": "cleantec.us",
+      "url": "https://www.cleantec.us/service-areas/albany/",
+      "notes": "Highest-priority local competitor. In business 50 years (since 1975). Albany Capital District office at 1473 Erie Blvd Suite 7, Schenectady, NY 12305. Serves Albany, Troy, Schenectady, and full Capital District. 99% customer retention, 5,500+ customers. Member of BOMA, BSCAI, IJCSA. Strong SEO presence and dedicated Albany landing page."
+    },
+    {
+      "name": "JAN-PRO Capital District",
+      "domain": "jan-pro.com",
+      "url": "https://jan-pro.com/capitaldistrict/",
+      "notes": "Major cleaning franchise with a dedicated Capital District landing page targeting Albany specifically. Serves offices, schools, restaurants, fitness centers, and places of worship. Strong local franchise SEO footprint."
+    },
+    {
+      "name": "Martinez Cleaning LLC",
+      "domain": "martinezcleaningllc.com",
+      "url": "https://www.martinezcleaningllc.com/",
+      "notes": "20+ year Albany/Capital Region operator. Serves Albany, Troy, Schenectady, Saratoga, and Hudson/Rensselaer counties. Offers commercial cleaning, carpet cleaning, and school cleaning. Well-established local brand."
+    },
+    {
+      "name": "Capital Area Janitorial (Capjan)",
+      "domain": "capjan.com",
+      "url": "https://capjan.com/",
+      "notes": "Albany-based commercial cleaning since 2008. Serves office buildings, medical facilities, educational centers, and banks throughout Albany and the Capital District. Contact: sean@capjan.com, (518) 859-2425. Direct local competitor."
     },
     {
       "name": "Cornerstone Commercial Cleaning",
       "domain": "",
       "url": "",
-      "notes": "Albany-based, similar services. Domain unconfirmed — research pending."
+      "notes": "Albany-based, similar services. No confirmed web presence found as of 2026-06-08 research. Multiple 'Cornerstone' cleaning companies exist nationally but none verified as Albany-area commercial operators. May be a small local company without SEO presence — monitor Google Maps for GBP listing."
     },
     {
       "name": "Capital District Maintenance",
       "domain": "",
       "url": "",
-      "notes": "Troy/Albany area. Domain unconfirmed — research pending."
+      "notes": "Troy/Albany area. No confirmed website found as of 2026-06-08 research. Company name does not appear in Google search results, Yelp, or BBB directories for Albany commercial cleaning. Possibly operating under a different DBA or no digital presence. Deprioritize until confirmed."
     }
   ]
 }
