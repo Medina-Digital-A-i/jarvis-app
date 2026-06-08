@@ -17,9 +17,18 @@ interface CompetitorData {
   note?: string;
 }
 
+interface GscRow {
+  key: string;
+  position: number;
+}
+
 export default function Competitors() {
   const [data, setData] = useState<CompetitorData | null>(null);
   const [loading, setLoading] = useState(true);
+  // Our SERP position is pulled LIVE from Google Search Console (matched on the
+  // target keyword), not from the static competitor-data.json file.
+  const [livePosition, setLivePosition] = useState<number | null>(null);
+  const [gscChecked, setGscChecked] = useState(false);
 
   useEffect(() => {
     fetch('/competitor-data.json', { cache: 'no-store' })
@@ -28,6 +37,29 @@ export default function Competitors() {
       .catch(() => null)
       .finally(() => setLoading(false));
   }, []);
+
+  // Once we know the target keyword, look up our live position in GSC.
+  const targetKeyword = data?.targetKeyword;
+  useEffect(() => {
+    if (!targetKeyword) return;
+    let cancelled = false;
+    fetch('/api/gsc-data?type=queries&days=90')
+      .then((r) => r.json())
+      .then((j) => {
+        if (cancelled) return;
+        const rows: GscRow[] = j.rows ?? [];
+        const target = targetKeyword.toLowerCase().trim();
+        const exact = rows.find((r) => r.key.toLowerCase().trim() === target);
+        const partial = exact ?? rows.find((r) => r.key.toLowerCase().includes(target));
+        setLivePosition(partial ? Math.round(partial.position) : null);
+      })
+      .catch(() => { if (!cancelled) setLivePosition(null); })
+      .finally(() => { if (!cancelled) setGscChecked(true); });
+    return () => { cancelled = true; };
+  }, [targetKeyword]);
+
+  // Prefer the live GSC position; fall back to the file only if GSC has no row.
+  const ourPosition = livePosition ?? data?.ourPosition ?? null;
 
   return (
     <>
@@ -44,20 +76,22 @@ export default function Competitors() {
             <div className="text-sm font-semibold text-white">{data.targetKeyword}</div>
           </div>
           <div className="rounded-xl border border-white/8 bg-white/[0.03] px-4 py-4">
-            <div className="text-xs text-white/40 uppercase tracking-wide mb-1">Our Position</div>
+            <div className="text-xs text-white/40 uppercase tracking-wide mb-1">Our Position · Live GSC</div>
             <div className={`text-2xl font-bold ${
-              data.ourPosition === null
+              ourPosition === null
                 ? 'text-white/30'
-                : data.ourPosition <= 3
+                : ourPosition <= 3
                 ? 'text-emerald-400'
-                : data.ourPosition <= 10
+                : ourPosition <= 10
                 ? 'text-amber-400'
                 : 'text-red-400'
             }`}>
-              {data.ourPosition ?? '—'}
+              {ourPosition ?? '—'}
             </div>
-            {data.ourPosition === null && (
-              <div className="text-xs text-white/25 mt-1">Awaiting GSC</div>
+            {ourPosition === null && (
+              <div className="text-xs text-white/25 mt-1">
+                {gscChecked ? 'Keyword not in top 100' : 'Checking GSC…'}
+              </div>
             )}
           </div>
           <div className="rounded-xl border border-white/8 bg-white/[0.03] px-4 py-4">

@@ -7,8 +7,8 @@ export default function TopBar() {
   const [clock, setClock] = useState(formatNow());
   const [health] = useSiteHealth();
   const navigate = useNavigate();
-  const score = health?.score ?? 92;
-  const scoreColor = score >= 80 ? 'text-success' : score >= 60 ? 'text-amber' : 'text-alert';
+  const score = health?.score ?? null;
+  const scoreColor = score == null ? 'text-ink-dim' : score >= 80 ? 'text-success' : score >= 60 ? 'text-amber' : 'text-alert';
   useEffect(() => {
     const id = setInterval(() => setClock(formatNow()), 1000);
     return () => clearInterval(id);
@@ -32,7 +32,7 @@ export default function TopBar() {
       <div className="hidden lg:flex items-center gap-3">
         <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg border border-line bg-bg-mid/60">
           <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-ink-dim">Health</span>
-          <span className="font-mono text-[15px] font-bold text-success leading-none">92</span>
+          <span className={`font-mono text-[15px] font-bold leading-none ${scoreColor}`}>{score ?? '--'}</span>
           <span className="font-mono text-[10px] text-ink-dim">/100</span>
         </div>
         <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-line bg-bg-mid/60 font-mono text-[10px] text-ink-soft">

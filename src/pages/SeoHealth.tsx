@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import PageHead from '@/components/PageHead';
 import { Panel, PanelHead } from '@/components/Panel';
+import { setSiteHealth } from '@/lib/store';
 
 type IssueType = 'error' | 'warning' | 'ok';
 
@@ -80,7 +81,14 @@ export default function SeoHealth() {
       })
     );
     setResults(fetched);
-    setAudited(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' EDT');
+    const now = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' EDT';
+    setAudited(now);
+    // Cache the live average score so the TopBar health badge reflects real data.
+    const ok = fetched.filter(Boolean) as AuditResult[];
+    if (ok.length > 0) {
+      const avg = Math.round(ok.reduce((a, r) => a + (r.score ?? 0), 0) / ok.length);
+      setSiteHealth(avg, now);
+    }
     setLoading(false);
   };
 
