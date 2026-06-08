@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import PageHead from '@/components/PageHead';
 import { Panel, PanelHead } from '@/components/Panel';
+import SeoActionsPanel from '@/components/SeoActionsPanel';
 
 interface GscRow {
   key: string;
@@ -245,6 +246,9 @@ export default function Rankings() {
               </>
             )}
           </Panel>
+
+          {/* Autonomous SEO action engine */}
+          <SeoActionsPanel />
         </>
       )}
     </>
