@@ -29,7 +29,10 @@ export default function SideNav({ collapsed = false }: { collapsed?: boolean }) 
   const [, setCollapsed] = useSidebarCollapsed();
 
   return (
-    <aside className="border-r border-line p-3 overflow-y-auto bg-bg-mid/40 flex flex-col">
+    <aside
+      className="hidden lg:flex shrink-0 border-r border-line p-3 overflow-y-auto bg-bg-mid/40 flex-col transition-[width] duration-200"
+      style={{ width: collapsed ? 72 : 248 }}
+    >
       {/* Collapse toggle */}
       <button
         onClick={() => setCollapsed(!collapsed)}

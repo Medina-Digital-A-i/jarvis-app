@@ -15,9 +15,9 @@ export default function TopBar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-20 flex items-center gap-5 px-6 py-3 border-b border-line backdrop-blur-md bg-bg-deep/80">
+    <header className="sticky top-0 z-20 flex items-center gap-3 sm:gap-5 px-3 sm:px-6 py-3 border-b border-line backdrop-blur-md bg-bg-deep/80">
       <div
-        className="flex items-center gap-2.5 text-[20px] font-bold tracking-[0.18em] text-white"
+        className="shrink-0 flex items-center gap-2.5 text-[20px] font-bold tracking-[0.18em] text-white"
         style={{ textShadow: '0 0 14px rgba(59,130,246,0.5)' }}
       >
         <div className="reactor" />
@@ -47,7 +47,7 @@ export default function TopBar() {
         <button className="btn btn-primary" onClick={() => navigate('/chat')}>✦ Ask JARVIS</button>
       </div>
 
-      <div className="flex items-center gap-2.5 px-2 py-1 pl-3 border border-line rounded-full text-[12px] text-ink">
+      <div className="shrink-0 flex items-center gap-2.5 px-2 py-1 pl-3 border border-line rounded-full text-[12px] text-ink">
         <div
           className="w-7 h-7 rounded-full grid place-items-center font-mono font-extrabold text-white text-[13px]"
           style={{ background: 'linear-gradient(135deg, #3B82F6, #1D4ED8)' }}

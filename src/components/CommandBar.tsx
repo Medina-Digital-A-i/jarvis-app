@@ -27,7 +27,7 @@ export default function CommandBar() {
 
   return (
     <div
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5 px-4 py-3 rounded-full border border-blue/40 backdrop-blur-md bg-bg-mid/90"
+      className="fixed bottom-[5.5rem] lg:bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5 px-4 py-3 rounded-full border border-blue/40 backdrop-blur-md bg-bg-mid/90"
       style={{
         width: 560,
         maxWidth: 'calc(100vw - 48px)',
