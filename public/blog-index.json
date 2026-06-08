@@ -3,46 +3,53 @@
   "nextScheduledTopic": "Floor stripping & waxing for Capital Region offices",
   "posts": [
     {
-      "title": "How Much Does Commercial Cleaning Cost in Albany, NY?",
-      "slug": "commercial-cleaning-cost-albany",
+      "title": "How to Choose a Commercial Cleaning Company in Albany, NY",
+      "slug": "blog-choose-commercial-cleaning-company-albany",
       "publishedDate": "2026-06-02",
+      "targetKeyword": "choose commercial cleaning company albany",
+      "wordCount": 3828
+    },
+    {
+      "title": "Commercial Cleaning Costs in Albany, NY — 2026 Guide",
+      "slug": "blog-commercial-cleaning-cost-albany",
+      "publishedDate": "2026-05-29",
       "targetKeyword": "commercial cleaning cost albany",
-      "wordCount": 0
+      "wordCount": 4452
     },
     {
-      "title": "The Property Manager's Guide to Commercial Cleaning",
-      "slug": "property-manager-cleaning-guide",
-      "publishedDate": "2026-05-26",
-      "targetKeyword": "property manager cleaning guide",
-      "wordCount": 0
+      "title": "Make-Ready Cleaning Albany NY — The Complete Guide",
+      "slug": "blog-make-ready-cleaning-guide",
+      "publishedDate": "2026-05-29",
+      "targetKeyword": "make ready cleaning albany",
+      "wordCount": 4235
     },
     {
-      "title": "Post-Construction Cleaning: What to Expect",
-      "slug": "post-construction-cleaning-what-to-expect",
-      "publishedDate": "2026-05-19",
-      "targetKeyword": "post construction cleaning",
-      "wordCount": 0
+      "title": "Post-Construction Cleaning Albany NY — What's Included",
+      "slug": "blog-post-construction-cleaning-what-to-expect",
+      "publishedDate": "2026-05-29",
+      "targetKeyword": "post construction cleaning albany",
+      "wordCount": 4398
     },
     {
-      "title": "Student Housing Turnover: What Cleaning Really Costs",
-      "slug": "student-turnover-cost",
-      "publishedDate": "2026-05-12",
-      "targetKeyword": "student turnover cleaning cost",
-      "wordCount": 0
-    },
-    {
-      "title": "Make-Ready Cleaning Guide for Rental Turnovers",
-      "slug": "make-ready-cleaning-guide",
-      "publishedDate": "2026-05-05",
-      "targetKeyword": "make ready cleaning",
-      "wordCount": 0
-    },
-    {
-      "title": "Commercial Cleaning in Saratoga Springs, NY",
-      "slug": "commercial-cleaning-saratoga",
-      "publishedDate": "2026-04-28",
+      "title": "Commercial Cleaning in Saratoga: 2026 Guide",
+      "slug": "blog-commercial-cleaning-saratoga",
+      "publishedDate": "2026-05-29",
       "targetKeyword": "commercial cleaning saratoga",
-      "wordCount": 0
+      "wordCount": 1551
+    },
+    {
+      "title": "Property Manager's Cleaning Guide",
+      "slug": "blog-property-manager-cleaning-guide",
+      "publishedDate": "2026-05-29",
+      "targetKeyword": "property manager cleaning guide",
+      "wordCount": 1611
+    },
+    {
+      "title": "Student Housing Turnover Costs: What PMs Pay",
+      "slug": "blog-student-turnover-cost",
+      "publishedDate": "2026-05-24",
+      "targetKeyword": "student housing turnover cost",
+      "wordCount": 1856
     }
   ]
 }

@@ -1,11 +1,32 @@
 {
   "lastUpdated": "2026-06-08",
   "targetKeyword": "commercial cleaning albany ny",
+  "ourPosition": null,
+  "note": "SERP positions are not yet measured — no estimated ranks are shown until real GSC/SERP data exists. Domains marked unconfirmed are pending manual research.",
   "competitors": [
-    { "name": "Cornerstone Commercial Cleaning", "domain": "cornerstonecommercialcleaning.com", "estimatedPosition": 1, "url": "https://cornerstonecommercialcleaning.com" },
-    { "name": "Capital District Maintenance", "domain": "capitaldistrictmaintenance.com", "estimatedPosition": 2, "url": "https://capitaldistrictmaintenance.com" },
-    { "name": "ServiceMaster Clean Albany", "domain": "servicemasterclean.com", "estimatedPosition": 3, "url": "https://www.servicemasterclean.com" },
-    { "name": "ABM Industries", "domain": "abm.com", "estimatedPosition": 4, "url": "https://www.abm.com" }
-  ],
-  "ourPosition": null
+    {
+      "name": "ServiceMaster Clean Albany",
+      "domain": "servicemasterclean.com",
+      "url": "https://www.servicemasterclean.com",
+      "notes": "National franchise with an Albany-area location. Strong brand authority and national backlink profile."
+    },
+    {
+      "name": "ABM Industries",
+      "domain": "abm.com",
+      "url": "https://www.abm.com",
+      "notes": "Enterprise facility-services competitor. Targets large commercial contracts rather than local SMBs."
+    },
+    {
+      "name": "Cornerstone Commercial Cleaning",
+      "domain": "",
+      "url": "",
+      "notes": "Albany-based, similar services. Domain unconfirmed — research pending."
+    },
+    {
+      "name": "Capital District Maintenance",
+      "domain": "",
+      "url": "",
+      "notes": "Troy/Albany area. Domain unconfirmed — research pending."
+    }
+  ]
 }

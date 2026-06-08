@@ -5,8 +5,8 @@ import { Panel, PanelHead } from '@/components/Panel';
 interface Competitor {
   name: string;
   domain: string;
-  estimatedPosition: number;
   url: string;
+  notes?: string;
 }
 
 interface CompetitorData {
@@ -14,16 +14,8 @@ interface CompetitorData {
   targetKeyword: string;
   competitors: Competitor[];
   ourPosition: number | null;
+  note?: string;
 }
-
-const posBadge = (pos: number) =>
-  pos === 1
-    ? 'text-amber-400 border-amber-400/30 bg-amber-400/10'
-    : pos <= 3
-    ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10'
-    : pos <= 10
-    ? 'text-sky-400 border-sky-400/30 bg-sky-400/10'
-    : 'text-white/40 border-white/10 bg-white/5';
 
 export default function Competitors() {
   const [data, setData] = useState<CompetitorData | null>(null);
@@ -64,6 +56,9 @@ export default function Competitors() {
             }`}>
               {data.ourPosition ?? '—'}
             </div>
+            {data.ourPosition === null && (
+              <div className="text-xs text-white/25 mt-1">Awaiting GSC</div>
+            )}
           </div>
           <div className="rounded-xl border border-white/8 bg-white/[0.03] px-4 py-4">
             <div className="text-xs text-white/40 uppercase tracking-wide mb-1">Data As Of</div>
@@ -96,35 +91,35 @@ export default function Competitors() {
                 {data.competitors.map((comp, i) => (
                   <div
                     key={i}
-                    className={`flex items-center gap-4 px-5 py-4 ${
+                    className={`flex items-start gap-4 px-5 py-4 ${
                       i < data.competitors.length - 1 ? 'border-b border-white/5' : ''
                     }`}
                   >
-                    <div
-                      className={`w-9 h-9 rounded-md flex items-center justify-center font-mono font-bold text-sm border flex-shrink-0 ${posBadge(comp.estimatedPosition)}`}
-                    >
-                      {comp.estimatedPosition}
+                    <div className="w-9 h-9 rounded-md flex items-center justify-center font-bold text-sm border border-white/10 bg-white/5 text-white/50 flex-shrink-0">
+                      {comp.name.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-semibold text-white">{comp.name}</div>
-                      <a
-                        href={comp.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-xs text-white/30 hover:text-white/60 transition font-mono"
-                      >
-                        {comp.domain}
-                      </a>
-                    </div>
-                    <div className="flex-shrink-0">
-                      <span className={`text-xs font-mono px-2 py-0.5 rounded border ${posBadge(comp.estimatedPosition)}`}>
-                        #{comp.estimatedPosition}
-                      </span>
+                      {comp.domain ? (
+                        <a
+                          href={comp.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-xs text-white/30 hover:text-white/60 transition font-mono"
+                        >
+                          {comp.domain}
+                        </a>
+                      ) : (
+                        <span className="text-xs text-white/20 font-mono">domain unconfirmed</span>
+                      )}
+                      {comp.notes && (
+                        <div className="text-xs text-white/40 mt-1 leading-relaxed">{comp.notes}</div>
+                      )}
                     </div>
                   </div>
                 ))}
                 <div className="px-5 py-3 border-t border-white/5 text-xs text-white/25 font-mono">
-                  Last updated by SEO agent · {data.lastUpdated}
+                  {data.note ?? `Last updated · ${data.lastUpdated}`}
                 </div>
               </div>
             )}
