@@ -1,6 +1,27 @@
 {
-  "lastUpdated": "2026-06-08",
+  "lastUpdated": "2026-06-09",
   "entries": [
+    {
+      "timestamp": "2026-06-09T09:00:00-04:00",
+      "agentName": "jarvis-daily-seo-audit",
+      "status": "partial",
+      "actions": [
+        "Ran SEO audit against totalpropertysolution.net",
+        "GET https://myjarvis.app/api/seo-audit returned empty response — no score data available",
+        "Score: N/A (API returned no data)",
+        "Critical issues: unknown",
+        "Warnings: unknown"
+      ],
+      "seoAuditScore": null,
+      "criticalIssues": [],
+      "topWarnings": [],
+      "newIssuesSinceLastRun": [],
+      "pagesAffected": ["totalpropertysolution.net"],
+      "deployed": false,
+      "blockers": [
+        "GSC service account not yet authorized — /api/seo-audit returned empty response. Add jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com as a verified owner or full user in Google Search Console for totalpropertysolution.net to enable live audit data."
+      ]
+    },
     {
       "timestamp": "2026-06-08T20:00:00-04:00",
       "agentName": "jarvis-autonomous-setup",
