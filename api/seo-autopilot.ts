@@ -36,6 +36,9 @@ import {
   appendAgentLog,
 } from './_lib/github';
 
+// Give the function room to read ~30 pages and commit fixes (Hobby allows 60s).
+export const config = { maxDuration: 60 };
+
 // --- business identity (drives the generated copy) -------------------------
 const BRAND = 'TPS Pro LLC';
 const BRAND_SHORT = 'TPS Pro';
@@ -247,22 +250,45 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }> = [];
     let committed = 0;
 
-    for (const slug of pages) {
-      if (!dryRun && committed >= maxChanges) {
-        results.push({ slug, path: slugToPath(slug), fixes: [], skipped: [{ field: 'cap', detail: `skipped — hit maxChanges=${maxChanges}` }], committed: false });
+    // Read every page up front, in bounded-concurrency batches. Sequential reads
+    // over ~30 pages blow past the function timeout; parallel reads finish in ~2s.
+    const CONCURRENCY = 8;
+    const files: Array<{ slug: string; path: string; file: Awaited<ReturnType<typeof getFile>>; error?: string }> = [];
+    for (let i = 0; i < pages.length; i += CONCURRENCY) {
+      const batch = pages.slice(i, i + CONCURRENCY);
+      const read = await Promise.all(
+        batch.map(async (slug) => {
+          const path = slugToPath(slug);
+          try {
+            return { slug, path, file: await getFile(SITE_REPO, path) };
+          } catch (e: unknown) {
+            return { slug, path, file: null, error: String(e) };
+          }
+        })
+      );
+      files.push(...read);
+    }
+
+    // Apply fixes. Commits stay sequential and stop once we hit the per-run cap.
+    for (const { slug, path, file, error } of files) {
+      if (error) {
+        results.push({ slug, path, fixes: [], skipped: [], committed: false, error });
         continue;
       }
-      const path = slugToPath(slug);
-      try {
-        const file = await getFile(SITE_REPO, path);
-        if (!file) {
-          results.push({ slug, path, fixes: [], skipped: [], committed: false, error: 'page not found in repo' });
-          continue;
-        }
-        const { html, fixes, skipped } = fixPage(slug, file.content);
-        const changed = html !== file.content && fixes.length > 0;
+      if (!file) {
+        results.push({ slug, path, fixes: [], skipped: [], committed: false, error: 'page not found in repo' });
+        continue;
+      }
+      const { html, fixes, skipped } = fixPage(slug, file.content);
+      const changed = html !== file.content && fixes.length > 0;
 
-        if (changed && !dryRun) {
+      if (changed && !dryRun && committed >= maxChanges) {
+        results.push({ slug, path, fixes, skipped: [...skipped, { field: 'cap', detail: `deferred — hit maxChanges=${maxChanges}, will fix next run` }], committed: false });
+        continue;
+      }
+
+      if (changed && !dryRun) {
+        try {
           const summary = fixes.map((f) => f.field).join(', ');
           const commit = await putFile(
             SITE_REPO,
@@ -273,11 +299,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           );
           committed++;
           results.push({ slug, path, fixes, skipped, committed: true, commit: commit.commitSha.slice(0, 7) });
-        } else {
-          results.push({ slug, path, fixes, skipped, committed: false });
+        } catch (e: unknown) {
+          results.push({ slug, path, fixes, skipped, committed: false, error: String(e) });
         }
-      } catch (e: unknown) {
-        results.push({ slug, path, fixes: [], skipped: [], committed: false, error: String(e) });
+      } else {
+        results.push({ slug, path, fixes, skipped, committed: false });
       }
     }
 
