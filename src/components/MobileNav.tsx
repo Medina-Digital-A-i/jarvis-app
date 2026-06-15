@@ -8,10 +8,9 @@ type Item = { to: string; label: string; ico: string };
 const ITEMS: Item[] = [
   { to: '/', label: 'Dashboard', ico: '📊' },
   { to: '/get-to-1', label: 'To #1', ico: '🏆' },
-  { to: '/seo-health', label: 'Health', ico: '⊕' },
-  { to: '/competitors', label: 'Rivals', ico: '🏁' },
-  { to: '/blog-manager', label: 'Blog', ico: '✎' },
+  { to: '/console', label: 'Console', ico: '⌨️' },
   { to: '/agents', label: 'Agents', ico: '🛰️' },
+  { to: '/blog-manager', label: 'Blog', ico: '✎' },
   { to: '/agent-activity', label: 'Activity', ico: '🤖' },
 ];
 
