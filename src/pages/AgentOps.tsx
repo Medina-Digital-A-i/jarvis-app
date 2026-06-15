@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import PageHead from '@/components/PageHead';
+import { useActiveSiteConfig, getActionToken, setActionToken } from '@/lib/store';
 
 type State = 'working' | 'planning' | 'waiting' | 'idle' | 'error' | 'listening';
 
@@ -176,6 +177,36 @@ export default function AgentOps() {
   const now = tick;
   const agents = snap?.agents ?? [];
   const s = snap?.summary;
+  const site = useActiveSiteConfig();
+  const [running, setRunning] = useState(false);
+  const [runMsg, setRunMsg] = useState<string | null>(null);
+
+  const runNow = async () => {
+    if (!site) return;
+    let token = getActionToken();
+    if (!token) {
+      const t = window.prompt('Paste your JARVIS action token to run agents:');
+      if (!t) return;
+      setActionToken(t); token = t;
+    }
+    setRunning(true); setRunMsg(null);
+    try {
+      const r = await fetch(`/api/seo-autopilot?site=${encodeURIComponent(site.id)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-jarvis-token': token },
+        body: JSON.stringify({ maxChanges: 10 }),
+      });
+      const j = await r.json();
+      if (r.status === 401) setRunMsg('Action token rejected.');
+      else if (j.auditOnly) setRunMsg(j.message);
+      else if (j.ok) setRunMsg(`✅ ${site.label}: fixed ${j.totalFixes} issue(s) across ${j.pagesFixed} page(s).`);
+      else setRunMsg(j.error || 'Run failed.');
+    } catch (e) {
+      setRunMsg(String(e));
+    } finally {
+      setRunning(false);
+    }
+  };
 
   return (
     <>
@@ -210,12 +241,18 @@ export default function AgentOps() {
         title="Agent Operations"
         meta="Live · what every agent is doing right now"
         actions={
-          <span className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.12em] uppercase text-ink-dim">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-led-pulse" />
-            {lastFetch ? 'live · 15s refresh' : 'connecting…'}
-          </span>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.12em] uppercase text-ink-dim">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-led-pulse" />
+              {lastFetch ? 'live · 15s refresh' : 'connecting…'}
+            </span>
+            <button className="btn btn-primary" onClick={runNow} disabled={running}>
+              {running ? 'Running…' : `⚡ Run ${site?.label ?? 'now'}`}
+            </button>
+          </div>
         }
       />
+      {runMsg && <div className="mb-4 -mt-2 text-[12.5px] text-ink bg-blue/10 border border-blue/30 rounded-lg px-4 py-2">{runMsg}</div>}
 
       {loading ? (
         <div className="flex items-center justify-center py-20">

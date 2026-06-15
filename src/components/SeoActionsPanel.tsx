@@ -132,7 +132,7 @@ export default function SeoActionsPanel() {
 
   const fmtTs = (ts: string) => {
     try {
-      return new Date(ts).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) + ' UTC';
+      return new Date(ts).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' ET';
     } catch {
       return ts;
     }

@@ -4,6 +4,7 @@ import Rankings from '@/pages/Rankings';
 import SeoHealth from '@/pages/SeoHealth';
 import AgentActivity from '@/pages/AgentActivity';
 import AgentOps from '@/pages/AgentOps';
+import GetToOne from '@/pages/GetToOne';
 import BlogManager from '@/pages/BlogManager';
 import Competitors from '@/pages/Competitors';
 import Settings from '@/pages/Settings';
@@ -17,6 +18,7 @@ export default function App() {
         <Route index element={<Rankings />} />
 
         {/* SEO Command Center */}
+        <Route path="/get-to-1" element={<GetToOne />} />
         <Route path="/agents" element={<AgentOps />} />
         <Route path="/seo-health" element={<SeoHealth />} />
         <Route path="/agent-activity" element={<AgentActivity />} />

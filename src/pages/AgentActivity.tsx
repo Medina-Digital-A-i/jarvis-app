@@ -41,10 +41,10 @@ function formatTs(ts: string) {
     return new Date(ts).toLocaleString('en-US', {
       month: 'short',
       day: 'numeric',
-      hour: '2-digit',
+      hour: 'numeric',
       minute: '2-digit',
-      timeZone: 'UTC',
-    }) + ' UTC';
+      timeZone: 'America/New_York',
+    }) + ' ET';
   } catch {
     return ts;
   }
