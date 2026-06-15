@@ -5,7 +5,7 @@
 //
 //   GET /api/agent-status  ->  { now, agents: [...], summary: {...} }
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { cors } from './_lib/github.js';
+import { cors, getFile, JARVIS_REPO } from './_lib/github.js';
 import { readHeartbeats, STALE_MS } from './_lib/heartbeat.js';
 
 export const config = { maxDuration: 30 };
@@ -26,7 +26,6 @@ interface AgentDef {
 const AGENTS: AgentDef[] = [
   { name: 'jarvis-seo-autopilot', label: 'SEO autopilot', role: 'Audits + fixes on-page SEO on the live site', trigger: 'on-demand', schedule: 'On demand · runs in the daily loop', icon: '🛠️' },
   { name: 'jarvis-daily-seo-audit', label: 'Daily SEO audit', role: 'Audits the site, then triggers the autopilot', trigger: 'scheduled', schedule: 'Every day · 9:00 AM ET', icon: '🔍', cron: 'daily' },
-  { name: 'jarvis-weekly-seo-digest', label: 'Weekly digest', role: 'Summarizes ranking movers + quick wins', trigger: 'scheduled', schedule: 'Mondays · 8:00 AM ET', icon: '📈', cron: 'weekly' },
   { name: 'jarvis-seo-action-engine', label: 'Action engine', role: 'Turns Search Console data into an action plan', trigger: 'on-demand', schedule: 'On demand', icon: '🎯' },
   { name: 'jarvis-rank-tracker', label: 'Rank tracker', role: 'Tracks keyword rankings from Search Console', trigger: 'live', schedule: 'Live · Search Console', icon: '📈' },
   { name: 'jarvis-blog-publisher', label: 'Blog publisher', role: 'Writes + publishes blog posts to the site', trigger: 'on-demand', schedule: 'On demand', icon: '✍️' },
@@ -58,8 +57,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const now = Date.now();
 
   const [log, beats, rank] = await Promise.all([
-    fetch(`${base}/agent-log.json`, { headers: { 'cache-control': 'no-cache' } })
-      .then((r) => r.json())
+    // Read the agent log LIVE from the repo (not the build-time static file),
+    // so fresh agent runs show within seconds instead of after a redeploy.
+    getFile(JARVIS_REPO, 'public/agent-log.json')
+      .then((f) => (f ? JSON.parse(f.content) : { entries: [] }))
       .catch(() => ({ entries: [] })),
     readHeartbeats(),
     // Live Search Console health for the rank tracker.
