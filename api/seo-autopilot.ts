@@ -161,8 +161,14 @@ function fixPage(slug: string, html: string): { html: string; fixes: Fix[]; skip
   }
 
   // --- robots: flip noindex -> index,follow --------------------------------
+  // EXCEPT dedicated ad/PPC landing pages (slug ends in "-lp"), which are
+  // intentionally noindex to avoid cannibalizing the main service pages they
+  // mirror. Never touch their robots tag.
+  const isLandingPage = /-lp$/i.test(slug.replace(/\.html$/i, ''));
   const robots = get(out, /<meta[^>]+name=["']robots["'][^>]+content=["']([^"']*)/i);
-  if (robots && /noindex/i.test(robots)) {
+  if (isLandingPage && robots && /noindex/i.test(robots)) {
+    skipped.push({ field: 'robots', detail: 'noindex left in place — ad landing page (-lp), kept out of organic index on purpose' });
+  } else if (robots && /noindex/i.test(robots)) {
     out = out.replace(
       /(<meta[^>]+name=["']robots["'][^>]+content=["'])[\s\S]*?(["'])/i,
       `$1index, follow$2`
