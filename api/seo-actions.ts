@@ -11,7 +11,7 @@
 //   - position > 30                     -> "content gap" -> queue a blog post
 //   - known page with no impressions    -> "review flag"
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { cors, readBody, ghToken, SITE_REPO, appendAgentLog } from './_lib/github';
+import { cors, readBody, ghToken, SITE_REPO, appendAgentLog } from './_lib/github.js';
 
 interface Row {
   key: string;

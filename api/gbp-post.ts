@@ -10,7 +10,7 @@
 //               GBP_ACCOUNT_ID, GBP_LOCATION_ID
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { google } from 'googleapis';
-import { cors, readBody, requireActionToken, appendAgentLog } from './_lib/github';
+import { cors, readBody, requireActionToken, appendAgentLog } from './_lib/github.js';
 
 const VALID_CTA = new Set(['BOOK', 'ORDER', 'SHOP', 'LEARN_MORE', 'SIGN_UP', 'CALL']);
 

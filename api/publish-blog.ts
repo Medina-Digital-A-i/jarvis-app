@@ -18,7 +18,7 @@ import {
   requireActionToken,
   readBody,
   appendAgentLog,
-} from './_lib/github';
+} from './_lib/github.js';
 
 const SITE = 'https://totalpropertysolution.net';
 

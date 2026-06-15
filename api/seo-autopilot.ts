@@ -34,7 +34,7 @@ import {
   requireActionToken,
   readBody,
   appendAgentLog,
-} from './_lib/github';
+} from './_lib/github.js';
 
 // Give the function room to read ~30 pages and commit fixes (Hobby allows 60s).
 export const config = { maxDuration: 60 };

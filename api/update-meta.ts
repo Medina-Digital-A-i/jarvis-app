@@ -15,7 +15,7 @@ import {
   requireActionToken,
   readBody,
   appendAgentLog,
-} from './_lib/github';
+} from './_lib/github.js';
 
 function extractTitle(html: string): string | null {
   const m = html.match(/<title>([\s\S]*?)<\/title>/i);
