@@ -15,6 +15,7 @@
 // so you can also fire it by hand to test.
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { appendAgentLog } from '../_lib/github.js';
+import { sendTelegram } from '../_lib/telegram.js';
 
 // Audit + up to 5 commits over ~30 pages. Hobby caps at 60s.
 export const config = { maxDuration: 60 };
@@ -114,6 +115,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (e: unknown) {
     blockers.push(`Agent-log write failed: ${String(e)}`);
   }
+
+  // Daily update straight to your phone (no-op until the Telegram bot is set up).
+  await sendTelegram(
+    ok
+      ? `🌅 *Daily SEO run*\nScore: *${score ?? '—'}/100* · ${errorCount} errors, ${warningCount} warnings\nAutopilot fixed *${totalFixes}* issue(s) across *${pagesFixed}* page(s).`
+      : `⚠️ *Daily SEO run hit a snag*\n${blockers[0] || 'see the board'}`,
+    { parseMode: 'Markdown' }
+  );
 
   return res.status(ok ? 200 : 207).json({
     ok,
