@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PageHead from '@/components/PageHead';
 import { Panel, PanelHead } from '@/components/Panel';
-import { setSiteHealth } from '@/lib/store';
+import { setSiteHealth, useActiveSiteConfig } from '@/lib/store';
 
 type IssueType = 'error' | 'warning' | 'ok';
 
@@ -26,12 +26,6 @@ interface AuditResult {
   wordCount: number;
   issues: Issue[];
 }
-
-const TARGET_URLS = [
-  'https://totalpropertysolution.net',
-  'https://totalpropertysolution.net/janitorial-services.html',
-  'https://totalpropertysolution.net/commercial-cleaning-albany-ny.html',
-];
 
 const scoreColor = (s: number) =>
   s >= 80 ? 'text-emerald-400' : s >= 55 ? 'text-amber-400' : 'text-red-400';
@@ -59,17 +53,20 @@ const IssueIcon = ({ type }: { type: IssueType }) => {
 };
 
 export default function SeoHealth() {
-  const [results, setResults] = useState<(AuditResult | null)[]>([null, null, null]);
+  const activeSite = useActiveSiteConfig();
+  const targetUrls = activeSite ? [activeSite.baseUrl] : [];
+  const [results, setResults] = useState<(AuditResult | null)[]>([]);
   const [loading, setLoading] = useState(true);
   const [audited, setAudited] = useState<string | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [filter, setFilter] = useState<'all' | IssueType>('all');
 
   const runAudits = async () => {
+    if (targetUrls.length === 0) return;
     setLoading(true);
     setAudited(null);
     const fetched = await Promise.all(
-      TARGET_URLS.map(async (url) => {
+      targetUrls.map(async (url) => {
         try {
           const res = await fetch(`/api/seo-audit?url=${encodeURIComponent(url)}`);
           const data = await res.json();
@@ -92,7 +89,7 @@ export default function SeoHealth() {
     setLoading(false);
   };
 
-  useEffect(() => { runAudits(); }, []);
+  useEffect(() => { setActiveIdx(0); runAudits(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [activeSite?.id]);
 
   const active = results[activeIdx];
   const errors = active?.issues.filter((i) => i.type === 'error').length ?? 0;
@@ -125,7 +122,7 @@ export default function SeoHealth() {
       {loading && (
         <div className="flex items-center gap-3 py-12 justify-center text-white/40 text-sm">
           <div className="w-6 h-6 border-2 border-amber border-t-transparent rounded-full animate-spin" />
-          Running live SEO audit on {TARGET_URLS.length} pages…
+          Running live SEO audit on {activeSite?.label ?? 'site'}…
         </div>
       )}
 
@@ -140,7 +137,7 @@ export default function SeoHealth() {
                 <span className="text-base font-normal text-white/20">/100</span>
               </div>
             </div>
-            {TARGET_URLS.map((url, i) => {
+            {targetUrls.map((url, i) => {
               const r = results[i];
               return (
                 <button
@@ -153,7 +150,7 @@ export default function SeoHealth() {
                   }`}
                 >
                   <div className="text-xs text-white/40 uppercase tracking-wide mb-1 truncate">
-                    {url.replace('https://totalpropertysolution.net', '').replace('/', '/') || '/'}
+                    {(activeSite ? url.replace(activeSite.baseUrl, '') : url) || '/ (homepage)'}
                   </div>
                   <div className={`text-2xl font-bold ${r ? scoreColor(r.score) : 'text-white/20'}`}>
                     {r ? r.score : '—'}

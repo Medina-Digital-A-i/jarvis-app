@@ -40,6 +40,69 @@ const site = makeSignal<string>('jarvis.activeSite', 'tps');
 export const setActiveSite = site.set;
 export const useActiveSite = site.use;
 
+/* ---------------- shared action token ---------------- */
+
+const ACTION_TOKEN_KEY = 'jarvis_action_token';
+export function getActionToken(): string {
+  return typeof window !== 'undefined' ? localStorage.getItem(ACTION_TOKEN_KEY) || '' : '';
+}
+export function setActionToken(v: string): void {
+  if (typeof window !== 'undefined') localStorage.setItem(ACTION_TOKEN_KEY, v);
+}
+
+/* ---------------- multi-site registry (from /api/sites) ---------------- */
+
+export interface SiteConfig {
+  id: string;
+  label: string;
+  domain: string;
+  baseUrl: string;
+  platform: 'github' | 'wix' | 'other';
+  gscProperty: string | null;
+  githubRepo: string | null;
+  brand: string;
+  brandShort: string;
+  phone: string;
+  region: string;
+  active: boolean;
+}
+
+let _sitesCache: SiteConfig[] | null = null;
+const sitesListeners = new Set<(s: SiteConfig[]) => void>();
+
+export async function loadSites(force = false): Promise<SiteConfig[]> {
+  if (_sitesCache && !force) return _sitesCache;
+  try {
+    const r = await fetch('/api/sites', { cache: 'no-store' });
+    const j = await r.json();
+    _sitesCache = Array.isArray(j.sites) ? j.sites : [];
+  } catch {
+    _sitesCache = [];
+  }
+  const result = _sitesCache ?? [];
+  sitesListeners.forEach((l) => l(result));
+  return result;
+}
+
+export function useSites() {
+  const [sites, setSites] = useState<SiteConfig[]>(_sitesCache ?? []);
+  const [loading, setLoading] = useState(_sitesCache == null);
+  useEffect(() => {
+    const fn = (s: SiteConfig[]) => setSites(s);
+    sitesListeners.add(fn);
+    if (_sitesCache == null) loadSites().finally(() => setLoading(false));
+    else setLoading(false);
+    return () => { sitesListeners.delete(fn); };
+  }, []);
+  return { sites, loading, reload: () => loadSites(true) };
+}
+
+export function useActiveSiteConfig(): SiteConfig | null {
+  const { sites } = useSites();
+  const [activeId] = useActiveSite();
+  return sites.find((s) => s.id === activeId) ?? sites[0] ?? null;
+}
+
 /* ---------------- sidebar collapse ---------------- */
 
 const sidebar = makeSignal<boolean>('jarvis.sidebarCollapsed', false);

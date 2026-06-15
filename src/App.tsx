@@ -6,6 +6,7 @@ import AgentActivity from '@/pages/AgentActivity';
 import AgentOps from '@/pages/AgentOps';
 import BlogManager from '@/pages/BlogManager';
 import Competitors from '@/pages/Competitors';
+import Settings from '@/pages/Settings';
 import Stub from '@/pages/Stub';
 
 export default function App() {
@@ -23,12 +24,7 @@ export default function App() {
         <Route path="/competitors" element={<Competitors />} />
 
         {/* Settings */}
-        <Route path="/settings" element={
-          <Stub title="Settings" meta="Account · API keys · team"
-            description="Per-site and account-wide configuration. Team member access, API credentials, billing."
-            todo={['Per-site config (domain, brand, contact)', 'Team member roles', 'API credential vault (encrypted)', 'Audit log']}
-          />
-        } />
+        <Route path="/settings" element={<Settings />} />
 
         {/* Catch-all */}
         <Route path="*" element={

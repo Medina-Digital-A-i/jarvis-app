@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import PageHead from '@/components/PageHead';
 import { Panel, PanelHead } from '@/components/Panel';
 import SeoActionsPanel from '@/components/SeoActionsPanel';
+import { useActiveSiteConfig } from '@/lib/store';
 
 interface GscRow {
   key: string;
@@ -41,12 +42,21 @@ export default function Rankings() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [days, setDays] = useState('90');
+  const activeSite = useActiveSiteConfig();
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
+    setData(null);
+    // No GSC property registered for this site → honest "not connected" state.
+    if (activeSite && !activeSite.gscProperty) {
+      setError(`No Search Console property connected for ${activeSite.label}. Add one in Settings to see live rankings.`);
+      setLoading(false);
+      return;
+    }
     try {
-      const res = await fetch(`/api/gsc-data?type=queries&days=${days}`);
+      const siteParam = activeSite?.gscProperty ? `&site=${encodeURIComponent(activeSite.gscProperty)}` : '';
+      const res = await fetch(`/api/gsc-data?type=queries&days=${days}${siteParam}`);
       const json = await res.json();
       if (json.error) throw new Error(json.error);
       setData(json);
@@ -55,7 +65,7 @@ export default function Rankings() {
     } finally {
       setLoading(false);
     }
-  }, [days]);
+  }, [days, activeSite]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
