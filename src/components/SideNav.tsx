@@ -43,12 +43,15 @@ export default function SideNav({ collapsed = false }: { collapsed?: boolean }) 
         {collapsed ? '»' : '«'}
       </button>
 
-      {/* Service account reminder */}
+      {/* Search Console live indicator */}
       {!collapsed && (
-        <div className="mb-5 mx-1 px-3 py-2.5 rounded-lg border border-amber/25 bg-amber/[0.06]">
-          <div className="font-mono text-[9px] tracking-[0.18em] uppercase text-amber/80 mb-1">GSC Access Needed</div>
+        <div className="mb-5 mx-1 px-3 py-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/[0.06]">
+          <div className="font-mono text-[9px] tracking-[0.18em] uppercase text-emerald-400/80 mb-1 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-led-pulse" />
+            Search Console · Live
+          </div>
           <div className="text-[10px] text-ink-soft/70 leading-relaxed">
-            Grant service account in Search Console to activate live rankings.
+            Live keyword rankings are connected and flowing.
           </div>
         </div>
       )}

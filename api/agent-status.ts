@@ -28,6 +28,7 @@ const AGENTS: AgentDef[] = [
   { name: 'jarvis-daily-seo-audit', label: 'Daily SEO audit', role: 'Audits the site, then triggers the autopilot', trigger: 'scheduled', schedule: 'Every day · 9:00 AM ET', icon: '🔍', cron: 'daily' },
   { name: 'jarvis-weekly-seo-digest', label: 'Weekly digest', role: 'Summarizes ranking movers + quick wins', trigger: 'scheduled', schedule: 'Mondays · 8:00 AM ET', icon: '📈', cron: 'weekly' },
   { name: 'jarvis-seo-action-engine', label: 'Action engine', role: 'Turns Search Console data into an action plan', trigger: 'on-demand', schedule: 'On demand', icon: '🎯' },
+  { name: 'jarvis-rank-tracker', label: 'Rank tracker', role: 'Tracks keyword rankings from Search Console', trigger: 'live', schedule: 'Live · Search Console', icon: '📈' },
   { name: 'jarvis-blog-publisher', label: 'Blog publisher', role: 'Writes + publishes blog posts to the site', trigger: 'on-demand', schedule: 'On demand', icon: '✍️' },
   { name: 'jarvis-meta-updater', label: 'Meta updater', role: 'Edits a single page’s title + description', trigger: 'on-demand', schedule: 'On demand', icon: '🏷️' },
   { name: 'jarvis-gbp-poster', label: 'GBP poster', role: 'Posts to your Google Business Profile', trigger: 'on-demand', schedule: 'On demand · queue-backed', icon: '📍' },
@@ -56,11 +57,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const base = `${proto}://${host}`;
   const now = Date.now();
 
-  const [log, beats] = await Promise.all([
+  const [log, beats, rank] = await Promise.all([
     fetch(`${base}/agent-log.json`, { headers: { 'cache-control': 'no-cache' } })
       .then((r) => r.json())
       .catch(() => ({ entries: [] })),
     readHeartbeats(),
+    // Live Search Console health for the rank tracker.
+    fetch(`${base}/api/gsc-data?type=queries&days=28`)
+      .then((r) => r.json())
+      .then((g) => ({ ok: !g.error && Array.isArray(g.rows), count: g.totalRows ?? (g.rows?.length ?? 0) }))
+      .catch(() => ({ ok: false, count: 0 })),
   ]);
 
   const entries: any[] = Array.isArray(log.entries) ? log.entries : [];
@@ -76,11 +82,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const hb = beat.get(a.name);
     const lastRun = last?.timestamp ? Date.parse(last.timestamp) : null;
     const lastStatus: string | null = last?.status ?? null;
-    const ok = lastStatus ? /^success/i.test(lastStatus) : true;
     const blockers: string[] = Array.isArray(last?.blockers) ? last.blockers : [];
 
     const running = !!hb && hb.finishedAt == null && now - hb.startedAt < STALE_MS;
     const failedRun = !!hb && hb.finishedAt != null && hb.ok === 0 && now - hb.finishedAt < 5 * 60_000;
+    // Only a genuine failure counts as "needs attention" — a blockers list, a
+    // hard 'blocked'/'failed' status, or a failed heartbeat. 'warning'/'critical'
+    // just mean the audit found SITE issues; the agent itself ran fine.
+    const realError = blockers.length > 0 || /^(blocked|failed|error)$/i.test(lastStatus || '') || failedRun;
 
     let nextDue: number | null = null;
     if (a.cron === 'daily') nextDue = nextDailyUtc(now, 13);
@@ -92,13 +101,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (a.name === 'jarvis-telegram-bot') {
       state = telegramOn ? 'listening' : 'idle';
       detail = telegramOn ? 'Online · awaiting commands' : 'Not connected — needs bot token';
+    } else if (a.name === 'jarvis-rank-tracker') {
+      state = rank.ok ? 'listening' : 'error';
+      detail = rank.ok ? `Live · tracking ${rank.count} keywords` : 'Search Console not responding';
     } else if (running && hb!.phase === 'planning') {
       state = 'planning';
       detail = 'Planning…';
     } else if (running) {
       state = 'working';
       detail = 'Working…';
-    } else if (failedRun || (!ok && lastStatus) || blockers.length) {
+    } else if (realError) {
       state = 'error';
       detail = blockers[0] || last?.actions?.[0] || 'Needs attention';
     } else if (a.cron && nextDue != null) {
