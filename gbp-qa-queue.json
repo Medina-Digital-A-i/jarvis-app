@@ -1,19 +1,21 @@
 {
-  "generated_at": "2026-06-04",
-  "status": "ready_for_manual_posting",
-  "instructions": "On the Google Business Profile (or public Google Maps listing), use 'Ask a question' to post each question from the owner/another account, then answer it from the business account. This seeds the Q&A section and improves local rankings.",
-  "qa": [
+  "generated_at": "2026-06-11",
+  "instructions": "Copy-paste each answer into Google Business Profile Q&A. Go to business.google.com → your profile → Q&A → Ask a question (post the question yourself) → then answer it. Or answer existing questions from customers.",
+  "qa_items": [
     {
       "question": "Do you clean medical offices?",
-      "answer": "Yes. TPS Pro provides commercial cleaning and janitorial service for medical and healthcare facilities throughout Albany and the Capital Region — including private practices, dental and urgent care offices, labs, and clinics. We follow proper disinfection protocols for high-touch surfaces, exam rooms, and restrooms, use EPA-approved products, and schedule after hours so we never disrupt patient flow. Fully insured and bonded. Call (518) 948-7156 for a free walkthrough and quote."
+      "answer": "Yes — TPS Pro handles medical office cleaning in Albany and throughout the Capital Region. We understand the elevated cleanliness standards required in healthcare environments, including waiting rooms, exam rooms, restrooms, and administrative areas. We use hospital-grade disinfectants on high-touch surfaces and follow OSHA guidelines for biohazard awareness. If your practice needs a reliable commercial cleaning partner who treats your space with the same precision you treat your patients, give us a call at (518) 948-7156 or request a quote at totalpropertysolution.net.",
+      "character_count": 497
     },
     {
       "question": "Do you offer contracts for property managers?",
-      "answer": "Absolutely — property managers are who we're built for. TPS Pro offers ongoing janitorial and maintenance contracts (daily, weekly, or monthly) plus high-volume make-ready and turnover cleaning across multiple units and buildings. You get consistent crews, flexible scheduling around your tenants, volume pricing, and one point of contact for your whole portfolio in Albany, Troy, Schenectady, and the greater Capital Region. Call (518) 948-7156 to set up a free walkthrough."
+      "answer": "Absolutely. TPS Pro specializes in working with property managers across Albany and the Capital Region. We offer recurring janitorial contracts for commercial properties, make-ready/turnover cleaning programs for residential portfolios, and scheduled common-area maintenance. Our contracts are flexible — weekly, bi-weekly, or monthly — and we coordinate directly with your maintenance team so you're not stuck in the middle. We're used to multi-unit workflows, fast turnarounds, and the documentation property managers need. Call (518) 948-7156 or visit totalpropertysolution.net to discuss a custom plan.",
+      "character_count": 512
     },
     {
       "question": "Are you available for same-day cleaning?",
-      "answer": "Often, yes. For urgent needs — a last-minute showing, a post-construction punch-out, or an unexpected turnover — TPS Pro can frequently mobilize same-day or next-day across the Albany Capital Region, depending on crew availability. The sooner you call, the better we can fit you in. Reach us at (518) 948-7156 and we'll tell you exactly what we can do today."
+      "answer": "In many cases, yes. TPS Pro offers same-day and next-day availability for commercial cleaning in Albany and the surrounding Capital Region, depending on the scope of work and current schedule. We know that property managers and business owners don't always have the luxury of planning weeks ahead — a tenant moves out early, an inspection gets moved up, or a facility issue needs immediate attention. Text or call (518) 948-7156 to check our availability. We'll give you a straight answer, not a runaround.",
+      "character_count": 468
     }
   ]
 }

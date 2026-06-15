@@ -11,7 +11,35 @@
 //   - position > 30                     -> "content gap" -> queue a blog post
 //   - known page with no impressions    -> "review flag"
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { cors, readBody, ghToken, SITE_REPO, appendAgentLog } from './_lib/github.js';
+import { cors, readBody, ghToken, SITE_REPO, appendAgentLog, getFile, putFile, slugToPath, escapeHtml } from './_lib/github.js';
+
+// --- inlined meta-commit (formerly api/update-meta.ts) ---------------------
+// Folded in to stay under the Vercel Hobby 12-function limit. Rewrites a page's
+// <title> + meta/og description in the live site repo and commits.
+function replaceTitle(html: string, title: string): string {
+  return html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(title)}</title>`);
+}
+function replaceDescription(html: string, desc: string): string {
+  const safe = escapeHtml(desc);
+  let out = html.replace(/(<meta\s+name=["']description["']\s+content=["'])[\s\S]*?(["']\s*\/?>)/i, `$1${safe}$2`);
+  out = out.replace(/(<meta\s+property=["']og:description["']\s+content=["'])[\s\S]*?(["']\s*\/?>)/i, `$1${safe}$2`);
+  return out;
+}
+function replaceOgTitle(html: string, title: string): string {
+  return html.replace(/(<meta\s+property=["']og:title["']\s+content=["'])[\s\S]*?(["']\s*\/?>)/i, `$1${escapeHtml(title)}$2`);
+}
+async function commitMeta(slug: string, title?: string, description?: string): Promise<{ ok: boolean; changed: boolean; commit?: { commitSha: string }; message?: string; error?: string }> {
+  const path = slugToPath(slug);
+  const file = await getFile(SITE_REPO, path);
+  if (!file) return { ok: false, changed: false, error: `Page not found: ${path}` };
+  let html = file.content;
+  if (title) html = replaceOgTitle(replaceTitle(html, title), title);
+  if (description) html = replaceDescription(html, description);
+  if (html === file.content) return { ok: true, changed: false, message: 'no change' };
+  const parts = [title && 'title', description && 'description'].filter(Boolean).join(' + ');
+  const commit = await putFile(SITE_REPO, path, html, `seo(meta): update ${parts} for /${path} [JARVIS]`, file.sha);
+  return { ok: true, changed: true, commit };
+}
 
 interface Row {
   key: string;
@@ -147,16 +175,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!token || sent !== token) {
         return res.status(401).json({ error: 'Unauthorized — apply=true requires a valid x-jarvis-token.', plan });
       }
-      const base = baseUrl(req);
       const candidates = quickWins.filter((w) => w.confident).slice(0, max);
       for (const w of candidates) {
         try {
-          const r = await fetch(`${base}/api/update-meta`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-jarvis-token': token },
-            body: JSON.stringify({ slug: w.targetSlug, title: w.suggestedTitle, description: w.suggestedDescription }),
-          });
-          const j = await r.json();
+          const j = await commitMeta(w.targetSlug!, w.suggestedTitle, w.suggestedDescription);
           plan.applied.push({ keyword: w.keyword, slug: w.targetSlug!, ok: !!j.ok, detail: j.changed ? `commit ${j.commit?.commitSha?.slice(0, 7)}` : j.message || j.error || 'no change' });
         } catch (e: unknown) {
           plan.applied.push({ keyword: w.keyword, slug: w.targetSlug!, ok: false, detail: String(e) });
