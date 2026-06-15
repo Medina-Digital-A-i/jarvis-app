@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout';
 import Rankings from '@/pages/Rankings';
 import SeoHealth from '@/pages/SeoHealth';
 import AgentActivity from '@/pages/AgentActivity';
+import AgentOps from '@/pages/AgentOps';
 import BlogManager from '@/pages/BlogManager';
 import Competitors from '@/pages/Competitors';
 import JarvisChat from '@/pages/JarvisChat';
@@ -16,6 +17,7 @@ export default function App() {
         <Route index element={<Rankings />} />
 
         {/* SEO Command Center */}
+        <Route path="/agents" element={<AgentOps />} />
         <Route path="/seo-health" element={<SeoHealth />} />
         <Route path="/agent-activity" element={<AgentActivity />} />
         <Route path="/blog-manager" element={<BlogManager />} />

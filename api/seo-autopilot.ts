@@ -36,6 +36,7 @@ import {
   appendAgentLog,
 } from './_lib/github.js';
 import { sendTelegram } from './_lib/telegram.js';
+import { markRunning, markDone } from './_lib/heartbeat.js';
 
 // Give the function room to read ~30 pages and commit fixes (Hobby allows 60s).
 export const config = { maxDuration: 60 };
@@ -236,6 +237,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Writes are gated; a dry run is safe to leave open for previews.
   if (!dryRun && !requireActionToken(req, res)) return;
 
+  // Light up the live board: this agent is now working (real runs only).
+  if (!dryRun) await markRunning('jarvis-seo-autopilot', 'working');
+
   try {
     const pages = requestedSlugs && requestedSlugs.length ? requestedSlugs : await listSitePages();
     if (!pages.length) {
@@ -350,6 +354,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       );
     }
 
+    if (!dryRun) await markDone('jarvis-seo-autopilot', true);
     return res.json({
       ok: true,
       dryRun,
@@ -360,6 +365,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       results,
     });
   } catch (e: unknown) {
+    if (!dryRun) await markDone('jarvis-seo-autopilot', false);
     return res.status(500).json({ error: String(e) });
   }
 }

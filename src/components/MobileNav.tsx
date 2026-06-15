@@ -10,7 +10,7 @@ const ITEMS: Item[] = [
   { to: '/seo-health', label: 'Health', ico: '⊕' },
   { to: '/competitors', label: 'Rivals', ico: '🏁' },
   { to: '/blog-manager', label: 'Blog', ico: '✎' },
-  { to: '/agent-activity', label: 'Agents', ico: '🤖' },
+  { to: '/agents', label: 'Agents', ico: '🛰️' },
   { to: '/chat', label: 'Chat', ico: '✦' },
 ];
 

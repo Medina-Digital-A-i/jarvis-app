@@ -9,6 +9,7 @@ const GROUPS: Group[] = [
     label: 'SEO Command Center',
     items: [
       { to: '/', label: 'Dashboard', ico: '📊', badge: 'LIVE' },
+      { to: '/agents', label: 'Agent Ops', ico: '🛰️', badge: 'LIVE' },
       { to: '/seo-health', label: 'SEO Health', ico: '⊕' },
       { to: '/competitors', label: 'Competitors', ico: '🏁' },
       { to: '/blog-manager', label: 'Blog Manager', ico: '✎' },
