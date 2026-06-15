@@ -35,6 +35,7 @@ import {
   readBody,
   appendAgentLog,
 } from './_lib/github.js';
+import { sendTelegram } from './_lib/telegram.js';
 
 // Give the function room to read ~30 pages and commit fixes (Hobby allows 60s).
 export const config = { maxDuration: 60 };
@@ -335,6 +336,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       } catch {
         /* logging is non-critical */
       }
+
+      // Ping the owner on Telegram with a summary (no-op if the bot isn't set up).
+      const top = results
+        .filter((r) => r.committed)
+        .slice(0, 8)
+        .map((r) => `• /${r.path}: ${r.fixes.map((f) => f.field).join(', ')}`)
+        .join('\n');
+      const more = pagesAffected.length > 8 ? `\n…and ${pagesAffected.length - 8} more` : '';
+      await sendTelegram(
+        `🤖 *Autopilot ran*\nFixed *${totalFixes}* issue(s) across *${pagesAffected.length}* page(s):\n${top}${more}`,
+        { parseMode: 'Markdown' }
+      );
     }
 
     return res.json({
