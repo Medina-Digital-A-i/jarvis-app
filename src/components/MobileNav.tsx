@@ -11,7 +11,7 @@ const ITEMS: Item[] = [
   { to: '/competitors', label: 'Rivals', ico: '🏁' },
   { to: '/blog-manager', label: 'Blog', ico: '✎' },
   { to: '/agents', label: 'Agents', ico: '🛰️' },
-  { to: '/chat', label: 'Chat', ico: '✦' },
+  { to: '/agent-activity', label: 'Activity', ico: '🤖' },
 ];
 
 export default function MobileNav() {

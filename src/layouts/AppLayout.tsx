@@ -1,14 +1,11 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import TopBar from '@/components/TopBar';
 import SideNav from '@/components/SideNav';
 import MobileNav from '@/components/MobileNav';
-import CommandBar from '@/components/CommandBar';
 import { useSidebarCollapsed } from '@/lib/store';
 
 export default function AppLayout() {
   const [collapsed] = useSidebarCollapsed();
-  const { pathname } = useLocation();
-  const onChat = pathname === '/chat';
 
   return (
     <div className="relative z-10 h-screen flex flex-col overflow-hidden">
@@ -20,8 +17,6 @@ export default function AppLayout() {
           <Outlet />
         </main>
       </div>
-      {/* Floating ask-anything bar everywhere except the dedicated chat page */}
-      {!onChat && <CommandBar />}
       {/* Bottom tab bar — mobile only */}
       <MobileNav />
     </div>

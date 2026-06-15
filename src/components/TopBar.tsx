@@ -44,7 +44,7 @@ export default function TopBar() {
       {/* Quick actions */}
       <div className="hidden md:flex items-center gap-2">
         <button className="btn" onClick={() => navigate('/')} title="Refresh rankings">⟳ Refresh</button>
-        <button className="btn btn-primary" onClick={() => navigate('/chat')}>✦ Ask JARVIS</button>
+        <button className="btn btn-primary" onClick={() => navigate('/agents')}>🛰️ Agents</button>
       </div>
 
       <div className="shrink-0 flex items-center gap-2.5 px-2 py-1 pl-3 border border-line rounded-full text-[12px] text-ink">

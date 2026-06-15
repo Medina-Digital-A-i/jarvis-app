@@ -17,10 +17,6 @@ const GROUPS: Group[] = [
     ],
   },
   {
-    label: 'Assistant',
-    items: [{ to: '/chat', label: 'JARVIS Chat', ico: '✦', badge: 'AI' }],
-  },
-  {
     label: 'System',
     items: [{ to: '/settings', label: 'Settings', ico: '⚙' }],
   },

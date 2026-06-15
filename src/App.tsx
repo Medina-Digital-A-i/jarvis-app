@@ -6,7 +6,6 @@ import AgentActivity from '@/pages/AgentActivity';
 import AgentOps from '@/pages/AgentOps';
 import BlogManager from '@/pages/BlogManager';
 import Competitors from '@/pages/Competitors';
-import JarvisChat from '@/pages/JarvisChat';
 import Stub from '@/pages/Stub';
 
 export default function App() {
@@ -22,9 +21,6 @@ export default function App() {
         <Route path="/agent-activity" element={<AgentActivity />} />
         <Route path="/blog-manager" element={<BlogManager />} />
         <Route path="/competitors" element={<Competitors />} />
-
-        {/* JARVIS Chat — AI assistant */}
-        <Route path="/chat" element={<JarvisChat />} />
 
         {/* Settings */}
         <Route path="/settings" element={
