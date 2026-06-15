@@ -25,7 +25,6 @@
 // Those are surfaced in `skipped` so a human can pick them up.
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import {
-  SITE_REPO,
   getFile,
   putFile,
   slugToPath,
@@ -37,16 +36,28 @@ import {
 } from './_lib/github.js';
 import { sendTelegram } from './_lib/telegram.js';
 import { markRunning, markDone } from './_lib/heartbeat.js';
+import { resolveSite, type SiteConfig } from './_lib/sites.js';
 
 // Give the function room to read ~30 pages and commit fixes (Hobby allows 60s).
 export const config = { maxDuration: 60 };
 
-// --- business identity (drives the generated copy) -------------------------
-const BRAND = 'TPS Pro LLC';
-const BRAND_SHORT = 'TPS Pro';
-const SITE_BASE = (process.env.SITE_BASE_URL || 'https://totalpropertysolution.net').replace(/\/$/, '');
-const PHONE = '(518) 948-7156';
-const REGION = 'Albany & the Capital Region';
+// Per-run business identity, pulled from the active site's config.
+interface SiteCtx {
+  brand: string;
+  brandShort: string;
+  baseUrl: string;
+  phone: string;
+  region: string;
+}
+function ctxOf(s: SiteConfig): SiteCtx {
+  return {
+    brand: s.brand || s.label,
+    brandShort: s.brandShort || s.label,
+    baseUrl: (s.baseUrl || `https://${s.domain}`).replace(/\/$/, ''),
+    phone: s.phone || '',
+    region: s.region || '',
+  };
+}
 
 const titleCase = (s: string) => s.replace(/\b\w/g, (c) => c.toUpperCase());
 const humanize = (slug: string) =>
@@ -70,28 +81,31 @@ interface Fix {
   detail: string;
 }
 
-function buildTitle(topic: string): string {
-  let t = `${topic} | ${BRAND}`;
-  if (t.length > 60) t = `${topic} | ${BRAND_SHORT}`;
-  if (t.length > 60) t = `${topic.slice(0, 57 - BRAND_SHORT.length)}… | ${BRAND_SHORT}`;
+function buildTitle(topic: string, c: SiteCtx): string {
+  let t = `${topic} | ${c.brand}`;
+  if (t.length > 60) t = `${topic} | ${c.brandShort}`;
+  if (t.length > 60) t = `${topic.slice(0, 57 - c.brandShort.length)}… | ${c.brandShort}`;
   // pad short titles so they clear the 30-char floor
-  if (t.length < 30) t = `${topic} Services in ${REGION} | ${BRAND_SHORT}`.slice(0, 60);
+  if (t.length < 30 && c.region) t = `${topic} in ${c.region} | ${c.brandShort}`.slice(0, 60);
   return t;
 }
-function buildDescription(topic: string): string {
-  const d = `Professional ${topic.toLowerCase()} in ${REGION}. ${BRAND} — bonded & insured commercial cleaning and property maintenance. Free quote: ${PHONE}.`;
+function buildDescription(topic: string, c: SiteCtx): string {
+  const where = c.region ? ` in ${c.region}` : '';
+  const call = c.phone ? ` Call ${c.phone}.` : '';
+  const d = `${topic}${where} — ${c.brand}.${call}`.replace(/\s+/g, ' ').trim();
+  if (d.length < 100) return `${topic}${where} from ${c.brand}. Quality service you can count on.${call}`.slice(0, 160);
   return d.length > 160 ? d.slice(0, 157).trimEnd() + '…' : d;
 }
 
 // Analyse one page's HTML and return the patched HTML + the fixes/skips.
-function fixPage(slug: string, html: string): { html: string; fixes: Fix[]; skipped: Fix[] } {
+function fixPage(slug: string, html: string, c: SiteCtx): { html: string; fixes: Fix[]; skipped: Fix[] } {
   const fixes: Fix[] = [];
   const skipped: Fix[] = [];
   let out = html;
 
   const path = slugToPath(slug);
   const isIndex = path === 'index.html';
-  const canonicalUrl = isIndex ? `${SITE_BASE}/` : `${SITE_BASE}/${path}`;
+  const canonicalUrl = isIndex ? `${c.baseUrl}/` : `${c.baseUrl}/${path}`;
 
   const h1 = get(out, /<h1[^>]*>([^<]+)<\/h1>/i);
   const topic = h1 || humanize(slug);
@@ -99,7 +113,7 @@ function fixPage(slug: string, html: string): { html: string; fixes: Fix[]; skip
   // --- title ---------------------------------------------------------------
   const title = get(out, /<title[^>]*>([^<]*)<\/title>/i);
   if (!title || title.length < 30 || title.length > 60) {
-    const next = buildTitle(topic);
+    const next = buildTitle(topic, c);
     if (title == null) {
       out = injectInHead(out, `<title>${escapeHtml(next)}</title>`);
     } else {
@@ -112,7 +126,7 @@ function fixPage(slug: string, html: string): { html: string; fixes: Fix[]; skip
   const descRx = /<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)/i;
   const desc = get(out, descRx);
   if (!desc || desc.length < 100 || desc.length > 160) {
-    const next = buildDescription(topic);
+    const next = buildDescription(topic, c);
     if (desc == null) {
       out = injectInHead(out, `<meta name="description" content="${escapeHtml(next)}">`);
     } else {
@@ -137,8 +151,8 @@ function fixPage(slug: string, html: string): { html: string; fixes: Fix[]; skip
   }
 
   // --- Open Graph ----------------------------------------------------------
-  const finalTitle = get(out, /<title[^>]*>([^<]*)<\/title>/i) || buildTitle(topic);
-  const finalDesc = get(out, descRx) || buildDescription(topic);
+  const finalTitle = get(out, /<title[^>]*>([^<]*)<\/title>/i) || buildTitle(topic, c);
+  const finalDesc = get(out, descRx) || buildDescription(topic, c);
   if (!has(out, /<meta[^>]+property=["']og:title["']/i)) {
     out = injectInHead(out, `<meta property="og:title" content="${escapeHtml(finalTitle)}">`);
     fixes.push({ field: 'og:title', detail: 'added' });
@@ -183,11 +197,11 @@ function fixPage(slug: string, html: string): { html: string; fixes: Fix[]; skip
     const ld = {
       '@context': 'https://schema.org',
       '@type': 'LocalBusiness',
-      name: BRAND,
+      name: c.brand,
       description: finalDesc,
       url: canonicalUrl,
-      telephone: PHONE,
-      areaServed: REGION,
+      ...(c.phone ? { telephone: c.phone } : {}),
+      ...(c.region ? { areaServed: c.region } : {}),
     };
     out = injectInHead(
       out,
@@ -207,10 +221,10 @@ function fixPage(slug: string, html: string): { html: string; fixes: Fix[]; skip
   return { html: out, fixes, skipped };
 }
 
-// Discover root-level *.html pages in the live site repo.
-async function listSitePages(): Promise<string[]> {
+// Discover root-level *.html pages in the given site repo.
+async function listSitePages(repo: string): Promise<string[]> {
   try {
-    const r = await fetch(`https://api.github.com/repos/${SITE_REPO}/contents/`, {
+    const r = await fetch(`https://api.github.com/repos/${repo}/contents/`, {
       headers: {
         Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
         Accept: 'application/vnd.github+json',
@@ -237,15 +251,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Writes are gated; a dry run is safe to leave open for previews.
   if (!dryRun && !requireActionToken(req, res)) return;
 
+  // Resolve which site to operate on (defaults to the first/primary site).
+  const siteId = (req.query.site as string) || (body.site as string) || undefined;
+  const site = await resolveSite(siteId);
+  const c = ctxOf(site);
+
+  // Auto-fixes need a GitHub repo to commit to. Non-github sites are audit-only.
+  if (!site.githubRepo) {
+    return res.status(200).json({
+      ok: true,
+      auditOnly: true,
+      site: site.id,
+      message: `${site.label} is a ${site.platform} site with no GitHub repo, so JARVIS can audit and track it but can't auto-commit fixes. Use SEO Health to see issues and apply them in ${site.platform === 'wix' ? 'Wix' : 'your site editor'}.`,
+      results: [],
+    });
+  }
+  const repo = site.githubRepo;
+
   // Light up the live board: this agent is now working (real runs only).
   if (!dryRun) await markRunning('jarvis-seo-autopilot', 'working');
 
   try {
-    const pages = requestedSlugs && requestedSlugs.length ? requestedSlugs : await listSitePages();
+    const pages = requestedSlugs && requestedSlugs.length ? requestedSlugs : await listSitePages(repo);
     if (!pages.length) {
       return res.status(200).json({
         ok: true,
-        message: 'No pages found to audit (check GITHUB_TOKEN / SITE_REPO).',
+        message: `No pages found in ${repo} (check GITHUB_TOKEN / repo).`,
         results: [],
       });
     }
@@ -271,7 +302,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         batch.map(async (slug) => {
           const path = slugToPath(slug);
           try {
-            return { slug, path, file: await getFile(SITE_REPO, path) };
+            return { slug, path, file: await getFile(repo, path) };
           } catch (e: unknown) {
             return { slug, path, file: null, error: String(e) };
           }
@@ -290,7 +321,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         results.push({ slug, path, fixes: [], skipped: [], committed: false, error: 'page not found in repo' });
         continue;
       }
-      const { html, fixes, skipped } = fixPage(slug, file.content);
+      const { html, fixes, skipped } = fixPage(slug, file.content, c);
       const changed = html !== file.content && fixes.length > 0;
 
       if (changed && !dryRun && committed >= maxChanges) {
@@ -302,7 +333,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         try {
           const summary = fixes.map((f) => f.field).join(', ');
           const commit = await putFile(
-            SITE_REPO,
+            repo,
             path,
             html,
             `seo(autopilot): fix ${summary} on /${path} [JARVIS]`,
@@ -349,7 +380,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .join('\n');
       const more = pagesAffected.length > 8 ? `\n…and ${pagesAffected.length - 8} more` : '';
       await sendTelegram(
-        `🤖 *Autopilot ran*\nFixed *${totalFixes}* issue(s) across *${pagesAffected.length}* page(s):\n${top}${more}`,
+        `🤖 *Autopilot ran — ${site.label}*\nFixed *${totalFixes}* issue(s) across *${pagesAffected.length}* page(s):\n${top}${more}`,
         { parseMode: 'Markdown' }
       );
     }
