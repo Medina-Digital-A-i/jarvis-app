@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import PageHead from '@/components/PageHead';
 import { useActiveSiteConfig, getActionToken, setActionToken } from '@/lib/store';
+import AgentPanel from '@/components/AgentPanel';
 
 type State = 'working' | 'planning' | 'waiting' | 'idle' | 'error' | 'listening';
 
@@ -134,10 +135,10 @@ function Metric({ label, value, tone }: { label: string; value: number; tone?: s
   );
 }
 
-function Card({ a, now }: { a: Agent; now: number }) {
+function Card({ a, now, onClick }: { a: Agent; now: number; onClick: () => void }) {
   const p = PILL[a.state];
   return (
-    <div className="rounded-xl border border-line bg-bg-mid px-4 pt-3 pb-4 flex flex-col items-center text-center gap-2 hover:border-line-strong transition-colors animate-fade-up">
+    <button onClick={onClick} className="text-left rounded-xl border border-line bg-bg-mid px-4 pt-3 pb-4 flex flex-col items-center text-center gap-2 hover:border-blue/50 hover:bg-blue/[0.04] transition-colors animate-fade-up cursor-pointer">
       <Bot state={a.state} />
       <div className="font-mono text-[12.5px] font-bold text-white tracking-[0.02em] -mt-1">{a.label}</div>
       <span className={`inline-flex items-center text-[10px] font-mono px-2 py-0.5 rounded border tracking-[0.08em] ${p.cls}`}>{p.label}</span>
@@ -146,7 +147,7 @@ function Card({ a, now }: { a: Agent; now: number }) {
         <span>{ago(a.lastRun, now)}</span>
         <span className="text-ink-soft">{a.nextDue ? until(a.nextDue, now) : a.trigger}</span>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -180,6 +181,8 @@ export default function AgentOps() {
   const site = useActiveSiteConfig();
   const [running, setRunning] = useState(false);
   const [runMsg, setRunMsg] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Agent | null>(null);
+  const reload = () => fetch('/api/agent-status', { cache: 'no-store' }).then((r) => r.json()).then(setSnap).catch(() => {});
 
   const runNow = async () => {
     if (!site) return;
@@ -268,13 +271,17 @@ export default function AgentOps() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {agents.map((a) => <Card key={a.name} a={a} now={now} />)}
+            {agents.map((a) => <Card key={a.name} a={a} now={now} onClick={() => setSelected(a)} />)}
           </div>
 
           <div className="mt-5 font-mono text-[10px] text-ink-dim tracking-[0.1em] uppercase">
-            Auto-refreshing every 15s · {agents.length} agents
+            Tap any agent to command it · auto-refreshing every 15s · {agents.length} agents
           </div>
         </>
+      )}
+
+      {selected && (
+        <AgentPanel agent={selected as any} site={site} onClose={() => setSelected(null)} onRan={reload} />
       )}
     </>
   );
