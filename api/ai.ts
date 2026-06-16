@@ -9,7 +9,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Anthropic from '@anthropic-ai/sdk';
 import { cors, requireActionToken, readBody, getFile, putFile, slugToPath, appendAgentLog } from './_lib/github.js';
-import { resolveSite } from './_lib/sites.js';
+import { resolveSite, type SiteConfig } from './_lib/sites.js';
 import { sendTelegram } from './_lib/telegram.js';
 
 export const config = { maxDuration: 60 };
@@ -39,12 +39,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const action = String(body.action ?? 'edit');
   const site = await resolveSite(body.site as string);
 
-  if (!site.githubRepo) {
-    return res.status(200).json({ auditOnly: true, message: `${site.label} is a ${site.platform} site (no GitHub repo), so JARVIS can't edit its code. Edit it in your site builder.` });
-  }
-  const repo = site.githubRepo;
+  const claude = () => new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const host = req.headers.host;
+  const proto = (req.headers['x-forwarded-proto'] as string) || 'https';
+  const selfBase = process.env.PUBLIC_BASE_URL?.replace(/\/$/, '') || `${proto}://${host}`;
 
   try {
+    // ---- AI actions that work for ANY site (no repo needed) ----------------
+    if (action === 'ads') return await adsRecommend(site, selfBase, claude(), res);
+    if (action === 'competitor') return await competitorReport(site, selfBase, body, claude(), res);
+
+    // ---- actions that mutate the site repo (github-hosted only) ------------
+    if (!site.githubRepo) {
+      return res.status(200).json({ auditOnly: true, message: `${site.label} is a ${site.platform} site (no GitHub repo), so JARVIS can't edit its code. Edit it in your site builder.` });
+    }
+    const repo = site.githubRepo;
     if (action === 'pages') {
       const pages = await listPages(repo);
       return res.json({ pages });
@@ -127,4 +136,59 @@ Rules:
   } catch (e: unknown) {
     return res.status(500).json({ error: String(e) });
   }
+}
+
+function parseJson(txt: string): any {
+  const t = txt.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+  try { return JSON.parse(t); } catch { return null; }
+}
+
+// ---- Ads agent: recommend a launch-ready paid-search campaign --------------
+async function adsRecommend(site: SiteConfig, base: string, client: Anthropic, res: VercelResponse) {
+  if (!process.env.ANTHROPIC_API_KEY) return res.status(503).json({ error: 'ANTHROPIC_API_KEY not configured.' });
+  let rows: any[] = [];
+  if (site.gscProperty) {
+    rows = await fetch(`${base}/api/gsc-data?type=queries&days=90&site=${encodeURIComponent(site.gscProperty)}`)
+      .then((r) => r.json()).then((d) => d.rows || []).catch(() => []);
+  }
+  const kw = rows.slice(0, 40).map((r) => `${r.key} (pos ${Math.round(r.position)}, ${r.impressions} impr)`).join('\n');
+  const sys = `You are a Google Ads strategist for ${site.brand}, a local business in ${site.region || 'its area'} (${site.domain}). Design ONE launch-ready Search campaign. Use the real Search Console queries provided to pick commercial-intent keywords. Respond with ONLY JSON:
+{"campaignName":"","dailyBudget":<number USD>,"monthlyEstimate":<number USD>,"location":"","adGroups":[{"name":"","keywords":["keyword (match type)"],"headlines":["<=30 chars"],"descriptions":["<=90 chars"]}],"rationale":"<2 sentences: who we target and why>","projectedClicks":"<rough range/mo>"}
+Rules: 2-3 ad groups; 5-8 keywords each (phrase/exact for intent); 3 headlines + 2 descriptions per group; budget realistic for a local SMB ($10-40/day). No prose outside the JSON.`;
+  const msg = await client.messages.create({
+    model: MODEL, max_tokens: 2500, system: sys,
+    messages: [{ role: 'user', content: rows.length ? `Top Search Console queries:\n${kw}` : `No Search Console data yet — base the campaign on the business: ${site.brand}, ${site.region}.` }],
+  });
+  const campaign = parseJson(msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join(''));
+  if (!campaign) return res.status(200).json({ ok: false, error: 'Could not generate a campaign — try again.' });
+  return res.json({ ok: true, site: site.id, campaign, basedOnQueries: rows.length });
+}
+
+// ---- Competitor agent: gap report vs a rival -------------------------------
+async function competitorReport(site: SiteConfig, base: string, body: Record<string, unknown>, client: Anthropic, res: VercelResponse) {
+  if (!process.env.ANTHROPIC_API_KEY) return res.status(503).json({ error: 'ANTHROPIC_API_KEY not configured.' });
+  const competitorUrl = String(body.competitorUrl ?? '').trim();
+  if (!competitorUrl) return res.status(400).json({ error: 'competitorUrl is required' });
+  let compText = '';
+  try {
+    const html = await fetch(competitorUrl.startsWith('http') ? competitorUrl : `https://${competitorUrl}`, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; JARVIS/1.0)' }, signal: AbortSignal.timeout(12000),
+    }).then((r) => r.text());
+    compText = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 6000);
+  } catch {
+    return res.status(200).json({ ok: false, error: `Couldn't fetch ${competitorUrl}.` });
+  }
+  let rows: any[] = [];
+  if (site.gscProperty) rows = await fetch(`${base}/api/gsc-data?type=queries&days=90&site=${encodeURIComponent(site.gscProperty)}`).then((r) => r.json()).then((d) => d.rows || []).catch(() => []);
+  const myKw = rows.slice(0, 30).map((r) => r.key).join(', ');
+  const sys = `You are a local-SEO competitive analyst for ${site.brand} (${site.domain}, ${site.region || ''}). Compare us to the competitor's homepage text and our Search Console keywords. Respond ONLY as JSON:
+{"summary":"<2 sentences>","gaps":[{"topic":"","why":"","suggestedPage":"<slug or title to create>"}],"keywordOpportunities":["keyword we should target"],"quickActions":["<1-line action>"]}
+Find services/topics/keywords the competitor emphasizes that we are weak on or missing. Be specific and local.`;
+  const msg = await client.messages.create({
+    model: MODEL, max_tokens: 2000, system: sys,
+    messages: [{ role: 'user', content: `OUR keywords: ${myKw || '(none yet)'}\n\nCOMPETITOR (${competitorUrl}) homepage text:\n${compText}` }],
+  });
+  const report = parseJson(msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join(''));
+  if (!report) return res.status(200).json({ ok: false, error: 'Could not analyze — try again.' });
+  return res.json({ ok: true, site: site.id, competitor: competitorUrl, report });
 }
