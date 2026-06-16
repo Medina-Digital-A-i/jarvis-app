@@ -49,6 +49,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (action === 'ads') return await adsRecommend(site, selfBase, claude(), res);
     if (action === 'competitor') return await competitorReport(site, selfBase, body, claude(), res);
     if (action === 'gbp') return await gbpDrafts(site, body, claude(), res);
+    if (action === 'blog') return await blogWrite(site, body, selfBase, req, claude(), res);
 
     // ---- actions that mutate the site repo (github-hosted only) ------------
     if (!site.githubRepo) {
@@ -142,6 +143,43 @@ Rules:
 function parseJson(txt: string): any {
   const t = txt.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
   try { return JSON.parse(t); } catch { return null; }
+}
+
+// ---- Content engine: write (and optionally publish) an SEO blog post --------
+async function blogWrite(site: SiteConfig, body: Record<string, unknown>, base: string, req: VercelRequest, client: Anthropic, res: VercelResponse) {
+  if (!process.env.ANTHROPIC_API_KEY) return res.status(503).json({ error: 'ANTHROPIC_API_KEY not configured.' });
+  let keyword = String(body.keyword ?? body.topic ?? '').trim();
+  // No keyword given → pull a content-gap query from Search Console (ranks page 2+).
+  if (!keyword && site.gscProperty) {
+    const rows = await fetch(`${base}/api/gsc-data?type=queries&days=90&site=${encodeURIComponent(site.gscProperty)}`)
+      .then((r) => r.json()).then((d) => d.rows || []).catch(() => []);
+    const gap = rows.filter((r: any) => r.position > 15 && r.impressions > 0).sort((a: any, b: any) => b.impressions - a.impressions)[0];
+    keyword = gap?.key || '';
+  }
+  if (!keyword) keyword = `${site.region || 'local'} ${site.brand} services`;
+
+  const sys = `You are an expert local-SEO content writer for ${site.brand} (${site.domain}${site.region ? ', ' + site.region : ''}). Write one genuinely useful, locally-optimized blog post targeting the keyword. Respond with ONLY JSON:
+{"title":"<55-65 chars, includes the keyword + locale>","slug":"blog-<kebab-case>","metaDescription":"<120-160 chars>","targetKeyword":"<the keyword>","excerpt":"<1 sentence>","content":"<HTML body: <h2>/<h3>/<p>/<ul><li>, 600-900 words, helpful and specific to the area, a soft CTA at the end. NO <html>/<head>/<body>/<h1> tags>"}`;
+  const msg = await client.messages.create({
+    model: MODEL, max_tokens: 4000, system: sys,
+    messages: [{ role: 'user', content: `Target keyword: "${keyword}". Local business: ${site.brand}${site.phone ? ', phone ' + site.phone : ''}.` }],
+  });
+  const post = parseJson(msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join(''));
+  if (!post?.title || !post?.content) return res.status(200).json({ ok: false, error: 'Could not write the post — try again.' });
+
+  // Publish only when asked, and only for github-hosted sites.
+  if (body.publish === true) {
+    if (!site.githubRepo) return res.status(200).json({ ok: true, published: false, draft: post, note: `${site.label} is a ${site.platform} site — copy the draft into your editor to publish.` });
+    const token = (req.headers['x-jarvis-token'] as string) || '';
+    const pub = await fetch(`${base}/api/publish-blog`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'x-jarvis-token': token },
+      body: JSON.stringify({ title: post.title, slug: post.slug, content: post.content, targetKeyword: post.targetKeyword || keyword, metaDescription: post.metaDescription, excerpt: post.excerpt }),
+    }).then((r) => r.json()).catch((e) => ({ error: String(e) }));
+    if (pub.error) return res.status(200).json({ ok: false, error: `Draft written, publish failed: ${pub.error}`, draft: post });
+    try { await sendTelegram(`📝 *New post published — ${site.label}*\n${post.title}\n${pub.url || ''}`, { parseMode: 'Markdown' }); } catch { /* */ }
+    return res.json({ ok: true, published: true, keyword, post, url: pub.url });
+  }
+  return res.json({ ok: true, published: false, keyword, post });
 }
 
 // ---- GBP agent: write ready-to-publish Google Business Profile posts --------

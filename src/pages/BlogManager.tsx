@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import PageHead from '@/components/PageHead';
 import { Panel, PanelHead } from '@/components/Panel';
+import { useActiveSiteConfig, getActionToken, setActionToken } from '@/lib/store';
 
 interface BlogPost {
   title: string;
@@ -19,6 +20,13 @@ interface BlogIndex {
 export default function BlogManager() {
   const [index, setIndex] = useState<BlogIndex | null>(null);
   const [loading, setLoading] = useState(true);
+  const site = useActiveSiteConfig();
+  const [topic, setTopic] = useState('');
+  const [draft, setDraft] = useState<any>(null);
+  const [busy, setBusy] = useState<'write' | 'publish' | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [tok, setTok] = useState(getActionToken());
+  const [needTok, setNeedTok] = useState(false);
 
   useEffect(() => {
     fetch('/blog-index.json', { cache: 'no-store' })
@@ -27,6 +35,23 @@ export default function BlogManager() {
       .catch(() => setIndex({ lastUpdated: '', nextScheduledTopic: '', posts: [] }))
       .finally(() => setLoading(false));
   }, []);
+
+  const callBlog = async (publish: boolean) => {
+    if (!site) return;
+    let token = tok || getActionToken();
+    if (!token) { setNeedTok(true); return; }
+    setActionToken(token);
+    setBusy(publish ? 'publish' : 'write'); setMsg(null);
+    try {
+      const r = await fetch('/api/ai', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-jarvis-token': token }, body: JSON.stringify({ action: 'blog', site: site.id, topic: topic.trim() || undefined, publish }) });
+      const d = await r.json();
+      if (r.status === 401) { setNeedTok(true); setMsg('Action token rejected.'); }
+      else if (d.published) { setMsg(`✅ Published: ${d.post?.title}. Live in ~1–2 min. ${d.url || ''}`); setDraft(null); }
+      else if (d.ok && d.post) { setDraft({ ...d.post, _keyword: d.keyword }); setMsg(d.note || null); }
+      else setMsg(d.error || 'Could not write the post.');
+    } catch (e) { setMsg(String(e)); }
+    finally { setBusy(null); }
+  };
 
   const published = (index?.posts ?? []).filter((p) => p.publishedDate);
   const sorted = [...published].sort((a, b) => b.publishedDate.localeCompare(a.publishedDate));
@@ -39,8 +64,40 @@ export default function BlogManager() {
     <>
       <PageHead
         title="Blog Manager"
-        meta="Published posts · target keywords · content calendar"
+        meta="Published posts · AI content engine"
+        actions={
+          <div className="flex gap-2 items-center flex-wrap">
+            <input value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="topic (or blank = auto-pick a gap)"
+              className="px-3 py-2 rounded-md bg-bg-deep border border-line text-ink text-[13px] w-[220px] max-w-[55vw]" />
+            <button className="btn btn-primary" onClick={() => callBlog(false)} disabled={busy !== null}>{busy === 'write' ? 'Writing…' : '✨ Write a post'}</button>
+          </div>
+        }
       />
+
+      {needTok && (
+        <div className="mb-4 panel p-3 flex items-center gap-2 flex-wrap">
+          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-amber">Action token</span>
+          <input type="password" value={tok} onChange={(e) => setTok(e.target.value)} placeholder="JARVIS_ACTION_TOKEN" className="px-3 py-1.5 rounded-md bg-bg-deep border border-line text-ink text-[13px] flex-1 min-w-[160px]" />
+          <button className="btn btn-primary" onClick={() => { setActionToken(tok); setNeedTok(false); callBlog(false); }}>Save</button>
+        </div>
+      )}
+      {msg && <div className="mb-4 text-[13px] text-ink bg-blue/10 border border-blue/30 rounded-lg px-4 py-2.5">{msg}</div>}
+
+      {draft && (
+        <Panel className="mb-5">
+          <PanelHead title="Draft — review before publishing" meta={draft._keyword ? `target: ${draft._keyword}` : undefined} right={
+            <div className="flex gap-2">
+              <button className="btn" onClick={() => setDraft(null)} disabled={busy !== null}>Discard</button>
+              <button className="btn btn-primary" onClick={() => callBlog(true)} disabled={busy !== null}>{busy === 'publish' ? 'Publishing…' : '🚀 Publish'}</button>
+            </div>
+          } />
+          <div className="p-4">
+            <div className="text-white font-semibold text-[16px] mb-1">{draft.title}</div>
+            <div className="text-ink-dim text-[12px] mb-3 font-mono">{draft.metaDescription}</div>
+            <div className="rounded-lg border border-line bg-white p-4 max-h-[460px] overflow-y-auto" style={{ color: '#1a2230' }} dangerouslySetInnerHTML={{ __html: draft.content }} />
+          </div>
+        </Panel>
+      )}
 
       {/* Stats row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
