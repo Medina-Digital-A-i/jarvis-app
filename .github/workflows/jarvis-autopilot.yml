@@ -1,0 +1,28 @@
+name: JARVIS autonomous fixer
+
+# Always-on SEO autopilot — runs in GitHub's cloud (off the Mac), more often than
+# Vercel's once-a-day cron limit. It only commits/notifies when it actually fixes
+# something, so frequent runs are silent no-ops on a clean site. The daily 9am ET
+# briefing stays on the Vercel cron (api/cron/seo-daily).
+on:
+  schedule:
+    - cron: '0 */6 * * *' # every 6 hours
+  workflow_dispatch: {} # also runnable on demand from the Actions tab
+
+jobs:
+  autopilot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run SEO autopilot on github-hosted sites
+        env:
+          TOKEN: ${{ secrets.JARVIS_ACTION_TOKEN }}
+          BASE: https://jarvis-app-orpin.vercel.app
+        run: |
+          for site in tps; do
+            echo "── autopilot: $site ──"
+            curl -sS --max-time 90 -X POST "$BASE/api/seo-autopilot?site=$site" \
+              -H "Content-Type: application/json" \
+              -H "x-jarvis-token: $TOKEN" \
+              -d '{"maxChanges":10}' | head -c 500
+            echo ""
+          done
