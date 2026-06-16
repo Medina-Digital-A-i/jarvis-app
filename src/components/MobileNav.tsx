@@ -7,6 +7,7 @@ type Item = { to: string; label: string; ico: string };
 // target stays comfortably wide at 375px.
 const ITEMS: Item[] = [
   { to: '/', label: 'Dashboard', ico: '📊' },
+  { to: '/edit', label: 'AI Edit', ico: '✨' },
   { to: '/get-to-1', label: 'To #1', ico: '🏆' },
   { to: '/console', label: 'Console', ico: '⌨️' },
   { to: '/agents', label: 'Agents', ico: '🛰️' },

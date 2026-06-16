@@ -6,6 +6,7 @@ import AgentActivity from '@/pages/AgentActivity';
 import AgentOps from '@/pages/AgentOps';
 import GetToOne from '@/pages/GetToOne';
 import Console from '@/pages/Console';
+import AiEditor from '@/pages/AiEditor';
 import BlogManager from '@/pages/BlogManager';
 import Competitors from '@/pages/Competitors';
 import Settings from '@/pages/Settings';
@@ -21,6 +22,7 @@ export default function App() {
         {/* SEO Command Center */}
         <Route path="/get-to-1" element={<GetToOne />} />
         <Route path="/console" element={<Console />} />
+        <Route path="/edit" element={<AiEditor />} />
         <Route path="/agents" element={<AgentOps />} />
         <Route path="/seo-health" element={<SeoHealth />} />
         <Route path="/agent-activity" element={<AgentActivity />} />

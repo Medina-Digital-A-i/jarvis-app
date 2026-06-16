@@ -85,7 +85,7 @@ export default function Console() {
           break;
         }
         default:
-          say('jarvis', `Plain-English site edits ("add a winter promo banner") are coming with the AI Editor. For now: ${'\n'}${HELP}`);
+          say('jarvis', `For plain-English site changes ("add a winter promo banner"), open the ✨ AI Editor — it previews the change before shipping.\n\n${HELP}`);
       }
     } catch (e) {
       say('jarvis', `⚠️ ${String(e)}`);
