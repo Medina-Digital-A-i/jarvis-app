@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import PageHead from '@/components/PageHead';
 import { Panel, PanelHead } from '@/components/Panel';
+import { useActiveSiteConfig, getActionToken, setActionToken } from '@/lib/store';
 
 interface Competitor {
   name: string;
@@ -29,6 +30,29 @@ export default function Competitors() {
   // target keyword), not from the static competitor-data.json file.
   const [livePosition, setLivePosition] = useState<number | null>(null);
   const [gscChecked, setGscChecked] = useState(false);
+  const site = useActiveSiteConfig();
+  const [compUrl, setCompUrl] = useState('');
+  const [report, setReport] = useState<any>(null);
+  const [busy, setBusy] = useState(false);
+  const [tmsg, setTmsg] = useState<string | null>(null);
+  const [tok, setTok] = useState(getActionToken());
+  const [needTok, setNeedTok] = useState(false);
+
+  const teardown = async () => {
+    if (!site || !compUrl.trim()) { setTmsg('Enter a competitor URL.'); return; }
+    let token = tok || getActionToken();
+    if (!token) { setNeedTok(true); return; }
+    setActionToken(token);
+    setBusy(true); setTmsg(null); setReport(null);
+    try {
+      const r = await fetch('/api/ai', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-jarvis-token': token }, body: JSON.stringify({ action: 'competitor', site: site.id, competitorUrl: compUrl.trim() }) });
+      const d = await r.json();
+      if (r.status === 401) { setNeedTok(true); setTmsg('Action token rejected.'); }
+      else if (d.ok && d.report) setReport(d.report);
+      else setTmsg(d.error || 'Could not analyze that competitor.');
+    } catch (e) { setTmsg(String(e)); }
+    finally { setBusy(false); }
+  };
 
   useEffect(() => {
     fetch('/competitor-data.json', { cache: 'no-store' })
@@ -66,7 +90,52 @@ export default function Competitors() {
       <PageHead
         title="Competitors"
         meta={`Target: ${data?.targetKeyword ?? 'commercial cleaning albany ny'}`}
+        actions={
+          <div className="flex gap-2 items-center flex-wrap">
+            <input value={compUrl} onChange={(e) => setCompUrl(e.target.value)} placeholder="rival URL, e.g. acme-cleaning.com"
+              className="px-3 py-2 rounded-md bg-bg-deep border border-line text-ink text-[13px] w-[230px] max-w-[55vw]" />
+            <button className="btn btn-primary" onClick={teardown} disabled={busy}>{busy ? 'Analyzing…' : '🔭 AI teardown'}</button>
+          </div>
+        }
       />
+
+      {needTok && (
+        <div className="mb-4 panel p-3 flex items-center gap-2 flex-wrap">
+          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-amber">Action token</span>
+          <input type="password" value={tok} onChange={(e) => setTok(e.target.value)} placeholder="JARVIS_ACTION_TOKEN" className="px-3 py-1.5 rounded-md bg-bg-deep border border-line text-ink text-[13px] flex-1 min-w-[160px]" />
+          <button className="btn btn-primary" onClick={() => { setActionToken(tok); setNeedTok(false); teardown(); }}>Save</button>
+        </div>
+      )}
+      {tmsg && <div className="mb-4 text-[13px] text-ink bg-blue/10 border border-blue/30 rounded-lg px-4 py-2.5">{tmsg}</div>}
+
+      {report && (
+        <Panel className="mb-6">
+          <PanelHead title="🔭 AI competitor teardown" meta={compUrl} />
+          <div className="p-4 space-y-3">
+            <div className="text-[13px] text-ink-soft">{report.summary}</div>
+            {(report.gaps || []).length > 0 && (
+              <div>
+                <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-dim mb-2">Gaps to close</div>
+                <div className="space-y-2">
+                  {report.gaps.map((g: any, i: number) => (
+                    <div key={i} className="rounded-lg border border-line bg-white/[0.02] px-4 py-3">
+                      <div className="text-[13px] text-white font-medium">{g.topic}</div>
+                      <div className="text-[12px] text-ink-soft mt-0.5">{g.why}</div>
+                      {g.suggestedPage && <div className="text-[11px] text-blue mt-1 font-mono">→ build: {g.suggestedPage}</div>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {(report.keywordOpportunities || []).length > 0 && (
+              <div>
+                <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-dim mb-1">Keyword openings</div>
+                <div className="flex flex-wrap gap-1.5">{report.keywordOpportunities.map((k: string, i: number) => <span key={i} className="text-[11px] font-mono px-2 py-0.5 rounded border border-line text-ink-soft">{k}</span>)}</div>
+              </div>
+            )}
+          </div>
+        </Panel>
+      )}
 
       {/* KPI row */}
       {data && (
