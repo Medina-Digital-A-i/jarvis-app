@@ -37,6 +37,33 @@ import {
 import { sendTelegram } from './_lib/telegram.js';
 import { markRunning, markDone } from './_lib/heartbeat.js';
 import { resolveSite, type SiteConfig } from './_lib/sites.js';
+import Anthropic from '@anthropic-ai/sdk';
+
+const AI_MODEL = process.env.JARVIS_AI_MODEL || 'claude-sonnet-4-6';
+
+// Best-effort: ask Claude for genuinely keyword-optimized title+meta for the pages
+// that need them, in ONE call. Any failure → empty map → the templates take over,
+// so the unattended loop never breaks.
+async function aiMetaFor(
+  cands: Array<{ slug: string; topic: string; title: string | null; desc: string | null }>,
+  c: SiteCtx
+): Promise<Record<string, { title?: string; description?: string }>> {
+  if (!process.env.ANTHROPIC_API_KEY || cands.length === 0) return {};
+  try {
+    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    const list = cands.map((x) => `- slug "${x.slug}": topic "${x.topic}"${x.title ? `, current title "${x.title}"` : ''}`).join('\n');
+    const sys = `You write on-page SEO meta for ${c.brand} (${c.region}). For each page slug, write a compelling <title> (50-60 chars, includes the topic + locale where natural) and a meta description (120-160 chars, benefit + soft CTA). Respond ONLY as JSON: {"<slug>":{"title":"...","description":"..."}}. Keep titles 50-60 chars and descriptions 120-160 chars exactly.`;
+    const msg = await client.messages.create({
+      model: AI_MODEL, max_tokens: 1500, system: sys,
+      messages: [{ role: 'user', content: `Pages:\n${list}` }],
+    }, { timeout: 25000 });
+    const txt = msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join('').trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
+    const parsed = JSON.parse(txt);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
 
 // Give the function room to read ~30 pages and commit fixes (Hobby allows 60s).
 export const config = { maxDuration: 60 };
@@ -98,7 +125,7 @@ function buildDescription(topic: string, c: SiteCtx): string {
 }
 
 // Analyse one page's HTML and return the patched HTML + the fixes/skips.
-function fixPage(slug: string, html: string, c: SiteCtx): { html: string; fixes: Fix[]; skipped: Fix[] } {
+function fixPage(slug: string, html: string, c: SiteCtx, ai?: { title?: string; description?: string }): { html: string; fixes: Fix[]; skipped: Fix[] } {
   const fixes: Fix[] = [];
   const skipped: Fix[] = [];
   let out = html;
@@ -109,11 +136,14 @@ function fixPage(slug: string, html: string, c: SiteCtx): { html: string; fixes:
 
   const h1 = get(out, /<h1[^>]*>([^<]+)<\/h1>/i);
   const topic = h1 || humanize(slug);
+  // Prefer Claude-written meta when it's present and well-formed; else templates.
+  const aiTitle = ai?.title && ai.title.length >= 30 && ai.title.length <= 65 ? ai.title : null;
+  const aiDesc = ai?.description && ai.description.length >= 100 && ai.description.length <= 165 ? ai.description : null;
 
   // --- title ---------------------------------------------------------------
   const title = get(out, /<title[^>]*>([^<]*)<\/title>/i);
   if (!title || title.length < 30 || title.length > 60) {
-    const next = buildTitle(topic, c);
+    const next = aiTitle || buildTitle(topic, c);
     if (title == null) {
       out = injectInHead(out, `<title>${escapeHtml(next)}</title>`);
     } else {
@@ -126,7 +156,7 @@ function fixPage(slug: string, html: string, c: SiteCtx): { html: string; fixes:
   const descRx = /<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)/i;
   const desc = get(out, descRx);
   if (!desc || desc.length < 100 || desc.length > 160) {
-    const next = buildDescription(topic, c);
+    const next = aiDesc || buildDescription(topic, c);
     if (desc == null) {
       out = injectInHead(out, `<meta name="description" content="${escapeHtml(next)}">`);
     } else {
@@ -311,6 +341,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       files.push(...read);
     }
 
+    // One Claude call to write better title/meta for the pages that need them
+    // (best-effort; empty map → templates). Bounded so it stays fast + cheap.
+    const metaCands = files
+      .filter((f) => f.file)
+      .map((f) => {
+        const html = f.file!.content;
+        const title = get(html, /<title[^>]*>([^<]*)<\/title>/i);
+        const dsc = get(html, /<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)/i);
+        const needs = !title || title.length < 30 || title.length > 60 || !dsc || dsc.length < 100 || dsc.length > 160;
+        return needs ? { slug: f.slug, topic: get(html, /<h1[^>]*>([^<]+)<\/h1>/i) || humanize(f.slug), title, desc: dsc } : null;
+      })
+      .filter(Boolean)
+      .slice(0, Math.max(maxChanges, 8)) as Array<{ slug: string; topic: string; title: string | null; desc: string | null }>;
+    const metaMap = dryRun ? {} : await aiMetaFor(metaCands, c);
+
     // Apply fixes. Commits stay sequential and stop once we hit the per-run cap.
     for (const { slug, path, file, error } of files) {
       if (error) {
@@ -321,7 +366,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         results.push({ slug, path, fixes: [], skipped: [], committed: false, error: 'page not found in repo' });
         continue;
       }
-      const { html, fixes, skipped } = fixPage(slug, file.content, c);
+      const { html, fixes, skipped } = fixPage(slug, file.content, c, (metaMap as any)[slug]);
       const changed = html !== file.content && fixes.length > 0;
 
       if (changed && !dryRun && committed >= maxChanges) {
