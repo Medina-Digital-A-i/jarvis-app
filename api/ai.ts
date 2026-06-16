@@ -82,22 +82,48 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!process.env.ANTHROPIC_API_KEY) return res.status(503).json({ error: 'ANTHROPIC_API_KEY not configured.' });
     const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-    const sys = `You are an expert web developer making one precise edit to a single HTML page for ${site.brand} (${site.domain}, ${site.region}). Apply ONLY the change the user asks for. Preserve every other byte of markup, styling, scripts, and content exactly as-is. Keep the document valid. Match the page's existing visual style for anything you add. Return ONLY the complete edited HTML document — no markdown code fences, no explanation.`;
+    // Find-and-replace edits keep Claude's OUTPUT tiny (fast, no truncation on big
+    // pages). Each "find" must be an exact substring we apply server-side.
+    const sys = `You edit one HTML page for ${site.brand} (${site.domain}${site.region ? ', ' + site.region : ''}). The user describes a change. Respond with ONLY a JSON object, no prose, no code fences:
+{"summary":"<one short sentence>","feasible":true,"edits":[{"find":"<EXACT substring copied verbatim from the page>","replace":"<replacement>"}]}
+Rules:
+- Each "find" MUST appear character-for-character in the page HTML below. Keep it short but unique (include nearby tags if needed for uniqueness).
+- To INSERT, set "find" to an existing anchor (e.g. an opening tag) and "replace" to that same anchor plus your new HTML.
+- Make ONLY the requested change; match the page's existing visual style for anything new.
+- If it's not doable on this page, return "feasible":false with an empty edits array.`;
     const msg = await client.messages.create({
       model: MODEL,
-      max_tokens: 16000,
+      max_tokens: 4000,
       system: sys,
-      messages: [{ role: 'user', content: `Change to make: ${instruction}\n\n--- CURRENT HTML of /${path} ---\n${original}` }],
+      messages: [{ role: 'user', content: `Change to make: ${instruction}\n\n--- PAGE HTML (/${path}) ---\n${original}` }],
     });
-    let newHtml = msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join('');
-    newHtml = newHtml.replace(/^```(?:html)?\s*/i, '').replace(/\s*```$/i, '').trim();
-
-    // Guard against a truncated/garbled response.
-    if (newHtml.length < original.length * 0.5 || !/<\/html>/i.test(newHtml.slice(-2000)) && /<\/html>/i.test(original)) {
-      return res.status(200).json({ ok: false, error: 'The edit came back incomplete (page may be too large). Try a more specific instruction.' });
+    let txt = msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join('').trim();
+    txt = txt.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+    let parsed: { summary?: string; feasible?: boolean; edits?: Array<{ find: string; replace: string }> };
+    try { parsed = JSON.parse(txt); } catch { return res.status(200).json({ ok: false, error: 'Could not parse the edit. Try rephrasing the instruction.' }); }
+    if (parsed.feasible === false || !Array.isArray(parsed.edits) || parsed.edits.length === 0) {
+      return res.status(200).json({ ok: false, error: parsed.summary || "That change isn't doable on this page — try another page or be more specific." });
     }
-    const changed = newHtml !== original;
-    return res.json({ ok: true, changed, path, summary: instruction, newHtml, before: original.length, after: newHtml.length });
+
+    let newHtml = original;
+    const applied: string[] = [];
+    const failed: string[] = [];
+    for (const e of parsed.edits) {
+      if (typeof e.find !== 'string' || !e.find) continue;
+      const idx = newHtml.indexOf(e.find);
+      if (idx === -1) { failed.push(e.find.slice(0, 40)); continue; }
+      newHtml = newHtml.slice(0, idx) + (e.replace ?? '') + newHtml.slice(idx + e.find.length);
+      applied.push(e.find.slice(0, 40));
+    }
+    if (applied.length === 0) {
+      return res.status(200).json({ ok: false, error: 'The proposed edit did not match the live page. Try rephrasing.' });
+    }
+    return res.json({
+      ok: true, changed: newHtml !== original, path,
+      summary: parsed.summary || instruction, newHtml,
+      before: original.length, after: newHtml.length,
+      appliedCount: applied.length, failedCount: failed.length,
+    });
   } catch (e: unknown) {
     return res.status(500).json({ error: String(e) });
   }
