@@ -8,6 +8,7 @@ import GetToOne from '@/pages/GetToOne';
 import Console from '@/pages/Console';
 import AiEditor from '@/pages/AiEditor';
 import Ads from '@/pages/Ads';
+import Local from '@/pages/Local';
 import BlogManager from '@/pages/BlogManager';
 import Competitors from '@/pages/Competitors';
 import Settings from '@/pages/Settings';
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="/console" element={<Console />} />
         <Route path="/edit" element={<AiEditor />} />
         <Route path="/ads" element={<Ads />} />
+        <Route path="/local" element={<Local />} />
         <Route path="/agents" element={<AgentOps />} />
         <Route path="/seo-health" element={<SeoHealth />} />
         <Route path="/agent-activity" element={<AgentActivity />} />

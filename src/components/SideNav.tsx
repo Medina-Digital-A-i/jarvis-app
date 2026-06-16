@@ -12,6 +12,7 @@ const GROUPS: Group[] = [
       { to: '/edit', label: 'AI Editor', ico: '✨', badge: 'NEW' },
       { to: '/get-to-1', label: 'Get to #1', ico: '🏆', badge: 'NEW' },
       { to: '/ads', label: 'Ads', ico: '📣', badge: 'NEW' },
+      { to: '/local', label: 'Reviews & Local', ico: '⭐', badge: 'NEW' },
       { to: '/console', label: 'Console', ico: '⌨️' },
       { to: '/agents', label: 'Agent Ops', ico: '🛰️', badge: 'LIVE' },
       { to: '/seo-health', label: 'SEO Health', ico: '⊕' },

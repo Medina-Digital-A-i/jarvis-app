@@ -48,6 +48,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // ---- AI actions that work for ANY site (no repo needed) ----------------
     if (action === 'ads') return await adsRecommend(site, selfBase, claude(), res);
     if (action === 'competitor') return await competitorReport(site, selfBase, body, claude(), res);
+    if (action === 'gbp') return await gbpDrafts(site, body, claude(), res);
 
     // ---- actions that mutate the site repo (github-hosted only) ------------
     if (!site.githubRepo) {
@@ -141,6 +142,22 @@ Rules:
 function parseJson(txt: string): any {
   const t = txt.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
   try { return JSON.parse(t); } catch { return null; }
+}
+
+// ---- GBP agent: write ready-to-publish Google Business Profile posts --------
+async function gbpDrafts(site: SiteConfig, body: Record<string, unknown>, client: Anthropic, res: VercelResponse) {
+  if (!process.env.ANTHROPIC_API_KEY) return res.status(503).json({ error: 'ANTHROPIC_API_KEY not configured.' });
+  const theme = String(body.theme ?? '').trim();
+  const sys = `You write Google Business Profile posts for ${site.brand}, a local business in ${site.region || 'its area'}. GBP posts are short (about 150-300 characters), warm, specific, and end with a clear call to action. Respond with ONLY JSON:
+{"posts":[{"type":"<offer|update|tip|event>","text":"<the post, 150-300 chars>","cta":"<LEARN_MORE|CALL|BOOK|ORDER>","imageIdea":"<one line describing a photo to attach>"}]}
+Write 3 varied posts (e.g. a promotion, a helpful tip, a service-area/seasonal update). Local, human, no hashtags spam.`;
+  const msg = await client.messages.create({
+    model: MODEL, max_tokens: 1500, system: sys,
+    messages: [{ role: 'user', content: theme ? `Focus theme: ${theme}` : `General weekly posts for ${site.brand} (${site.domain}).` }],
+  });
+  const out = parseJson(msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join(''));
+  if (!out?.posts) return res.status(200).json({ ok: false, error: 'Could not generate posts — try again.' });
+  return res.json({ ok: true, site: site.id, posts: out.posts });
 }
 
 // ---- Ads agent: recommend a launch-ready paid-search campaign --------------
