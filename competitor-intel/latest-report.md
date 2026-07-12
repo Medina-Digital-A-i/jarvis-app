@@ -1,75 +1,9 @@
 # JARVIS Competitor Watch — 2026-07-12
 
-Tracked: 8 competitors + 5 TPS pages · generated 2026-07-12T20:43:04.066Z
+Tracked: 8 competitors + 5 TPS pages · generated 2026-07-12T20:49:44.493Z
 
 ## Changes since last run
-### TPS Pro — Home
-- title changed:
-    - was: Commercial Cleaning &amp; Property Maintenance Albany NY | TPS Pro
-    - now: Commercial Cleaning & Property Maintenance Albany NY | TPS Pro
-- description changed:
-    - was: Albany
-    - now: Albany's one-contract partner for commercial cleaning & property maintenance. Janitorial, student turnovers, post-construction. Bonded & insured, 24/7. (518) 948-7156.
-
-### TPS Pro — Student Turnovers
-- description changed:
-    - was: Student turnover cleaning in Albany, Saratoga &amp; the Capital Region. TPS Pro turns 100-200+ units per season — deep cleaned, inspection-ready, on schedule.
-    - now: Student turnover cleaning in Albany, Saratoga & the Capital Region. TPS Pro turns 100-200+ units per season — deep cleaned, inspection-ready, on schedule.
-
-### TPS Pro — Commercial Cleaning
-- description changed:
-    - was: Commercial cleaning services in Albany NY — offices, facilities, retail &amp; more. One accountable contract, bonded &amp; insured, 24/7 response. (518) 948-7156.
-    - now: Commercial cleaning services in Albany NY — offices, facilities, retail & more. One accountable contract, bonded & insured, 24/7 response. (518) 948-7156.
-- h1 changed:
-    - was: Commercial Cleaning in Albany &amp; the Capital Region
-    - now: Commercial Cleaning in Albany & the Capital Region
-
-### TPS Pro — Post-Construction
-- description changed:
-    - was: Post-construction cleaning in Albany NY: rough, final &amp; touch-up cleans that make your project handoff-ready. Trusted by local GCs. (518) 948-7156.
-    - now: Post-construction cleaning in Albany NY: rough, final & touch-up cleans that make your project handoff-ready. Trusted by local GCs. (518) 948-7156.
-- h1 changed:
-    - was: Post-Construction Cleaning in Albany &amp; the Capital Region
-    - now: Post-Construction Cleaning in Albany & the Capital Region
-
-### TPS Pro — Property Management
-- title changed:
-    - was: Commercial &amp; Residential Property Management Albany | TPS Pro
-    - now: Commercial & Residential Property Management Albany | TPS Pro
-- description changed:
-    - was: Commercial &amp; residential property management in Albany NY with 24/7 in-house maintenance, cleaning &amp; renovations. One accountable partner. (518) 948-7156.
-    - now: Commercial & residential property management in Albany NY with 24/7 in-house maintenance, cleaning & renovations. One accountable partner. (518) 948-7156.
-
-### JAN-PRO Capital District
-- title changed:
-    - was: Commercial Cleaning Services Albany, NY | JAN-PRO Cleaning &amp; Disinfecting
-    - now: Commercial Cleaning Services Albany, NY | JAN-PRO Cleaning & Disinfecting
-- description changed:
-    - was: JAN-PRO Cleaning &amp; Disinfecting&#039;s commercial cleaning services Albany, NY provides best in class janitorial services in Albany to commercial facilities.
-    - now: JAN-PRO Cleaning & Disinfecting's commercial cleaning services Albany, NY provides best in class janitorial services in Albany to commercial facilities.
-
-### Clean Method (Albany page)
-- description changed:
-    - was: Get reliable, customer-focused commercial cleaning services in Albany, NY. Clean Method provides janitorial services, floor/carpet cleaning, window cleaning &amp; more.
-    - now: Get reliable, customer-focused commercial cleaning services in Albany, NY. Clean Method provides janitorial services, floor/carpet cleaning, window cleaning & more.
-
-### Daigle Cleaning Systems
-- h1 changed:
-    - was: Commercial &amp; Residential Cleaning Built on Standards
-    - now: Commercial & Residential Cleaning Built on Standards
-
-### Martinez Cleaning (post-construction)
-- title changed:
-    - was: Martinez Cleaning | Post Construction Cleaning Services for Albany, Troy, Schenectady &amp; Saratoga New York
-    - now: Martinez Cleaning | Post Construction Cleaning Services for Albany, Troy, Schenectady & Saratoga New York
-
-### Olsen's Property Maintenance
-- title changed:
-    - was: Commercial Property Maintenance Albany &amp; Capital Region
-    - now: Commercial Property Maintenance Albany & Capital Region
-- description changed:
-    - was: Olsen&#039;s offers reliable commercial property maintenance in Albany, Loudonville, Latham, and Colonie. Contact us for tailored services today
-    - now: Olsen's offers reliable commercial property maintenance in Albany, Loudonville, Latham, and Colonie. Contact us for tailored services today
+_No changes detected across the tracked set._
 
 ## Keyword encroachment board
 
