@@ -1,0 +1,337 @@
+{
+  "generatedAt": "2026-07-12T20:43:04.066Z",
+  "pages": {
+    "tps-home": {
+      "id": "tps-home",
+      "name": "TPS Pro — Home",
+      "url": "https://totalpropertysolution.net/",
+      "ok": true,
+      "status": 200,
+      "ms": 243,
+      "title": "Commercial Cleaning & Property Maintenance Albany NY | TPS Pro",
+      "description": "Albany's one-contract partner for commercial cleaning & property maintenance. Janitorial, student turnovers, post-construction. Bonded & insured, 24/7. (518) 948-7156.",
+      "h1": "One company. One contract. Every property solved.",
+      "wordCount": 696,
+      "hasTelLink": true,
+      "hasForm": true,
+      "schemaTypes": [
+        "AdministrativeArea",
+        "City",
+        "GeoCoordinates",
+        "LocalBusiness",
+        "Offer",
+        "OfferCatalog",
+        "OpeningHoursSpecification",
+        "PostalAddress",
+        "Service"
+      ],
+      "keywordHits": [
+        "student turnover",
+        "student turn",
+        "rental turnover",
+        "turnover ticket",
+        "property management",
+        "renovation",
+        "one contract"
+      ]
+    },
+    "tps-student": {
+      "id": "tps-student",
+      "name": "TPS Pro — Student Turnovers",
+      "url": "https://totalpropertysolution.net/student-turnover-cleaning.html",
+      "ok": true,
+      "status": 200,
+      "ms": 169,
+      "title": "Student Turnover Cleaning Albany NY | TPS Pro",
+      "description": "Student turnover cleaning in Albany, Saratoga & the Capital Region. TPS Pro turns 100-200+ units per season — deep cleaned, inspection-ready, on schedule.",
+      "h1": "Student Turnover Cleaning, Done at Scale",
+      "wordCount": 534,
+      "hasTelLink": true,
+      "hasForm": true,
+      "schemaTypes": [
+        "BreadcrumbList",
+        "ListItem",
+        "LocalBusiness",
+        "PostalAddress",
+        "Service"
+      ],
+      "keywordHits": [
+        "student turnover",
+        "student turn",
+        "rental turnover",
+        "property management",
+        "renovation"
+      ]
+    },
+    "tps-commercial": {
+      "id": "tps-commercial",
+      "name": "TPS Pro — Commercial Cleaning",
+      "url": "https://totalpropertysolution.net/commercial-cleaning-albany-ny.html",
+      "ok": true,
+      "status": 200,
+      "ms": 163,
+      "title": "Commercial Cleaning in Albany, NY | TPS Pro LLC",
+      "description": "Commercial cleaning services in Albany NY — offices, facilities, retail & more. One accountable contract, bonded & insured, 24/7 response. (518) 948-7156.",
+      "h1": "Commercial Cleaning in Albany & the Capital Region",
+      "wordCount": 837,
+      "hasTelLink": true,
+      "hasForm": true,
+      "schemaTypes": [
+        "Answer",
+        "BreadcrumbList",
+        "City",
+        "FAQPage",
+        "ListItem",
+        "LocalBusiness",
+        "PostalAddress",
+        "Question",
+        "Service"
+      ],
+      "keywordHits": [
+        "student turn",
+        "rental turnover",
+        "property management",
+        "renovation",
+        "one contract"
+      ]
+    },
+    "tps-postcon": {
+      "id": "tps-postcon",
+      "name": "TPS Pro — Post-Construction",
+      "url": "https://totalpropertysolution.net/post-construction-cleaning.html",
+      "ok": true,
+      "status": 200,
+      "ms": 79,
+      "title": "Post-Construction Cleaning Albany NY | TPS Pro",
+      "description": "Post-construction cleaning in Albany NY: rough, final & touch-up cleans that make your project handoff-ready. Trusted by local GCs. (518) 948-7156.",
+      "h1": "Post-Construction Cleaning in Albany & the Capital Region",
+      "wordCount": 576,
+      "hasTelLink": true,
+      "hasForm": true,
+      "schemaTypes": [
+        "BreadcrumbList",
+        "ListItem",
+        "LocalBusiness",
+        "PostalAddress",
+        "Service"
+      ],
+      "keywordHits": [
+        "student turn",
+        "rental turnover",
+        "property management",
+        "renovation"
+      ]
+    },
+    "tps-pm": {
+      "id": "tps-pm",
+      "name": "TPS Pro — Property Management",
+      "url": "https://totalpropertysolution.net/property-management.html",
+      "ok": true,
+      "status": 200,
+      "ms": 89,
+      "title": "Commercial & Residential Property Management Albany | TPS Pro",
+      "description": "Commercial & residential property management in Albany NY with 24/7 in-house maintenance, cleaning & renovations. One accountable partner. (518) 948-7156.",
+      "h1": "Property management with its own maintenance crew built in",
+      "wordCount": 401,
+      "hasTelLink": true,
+      "hasForm": true,
+      "schemaTypes": [
+        "AdministrativeArea",
+        "City",
+        "Service"
+      ],
+      "keywordHits": [
+        "student turn",
+        "rental turnover",
+        "property management",
+        "renovation"
+      ]
+    },
+    "mcw": {
+      "id": "mcw",
+      "name": "MCW Janitorial",
+      "url": "https://mcwjanitorial.com/",
+      "ok": false,
+      "status": 403,
+      "ms": 178,
+      "title": "403 - Forbidden",
+      "description": null,
+      "h1": "403 - Forbidden",
+      "wordCount": 15,
+      "hasTelLink": false,
+      "hasForm": false,
+      "schemaTypes": [],
+      "keywordHits": []
+    },
+    "cleantec": {
+      "id": "cleantec",
+      "name": "Cleantec (Albany page)",
+      "url": "https://www.cleantec.us/service-areas/albany/",
+      "ok": true,
+      "status": 200,
+      "ms": 1790,
+      "title": "Commercial Cleaning Services Albany, NY - Cleantec Commercial Cleaning",
+      "description": "Book best-in-class commercial cleaning in Albany with Cleantec. Request your free quote based on 50 years of experience serving upstate NY.",
+      "h1": "Commercial Cleaning & Janitorial Services In Albany, NY",
+      "wordCount": 1704,
+      "hasTelLink": true,
+      "hasForm": false,
+      "schemaTypes": [
+        "BreadcrumbList",
+        "EntryPoint",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PropertyValueSpecification",
+        "ReadAction",
+        "SearchAction",
+        "WebPage",
+        "WebSite"
+      ],
+      "keywordHits": []
+    },
+    "janpro": {
+      "id": "janpro",
+      "name": "JAN-PRO Capital District",
+      "url": "https://jan-pro.com/capitaldistrict/",
+      "ok": true,
+      "status": 200,
+      "ms": 269,
+      "title": "Commercial Cleaning Services Albany, NY | JAN-PRO Cleaning & Disinfecting",
+      "description": "JAN-PRO Cleaning & Disinfecting's commercial cleaning services Albany, NY provides best in class janitorial services in Albany to commercial facilities.",
+      "h1": "Commercial Cleaning Services Albany, NY",
+      "wordCount": 1444,
+      "hasTelLink": true,
+      "hasForm": true,
+      "schemaTypes": [],
+      "keywordHits": [
+        "property management"
+      ]
+    },
+    "cleanmethod": {
+      "id": "cleanmethod",
+      "name": "Clean Method (Albany page)",
+      "url": "https://cleanmethod.com/near-me/new-york/albany/",
+      "ok": true,
+      "status": 200,
+      "ms": 301,
+      "title": "Commercial Cleaning Service in Albany, NY | Clean Method",
+      "description": "Get reliable, customer-focused commercial cleaning services in Albany, NY. Clean Method provides janitorial services, floor/carpet cleaning, window cleaning & more.",
+      "h1": "Commercial Cleaning Service in Albany, NY",
+      "wordCount": 1798,
+      "hasTelLink": true,
+      "hasForm": true,
+      "schemaTypes": [
+        "BreadcrumbList",
+        "GeoCoordinates",
+        "ListItem",
+        "LocalBusiness",
+        "PostalAddress"
+      ],
+      "keywordHits": [
+        "property management"
+      ]
+    },
+    "daigle": {
+      "id": "daigle",
+      "name": "Daigle Cleaning Systems",
+      "url": "https://daigleclean.com/",
+      "ok": true,
+      "status": 200,
+      "ms": 242,
+      "title": "Commercial Cleaning Services for Your Business Needs - Daigle Cleaning Systems",
+      "description": "Explore our commercial cleaning services with eco-friendly solutions for offices and homes. Experience cleanliness without harsh chemicals.",
+      "h1": "Commercial & Residential Cleaning Built on Standards",
+      "wordCount": 1384,
+      "hasTelLink": true,
+      "hasForm": true,
+      "schemaTypes": [
+        "BreadcrumbList",
+        "EntryPoint",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PropertyValueSpecification",
+        "ReadAction",
+        "SearchAction",
+        "WebPage",
+        "WebSite"
+      ],
+      "keywordHits": []
+    },
+    "martinez": {
+      "id": "martinez",
+      "name": "Martinez Cleaning (post-construction)",
+      "url": "https://www.martinezcleaningllc.com/services/post-construction-cleaning/",
+      "ok": true,
+      "status": 200,
+      "ms": 472,
+      "title": "Martinez Cleaning | Post Construction Cleaning Services for Albany, Troy, Schenectady & Saratoga New York",
+      "description": "Martinez Cleaning, LLC offers post-construction cleaning services in Albany for house and commercial buildings, Our team will make your living environment clean after a construction or renovation project.",
+      "h1": "Post Construction Cleaning Services",
+      "wordCount": 1215,
+      "hasTelLink": true,
+      "hasForm": true,
+      "schemaTypes": [
+        "Article",
+        "BreadcrumbList",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "Person",
+        "PostalAddress",
+        "WebPage",
+        "WebSite"
+      ],
+      "keywordHits": [
+        "renovation"
+      ]
+    },
+    "abm": {
+      "id": "abm",
+      "name": "ABM Albany",
+      "url": "https://locations.abm.com/ny/albany/",
+      "ok": true,
+      "status": 200,
+      "ms": 401,
+      "title": "Find Facility Maintenance Experts in Albany, NY",
+      "description": "ABM delivers building maintenance solutions through more than 225 offices throughout the U.S., U.K, and more. Locate our Albany offices.",
+      "h1": "Albany Locations",
+      "wordCount": 1763,
+      "hasTelLink": true,
+      "hasForm": true,
+      "schemaTypes": [
+        "BreadcrumbList",
+        "ListItem",
+        "LocalBusiness",
+        "WebPage"
+      ],
+      "keywordHits": []
+    },
+    "olsens": {
+      "id": "olsens",
+      "name": "Olsen's Property Maintenance",
+      "url": "https://olsensproperty.com/commercial/",
+      "ok": true,
+      "status": 200,
+      "ms": 220,
+      "title": "Commercial Property Maintenance Albany & Capital Region",
+      "description": "Olsen's offers reliable commercial property maintenance in Albany, Loudonville, Latham, and Colonie. Contact us for tailored services today",
+      "h1": "Commercial",
+      "wordCount": 281,
+      "hasTelLink": true,
+      "hasForm": false,
+      "schemaTypes": [
+        "BreadcrumbList",
+        "EntryPoint",
+        "ListItem",
+        "PropertyValueSpecification",
+        "ReadAction",
+        "SearchAction",
+        "WebPage",
+        "WebSite"
+      ],
+      "keywordHits": []
+    }
+  }
+}

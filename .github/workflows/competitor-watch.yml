@@ -1,0 +1,32 @@
+name: JARVIS competitor watch
+
+# Weekly recon on the verified Albany/Capital Region competitor set.
+# Credential-free: fetches public pages, diffs against the committed snapshot,
+# and commits the intel report back to this repo. Manual runs from the
+# Actions tab any time.
+on:
+  schedule:
+    - cron: '0 11 * * 1' # Mondays 11:00 UTC (~7am ET)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run competitor watch
+        run: node scripts/competitor-watch.mjs
+      - name: Commit intel
+        run: |
+          git config user.name "JARVIS Agent"
+          git config user.email "jarvis@totalpropertysolution.net"
+          git add competitor-intel/
+          git diff --cached --quiet && echo "no intel changes" && exit 0
+          git commit -m "intel: competitor watch $(date -u +%F)"
+          git push
