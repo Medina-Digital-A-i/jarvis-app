@@ -25,6 +25,8 @@ Translation for TPS Pro:
 |---|---|---|---|---|
 | **SEO Autopilot** | GitHub Action → Vercel `api/seo-autopilot` | Every 6h | Audit every page of the live site repo; fix missing/weak title, description, canonical, viewport, OG, twitter, schema; commit fixes | Never fabricates meta from filenames; title band 30–65, desc 100–170; never flips noindex on `-lp`/thank-you pages; max 10 changes/run; Telegram notify |
 | **Competitor Watch** | GitHub Action `competitor-watch.yml` | Weekly (Mon) | Fetch the 8 verified Albany competitors + our 5 money pages; diff titles/H1/descriptions/schema/keywords vs last snapshot; write `competitor-intel/latest-report.md`; flag keyword encroachment (especially student-turnover lane) | Read-only on the web; commits reports only to this repo; no AI, no secrets |
+| **Inspector** | Site-repo Action `jarvis-inspector.yml` | Weekly (Tue) | Deep-audit all 43 pages (meta bands, broken links, schema, GA, orphans, image weight, alt text); merge Scout intel cross-repo; write `jarvis/tasks.json` ledger; post the crew's weekly report as a GitHub Issue | Read-only on pages — routes work to fixer/content/human owners |
+| **Season Rotator** | Site-repo Action `jarvis-season.yml` | Monthly (1st) | Rotate the homepage seasonal strip with the Albany calendar (turns → fall renovations → winter contracts → spring make-ready) | Edits ONLY between `jarvis:season` markers; aborts if markers missing |
 | **Daily Brief** | Vercel cron `api/cron/seo-daily` | 9am ET | Morning digest to Miguel | Existing |
 | **GBP Poster** | `api/gbp-post` + `gbp-post-queue.json` | Queued | Publish Google Business Profile posts | **BLOCKED: needs GBP OAuth (Miguel)** |
 | **Review Responder** | repo `Review-Responder` | — | Auto-draft responses to Google reviews | **BLOCKED: needs GBP OAuth (Miguel)** |
@@ -32,12 +34,15 @@ Translation for TPS Pro:
 
 ## Standing weekly loop
 
-1. **Mon** — Competitor Watch runs → intel report lands in `competitor-intel/`.
-2. **Continuous** — Autopilot guards on-page drift every 6 hours.
-3. **When intel flags encroachment** (e.g. a competitor starts targeting
-   "student turnover cleaning") → escalate: strengthen that page's content,
-   consider a supporting blog post, check their GBP activity manually.
-4. **Miguel's 15-minute weekly ritual** (until GBP/reviews are API-wired):
+1. **Mon** — Scout (Competitor Watch) runs → intel lands in `competitor-intel/`.
+2. **Tue** — Inspector audits the site + merges Scout intel → task ledger updated → weekly report posted as a GitHub Issue on the site repo (Miguel gets notified).
+3. **Continuous** — Fixer (Autopilot) guards on-page drift every 6 hours; meta findings in the ledger clear on its next pass.
+4. **Monthly (1st)** — Rotator swaps the homepage seasonal banner.
+5. **When intel flags encroachment** (e.g. a competitor starts targeting
+   "student turnover cleaning") → the Inspector marks it HIGH in the Issue:
+   strengthen that page's content, consider a supporting blog post, check
+   their GBP activity manually.
+6. **Miguel's 15-minute weekly ritual** (until GBP/reviews are API-wired):
    - Ask 2–3 finished customers for a Google review (use
      `seo-strategy/review-request-sequence.md` templates). Respond to every
      new review same-week — recency and response rate are ranked factors.
