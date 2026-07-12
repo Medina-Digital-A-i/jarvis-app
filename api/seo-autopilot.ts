@@ -142,21 +142,31 @@ function fixPage(slug: string, html: string, c: SiteCtx, ai?: { title?: string; 
 
   // --- title ---------------------------------------------------------------
   const title = get(out, /<title[^>]*>([^<]*)<\/title>/i);
-  if (!title || title.length < 30 || title.length > 60) {
-    const next = aiTitle || buildTitle(topic, c);
+  if (!title || title.length < 30 || title.length > 65) {
+    // Guardrail: never fabricate a title from the filename (the old
+    // humanize(slug) fallback wrote "Index Services…" on the homepage).
+    // Only act with an AI-written title or a real on-page H1 to build from.
+    const next = aiTitle || (h1 ? buildTitle(h1, c) : null);
+    if (!next) {
+      skipped.push({ field: 'title', detail: 'no AI title and no H1 — left for human review (filename templates disabled)' });
+    } else {
     if (title == null) {
       out = injectInHead(out, `<title>${escapeHtml(next)}</title>`);
     } else {
       out = out.replace(/<title[^>]*>[\s\S]*?<\/title>/i, `<title>${escapeHtml(next)}</title>`);
     }
     if (out !== html || title == null) fixes.push({ field: 'title', detail: `→ "${next}"` });
+    }
   }
 
   // --- meta description ----------------------------------------------------
   const descRx = /<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)/i;
   const desc = get(out, descRx);
-  if (!desc || desc.length < 100 || desc.length > 160) {
-    const next = aiDesc || buildDescription(topic, c);
+  if (!desc || desc.length < 100 || desc.length > 170) {
+    const next = aiDesc || (h1 ? buildDescription(h1, c) : null);
+    if (!next) {
+      skipped.push({ field: 'description', detail: 'no AI description and no H1 — left for human review (filename templates disabled)' });
+    } else {
     if (desc == null) {
       out = injectInHead(out, `<meta name="description" content="${escapeHtml(next)}">`);
     } else {
@@ -166,6 +176,7 @@ function fixPage(slug: string, html: string, c: SiteCtx, ai?: { title?: string; 
       );
     }
     fixes.push({ field: 'description', detail: `→ "${next.slice(0, 60)}…"` });
+    }
   }
 
   // --- canonical -----------------------------------------------------------
@@ -210,7 +221,8 @@ function fixPage(slug: string, html: string, c: SiteCtx, ai?: { title?: string; 
   // EXCEPT dedicated ad/PPC landing pages (slug ends in "-lp"), which are
   // intentionally noindex to avoid cannibalizing the main service pages they
   // mirror. Never touch their robots tag.
-  const isLandingPage = /-lp$/i.test(slug.replace(/\.html$/i, ''));
+  const bare = slug.replace(/\.html$/i, '');
+  const isLandingPage = /-lp$/i.test(bare) || /^(thank-you|thanks|confirmation)$/i.test(bare);
   const robots = get(out, /<meta[^>]+name=["']robots["'][^>]+content=["']([^"']*)/i);
   if (isLandingPage && robots && /noindex/i.test(robots)) {
     skipped.push({ field: 'robots', detail: 'noindex left in place — ad landing page (-lp), kept out of organic index on purpose' });
@@ -349,7 +361,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const html = f.file!.content;
         const title = get(html, /<title[^>]*>([^<]*)<\/title>/i);
         const dsc = get(html, /<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)/i);
-        const needs = !title || title.length < 30 || title.length > 60 || !dsc || dsc.length < 100 || dsc.length > 160;
+        const needs = !title || title.length < 30 || title.length > 65 || !dsc || dsc.length < 100 || dsc.length > 170;
         return needs ? { slug: f.slug, topic: get(html, /<h1[^>]*>([^<]+)<\/h1>/i) || humanize(f.slug), title, desc: dsc } : null;
       })
       .filter(Boolean)
