@@ -17,9 +17,8 @@ import Competitors from '@/pages/Competitors';
 import Settings from '@/pages/Settings';
 import Stub from '@/pages/Stub';
 
-// When a Clerk publishable key is present the routed content is gated behind
-// sign-in; when it's absent the gate is a no-op and the app renders openly.
-const CLERK_ENABLED = !!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+// Personal tool — no login required. Clerk integration removed.
+const CLERK_ENABLED = false;
 
 export default function App() {
   // Auto-populate action token from server on first visit (no manual paste needed)
