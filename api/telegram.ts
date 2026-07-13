@@ -1,18 +1,20 @@
 // api/telegram.ts
-// JARVIS Telegram bot webhook. Telegram POSTs every message / button tap here.
-// Lets the owner SEE and COMMAND the agents from their phone:
+// JARVIS Telegram bot webhook — full AI conversation + commands.
 //
-//   /start        register + show your chat id
-//   /status       last 5 agent-log entries
-//   /audit        run the SEO audit, reply with score
-//   /fix [n]      run the autopilot, fixing up to n pages (default 5)
-//   /help         list commands
+// Slash commands:
+//   /start   register + show chat id
+//   /status  last 5 agent-log entries
+//   /audit   run SEO audit
+//   /fix [n] autopilot fix up to n pages
+//   /help    list commands
+//
+// Free text → routed to Claude claude-haiku-4-5 with JARVIS persona
 //
 // Security:
-//   - Telegram sends a secret in X-Telegram-Bot-Api-Secret-Token (set via setWebhook).
-//     We verify it against TELEGRAM_WEBHOOK_SECRET when configured.
-//   - Once TELEGRAM_CHAT_ID is set, only that chat may issue commands.
+//   - X-Telegram-Bot-Api-Secret-Token verified against TELEGRAM_WEBHOOK_SECRET
+//   - Only TELEGRAM_CHAT_ID owner can interact
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import Anthropic from '@anthropic-ai/sdk';
 import { sendTelegram, answerCallback } from './_lib/telegram.js';
 import { readBody } from './_lib/github.js';
 
@@ -25,12 +27,43 @@ function baseUrl(req: VercelRequest): string {
 }
 
 const HELP = [
-  '🤖 *JARVIS commands*',
+  '🤖 *JARVIS — TPS Pro AI*',
+  '',
+  'Just talk to me naturally — ask anything.',
+  '',
+  '*Commands:*',
   '/status — recent agent activity',
   '/audit — run an SEO audit now',
   '/fix [n] — autopilot: fix up to n pages (default 5)',
   '/help — this list',
 ].join('\n');
+
+const SYSTEM_PROMPT = `You are JARVIS, the AI brain of TPS Pro (Total Property Solutions Pro), a cleaning and property management company in New York run by Miguel Medina.
+
+You are:
+- Sharp, direct, New York energy — no fluff
+- A real business partner, not a chatbot
+- CEO-minded: every answer should help Miguel grow the business
+- Knowledgeable about TPS Pro: commercial/residential cleaning, property management, lead gen, HubSpot CRM, their app at jarvis-app-orpin.vercel.app
+- Zero-cost first mindset — Miguel is bootstrapping
+
+You have access to these commands if needed: /status, /audit, /fix
+
+Keep replies concise for Telegram (under 200 words). Use plain text — no markdown headers. Be real, be sharp, be useful.`;
+
+async function askClaude(userMessage: string): Promise<string> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return '⚠️ AI brain offline — ANTHROPIC_API_KEY not set.';
+  const client = new Anthropic({ apiKey });
+  const response = await client.messages.create({
+    model: 'claude-haiku-4-5',
+    max_tokens: 400,
+    system: SYSTEM_PROMPT,
+    messages: [{ role: 'user', content: userMessage }],
+  });
+  const block = response.content[0];
+  return block.type === 'text' ? block.text.trim() : '...';
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Verify Telegram's secret header when one is configured.
@@ -108,9 +141,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     } else if (cmd.startsWith('/')) {
       await sendTelegram(`Unknown command \`${cmd}\`. Try /help`, { chatId, parseMode: 'Markdown' });
-    } else if (cmd) {
-      // free text — acknowledge so the user knows the bot is alive
-      await sendTelegram(`Got it. Send /help to see what I can do.`, { chatId });
+    } else if (text) {
+      // Free text → route to Claude AI with JARVIS persona
+      const reply = await askClaude(text);
+      await sendTelegram(reply, { chatId });
     }
   } catch (e: unknown) {
     await sendTelegram(`⚠️ Error: ${String(e).slice(0, 200)}`, { chatId });
