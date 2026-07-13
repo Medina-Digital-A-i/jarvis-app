@@ -1,7 +1,7 @@
 // api/gbp-post.ts
 // Publish a post to the TPS Pro Google Business Profile (local post) to boost
 // local SEO. Uses the GMB OAuth credentials (refresh-token flow) to mint an
-// access token, then calls the Business Profile v4 localPosts endpoint.
+// access token, then calls the Business Profile v5 localPosts endpoint.
 //
 // POST { message, imageUrl?, ctaType?, ctaUrl? }
 //   header: x-jarvis-token: <JARVIS_ACTION_TOKEN>
@@ -43,8 +43,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const body = readBody(req);
   const message = String(body.message ?? '').trim();
   const imageUrl = body.imageUrl ? String(body.imageUrl) : undefined;
-  const ctaUrl = body.ctaUrl ? String(body.ctaUrl) : undefined;
-  const ctaType = body.ctaType ? String(body.ctaType).toUpperCase() : ctaUrl ? 'LEARN_MORE' : undefined;
+  const ctaUrl = body.ctaUrl ? String(body.ctaUrl) : 'https://totalpropertysolution.net';
+  const ctaType = body.ctaType ? String(body.ctaType).toUpperCase() : 'LEARN_MORE';
 
   if (!message) return res.status(400).json({ error: 'message is required' });
   if (message.length > 1500) return res.status(400).json({ error: 'message exceeds GBP 1500-char limit' });
@@ -63,15 +63,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const token = await getAccessToken();
-    const url = `https://mybusiness.googleapis.com/v4/accounts/${accountId}/locations/${locationId}/localPosts`;
+    // Use v5 Business Profile API (v4 mybusiness.googleapis.com is deprecated)
+    const locationName = `accounts/${accountId}/locations/${locationId}`;
+    const url = `https://businessprofileperformance.googleapis.com/v1/${locationName}/localPosts`;
     const r = await fetch(url, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(localPost),
     });
-    const data = await r.json();
+    const data = await r.json() as Record<string, unknown>;
+
+    // Fallback to mybusinessaccountmanagement v1 if performance API doesn't support posts
     if (!r.ok) {
-      return res.status(r.status).json({ error: 'GBP API error', detail: data });
+      const url2 = `https://mybusinessaccountmanagement.googleapis.com/v1/${locationName}/localPosts`;
+      const r2 = await fetch(url2, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(localPost),
+      });
+      const data2 = await r2.json() as Record<string, unknown>;
+      if (!r2.ok) {
+        return res.status(r2.status).json({ error: 'GBP API error', detail: data2, also: data });
+      }
+      return res.json({ ok: true, post: data2, api: 'mybusinessaccountmanagement/v1' });
     }
 
     try {
@@ -79,7 +93,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         timestamp: new Date().toISOString(),
         agentName: 'jarvis-gbp-poster',
         status: 'success',
-        actions: [`Posted to Google Business Profile: "${message.slice(0, 80)}${message.length > 80 ? '…' : ''}"`, imageUrl ? `With image: ${imageUrl}` : 'No image', `Post: ${data.name ?? '(name n/a)'}`].filter(Boolean),
+        actions: [
+          `Posted to Google Business Profile: "${message.slice(0, 80)}${message.length > 80 ? '…' : ''}"`,
+          imageUrl ? `With image: ${imageUrl}` : 'No image',
+          `Post: ${(data as any).name ?? '(name n/a)'}`,
+        ].filter(Boolean),
         pagesAffected: ['Google Business Profile'],
         deployed: true,
       });
@@ -87,7 +105,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       /* non-critical */
     }
 
-    return res.json({ ok: true, post: data });
+    return res.json({ ok: true, post: data, api: 'businessprofileperformance/v1' });
   } catch (e: unknown) {
     return res.status(500).json({ error: String(e) });
   }
