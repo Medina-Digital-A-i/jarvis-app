@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
+import { bootstrapActionToken } from '@/lib/store';
 import AppLayout from '@/layouts/AppLayout';
 import Rankings from '@/pages/Rankings';
 import SeoHealth from '@/pages/SeoHealth';
@@ -20,6 +22,9 @@ import Stub from '@/pages/Stub';
 const CLERK_ENABLED = !!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 export default function App() {
+  // Auto-populate action token from server on first visit (no manual paste needed)
+  useEffect(() => { bootstrapActionToken(); }, []);
+
   const routes = (
     <Routes>
       <Route element={<AppLayout />}>
