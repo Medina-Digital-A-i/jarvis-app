@@ -50,11 +50,21 @@ export function setActionToken(v: string): void {
   if (typeof window !== 'undefined') localStorage.setItem(ACTION_TOKEN_KEY, v);
 }
 
-/** Auto-bootstrap disabled — /api/init removed (security: was unauthenticated).
- *  Will be re-enabled behind Clerk login. Token must be pasted manually for now.
+/** Auto-bootstrap: fetch token from /api/init (Clerk-gated on server).
+ *  If the user is signed in and token is missing from localStorage, this fills it.
+ *  Falls back silently — user can still paste manually in Settings.
  */
 export async function bootstrapActionToken(): Promise<void> {
-  // no-op until Clerk login gate is active
+  if (typeof window === 'undefined') return;
+  if (localStorage.getItem(ACTION_TOKEN_KEY)) return; // already set
+  try {
+    const r = await fetch('/api/init', { credentials: 'include' });
+    if (!r.ok) return; // not signed in or endpoint disabled
+    const j = await r.json();
+    if (j?.token) setActionToken(j.token);
+  } catch {
+    // silently ignore — manual paste still works
+  }
 }
 
 /* ---------------- multi-site registry (from /api/sites) ---------------- */

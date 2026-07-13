@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.102.0",
+    "@clerk/backend": "^3.11.4",
     "@clerk/clerk-react": "^5.0.0",
     "@libsql/client": "^0.17.3",
     "googleapis": "^172.0.0",
