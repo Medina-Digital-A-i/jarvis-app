@@ -44,9 +44,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const metaDesc = getText(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)/i)
       ?? getText(/<meta[^>]+content=["']([^"']*?)["'][^>]+name=["']description["']/i);
 
-    const h1s = getAll(/<h1[^>]*>([^<]+)<\/h1>/i);
-    const h2s = getAll(/<h2[^>]*>([^<]+)<\/h2>/i);
-    const h3s = getAll(/<h3[^>]*>([^<]+)<\/h3>/i);
+    const h1s = getAll(/<h1[^>]*>([\s\S]*?)<\/h1>/i).map(h => h.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim());
+    const h2s = getAll(/<h2[^>]*>([\s\S]*?)<\/h2>/i).map(h => h.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim());
+    const h3s = getAll(/<h3[^>]*>([\s\S]*?)<\/h3>/i).map(h => h.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim());
 
     const canonical = getText(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)/i)
       ?? getText(/<link[^>]+href=["']([^"']+)["'][^>]+rel=["']canonical["']/i);
