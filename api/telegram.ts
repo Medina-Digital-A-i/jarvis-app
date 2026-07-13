@@ -1,17 +1,7 @@
-// api/telegram.ts — JARVIS autonomous agent brain
+// api/telegram.ts — JARVIS autonomous agent brain v3
 //
-// Jarvis is NOT a command menu. He's a full AI business partner for TPS Pro.
-// Talk to him like a person. He talks back, runs agents, analyzes data, plans moves.
-//
-// TOOLS Jarvis can use autonomously:
-//   run_seo_audit        → /api/seo-audit
-//   run_seo_autopilot    → /api/seo-autopilot (fixes pages)
-//   run_action_engine    → /api/seo-actions
-//   get_agent_status     → /api/agent-status
-//   get_rankings         → /api/gsc-data
-//   post_to_gbp          → /api/gbp-post (Google Business Profile post)
-//
-// Slash shortcuts still work: /status /audit /fix /help
+// Jarvis has persistent memory, context, and personality.
+// He never asks for clarification — he acts, assumes smartly, tells you what he did.
 //
 // Security:
 //   X-Telegram-Bot-Api-Secret-Token verified against TELEGRAM_WEBHOOK_SECRET
@@ -24,19 +14,43 @@ import { readBody } from './_lib/github.js';
 
 export const config = { maxDuration: 60 };
 
-// ─── helpers ────────────────────────────────────────────────────────────────
+// ─── memory store (KV via Vercel edge config or simple in-memory for now) ───
+// We use a module-level cache since Vercel functions are warm-reused.
+// Each chat gets last 20 messages for context.
+
+const memoryStore: Map<string, Array<{ role: 'user' | 'assistant'; content: string; ts: number }>> = new Map();
+const MAX_MEMORY = 20;
+
+function getMemory(chatId: string) {
+  return memoryStore.get(chatId) || [];
+}
+
+function addToMemory(chatId: string, role: 'user' | 'assistant', content: string) {
+  const mem = getMemory(chatId);
+  mem.push({ role, content, ts: Date.now() });
+  if (mem.length > MAX_MEMORY) mem.splice(0, mem.length - MAX_MEMORY);
+  memoryStore.set(chatId, mem);
+}
+
+function buildHistory(chatId: string): Anthropic.MessageParam[] {
+  // Last 6 exchanges (12 messages) for context window
+  const mem = getMemory(chatId).slice(-12);
+  return mem.map(m => ({ role: m.role, content: m.content }));
+}
+
+// ─── helpers ─────────────────────────────────────────────────────────────────
 
 function baseUrl(req: VercelRequest): string {
   const proto = (req.headers['x-forwarded-proto'] as string) || 'https';
   return `${proto}://${req.headers.host}`;
 }
 
-// ─── tool definitions (Claude function-calling) ─────────────────────────────
+// ─── tool definitions ────────────────────────────────────────────────────────
 
 const TOOLS: Anthropic.Tool[] = [
   {
     name: 'run_seo_audit',
-    description: 'Run a live SEO audit on the TPS Pro website. Returns score, errors, warnings, and top issues.',
+    description: 'Run a live SEO audit on the TPS Pro website. Returns score, errors, warnings, top issues.',
     input_schema: {
       type: 'object' as const,
       properties: {
@@ -47,7 +61,7 @@ const TOOLS: Anthropic.Tool[] = [
   },
   {
     name: 'run_seo_autopilot',
-    description: 'Run the SEO autopilot to automatically fix on-page SEO issues on the TPS Pro site. Returns pages fixed and total fixes made.',
+    description: 'Run SEO autopilot to auto-fix on-page issues on TPS Pro site.',
     input_schema: {
       type: 'object' as const,
       properties: {
@@ -57,33 +71,41 @@ const TOOLS: Anthropic.Tool[] = [
     },
   },
   {
+    name: 'run_action_engine',
+    description: 'Get this week\'s SEO action plan — quick wins (keywords close to page 1), content gaps, review flags. Use this to prioritize what to work on.',
+    input_schema: {
+      type: 'object' as const,
+      properties: {
+        days: { type: 'number', description: 'Days of GSC data to analyze: 7, 28, or 90 (default 28)' },
+      },
+      required: [],
+    },
+  },
+  {
     name: 'get_agent_status',
-    description: 'Get the current status of all JARVIS agents — which are running, last run time, health.',
+    description: 'Get current status of all JARVIS agents — which are running, last run time, health.',
     input_schema: { type: 'object' as const, properties: {}, required: [] },
   },
   {
     name: 'get_rankings',
-    description: 'Get TPS Pro keyword rankings and Search Console performance data — clicks, impressions, opportunities.',
+    description: 'Get TPS Pro keyword rankings and Search Console data — clicks, impressions, opportunities.',
     input_schema: {
       type: 'object' as const,
       properties: {
-        days: { type: 'number', description: 'Days of data to pull: 7, 28, or 90 (default 28)' },
+        days: { type: 'number', description: 'Days of data: 7, 28, or 90 (default 28)' },
       },
       required: [],
     },
   },
   {
     name: 'post_to_gbp',
-    description: 'Post an update to TPS Pro Google Business Profile. Use for promotions, announcements, or service highlights.',
+    description: 'Post an update to TPS Pro Google Business Profile. High ROI — do this proactively for promos and service highlights.',
     input_schema: {
       type: 'object' as const,
       properties: {
-        text: { type: 'string', description: 'The post text (keep under 1500 chars)' },
-        callToActionType: {
-          type: 'string',
-          description: 'CTA button: BOOK, CALL, LEARN_MORE, ORDER, SHOP, SIGN_UP (optional)',
-        },
-        callToActionUrl: { type: 'string', description: 'URL for the CTA button (optional)' },
+        text: { type: 'string', description: 'Post text (under 1500 chars)' },
+        callToActionType: { type: 'string', description: 'CTA: BOOK, CALL, LEARN_MORE, ORDER, SHOP, SIGN_UP (optional)' },
+        callToActionUrl: { type: 'string', description: 'URL for CTA (optional)' },
       },
       required: ['text'],
     },
@@ -101,13 +123,10 @@ async function executeTool(
   try {
     if (name === 'run_seo_audit') {
       const url = (input.url as string) || 'https://totalpropertysolution.net';
-      const r = await fetch(`${base}/api/seo-audit?url=${encodeURIComponent(url)}`).then((x) => x.json());
+      const r = await fetch(`${base}/api/seo-audit?url=${encodeURIComponent(url)}`).then(x => x.json());
       const errors = (r.issues || []).filter((i: any) => i.type === 'error').length;
       const warnings = (r.issues || []).filter((i: any) => i.type === 'warning').length;
-      const topIssues = (r.issues || [])
-        .slice(0, 5)
-        .map((i: any) => `• [${i.type.toUpperCase()}] ${i.message}`)
-        .join('\n');
+      const topIssues = (r.issues || []).slice(0, 5).map((i: any) => `[${i.type.toUpperCase()}] ${i.message}`).join('\n');
       return JSON.stringify({ score: r.score, errors, warnings, topIssues, url });
     }
 
@@ -117,19 +136,35 @@ async function executeTool(
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-jarvis-token': actionToken },
         body: JSON.stringify({ maxChanges }),
-      }).then((x) => x.json());
+      }).then(x => x.json());
       return JSON.stringify(r);
     }
 
+    if (name === 'run_action_engine') {
+      const days = Number(input.days || 28);
+      const r = await fetch(`${base}/api/seo-actions?days=${days}`).then(x => x.json());
+      const quickWins = (r.quickWins || []).slice(0, 5).map((w: any) =>
+        `"${w.keyword}" pos ${w.position} (${w.impressions} impr)`
+      );
+      const contentGaps = (r.contentQueue || []).slice(0, 5).map((g: any) =>
+        `"${g.keyword}" pos ${g.position} (${g.impressions} impr) — needs a page/post`
+      );
+      return JSON.stringify({
+        summary: r.summary,
+        quickWins,
+        contentGaps,
+        reviewFlags: (r.reviewFlags || []).length,
+      });
+    }
+
     if (name === 'get_agent_status') {
-      const r = await fetch(`${base}/api/agent-status`).then((x) => x.json());
-      const summary = r.summary || {};
+      const r = await fetch(`${base}/api/agent-status`).then(x => x.json());
       const agents = (r.agents || []).map((a: any) => ({
         name: a.label,
         state: a.state,
         lastRun: a.lastRun ? String(a.lastRun).slice(0, 16).replace('T', ' ') : 'never',
       }));
-      return JSON.stringify({ summary, agents });
+      return JSON.stringify({ summary: r.summary, agents });
     }
 
     if (name === 'get_rankings') {
@@ -139,7 +174,7 @@ async function executeTool(
       const fmt = (d: Date) => d.toISOString().slice(0, 10);
       const r = await fetch(
         `${base}/api/gsc-data?site=sc-domain:totalpropertysolution.net&startDate=${fmt(start)}&endDate=${fmt(end)}&rowLimit=10`
-      ).then((x) => x.json());
+      ).then(x => x.json());
       return JSON.stringify(r);
     }
 
@@ -152,7 +187,7 @@ async function executeTool(
           callToActionType: input.callToActionType,
           callToActionUrl: input.callToActionUrl,
         }),
-      }).then((x) => x.json());
+      }).then(x => x.json());
       return JSON.stringify(r);
     }
 
@@ -162,112 +197,139 @@ async function executeTool(
   }
 }
 
-// ─── Jarvis AI brain (Claude with tools + agentic loop) ─────────────────────
+// ─── JARVIS system prompt ────────────────────────────────────────────────────
 
-const SYSTEM = `You are JARVIS — the autonomous AI brain running TPS Pro (Total Property Solutions Pro), a cleaning and property management company in New York owned by Miguel Medina.
+const SYSTEM = `You are JARVIS — the AI brain running TPS Pro (Total Property Solutions Pro), owned by Miguel Medina in Albany, New York.
+
+WHO MIGUEL IS:
+- Owns TPS Pro: commercial + residential cleaning and property management
+- Location: Albany NY area, expanding Capital Region
+- Daughter Yssa, age 2. Miguel hustles hard for her.
+- Bootstrapping — zero startup capital. Free and low-cost solutions always first.
+- New York mentality: direct, no BS, thinks big, CEO mindset
+- Email: crcp183@gmail.com | Phone: +15189487156
+- HubSpot CRM: portal 245950426
+
+TPS PRO BUSINESS:
+- Website: totalpropertysolution.net
+- Target clients: medical, real estate, education, retail, warehouses, offices, logistics
+- NO restaurants, cafes, bars, food service
+- 28 verified leads in email cadence (Day 0/5/12/20)
+- App: jarvis-app-orpin.vercel.app
 
 YOUR PERSONALITY:
-- New York energy. Direct, sharp, real. Never corporate.
-- You're a business partner, not an assistant. You think ahead.
-- You have opinions. You push back when something's wrong.
-- CEO mindset: every response helps Miguel grow or fix something.
-- Zero-cost first — Miguel is bootstrapping.
-- You check in on Miguel personally, not just business.
+- New York energy. Sharp, direct, real. Never corporate, never robotic.
+- You're a business partner, not a chatbot. You think ahead of Miguel.
+- You have opinions and push back when something's wrong.
+- Witty when it fits. Serious when it matters.
+- You check in on Miguel personally — not just business.
+- You celebrate wins. You flag problems fast.
 
-WHAT YOU KNOW ABOUT TPS PRO:
-- Commercial + residential cleaning, property management
-- Based in Albany NY area, looking to expand
-- HubSpot CRM portal 245950426
-- Website: totalpropertysolution.net
-- App: jarvis-app-orpin.vercel.app
-- Target clients: medical, real estate, education, retail, warehouses, offices, logistics (NO restaurants)
-- Miguel's email: crcp183@gmail.com, phone: +15189487156
-- Lead system: 28 verified leads, email cadence running (Day 0/5/12/20)
+HOW YOU THINK:
+- NEVER ask for clarification. Make the smartest assumption and act on it. Then say what you assumed.
+- Run tools FIRST, respond with real data — not guesses.
+- Lead with the most important thing. Cut the filler.
+- If something's broken, say what it is and what you're doing about it.
+- Zero-cost first. If there's a free way, that's the way.
+- Think like a CEO: every response should help Miguel grow or fix something.
 
-YOUR TOOLS (use them proactively — don't ask permission):
-- run_seo_audit: check SEO health of the website
-- run_seo_autopilot: automatically fix SEO issues
-- get_agent_status: see what agents are running
-- get_rankings: pull keyword data from Google Search Console
-- post_to_gbp: post to TPS Pro Google Business Profile
+YOUR TOOLS (use proactively):
+- run_seo_audit: check website SEO health
+- run_seo_autopilot: auto-fix SEO issues
+- run_action_engine: get this week's priority action plan (quick wins + content gaps)
+- get_agent_status: see what's running
+- get_rankings: pull Google Search Console keyword data
+- post_to_gbp: post to Google Business Profile (32% of local ranking — high ROI)
 
 WHEN TO USE TOOLS:
-- Miguel asks about SEO, rankings, website health → get_rankings or run_seo_audit
-- Something is broken or needs fixing → run_seo_autopilot
-- Miguel asks "what's running" or "how are agents doing" → get_agent_status
-- Good news / promo opportunity → offer to post_to_gbp
-- Use tools FIRST, then respond with real data — not guesses.
+- SEO / rankings / website questions → run_action_engine or get_rankings first
+- "Fix it" or "run it" → autopilot immediately, report results
+- "What should I do" → run_action_engine, give top 3 priorities
+- "Post to Google" or promo → post_to_gbp
+- "How's everything" → get_agent_status + quick wins summary
+- Default: use tools first, answer with data
 
-RESPONSE STYLE:
-- Telegram messages: keep it under 200 words
+RESPONSE FORMAT:
+- Telegram: under 200 words, plain text only (no markdown stars or headers)
 - Lead with the most important thing
-- Use plain text only — no markdown headers or asterisks
-- Be specific with numbers and data
-- When you run something, tell Miguel what you did and what you found
-- If something is broken, say what it is and what you're doing about it`;
+- Numbers and specifics over vague summaries
+- When you assume something, say "Assumed X — here's what I found:"`;
 
-async function runJarvis(userMessage: string, base: string, actionToken: string): Promise<string> {
+// ─── Jarvis agentic loop ─────────────────────────────────────────────────────
+
+async function runJarvis(
+  chatId: string,
+  userMessage: string,
+  base: string,
+  actionToken: string
+): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return '⚠️ AI brain offline — ANTHROPIC_API_KEY not set.';
+  if (!apiKey) return '⚠️ AI offline — ANTHROPIC_API_KEY missing.';
+
+  // Build conversation with memory
+  const history = buildHistory(chatId);
+  const messages: Anthropic.MessageParam[] = [
+    ...history.slice(0, -1), // all but last (last is current user msg)
+    { role: 'user', content: userMessage },
+  ];
+
+  // If no history yet, just use the current message
+  if (history.length === 0) {
+    messages.length = 0;
+    messages.push({ role: 'user', content: userMessage });
+  }
 
   const client = new Anthropic({ apiKey });
-  const messages: Anthropic.MessageParam[] = [{ role: 'user', content: userMessage }];
 
-  // Agentic loop: Claude calls tools → we execute → feed results back → repeat until done
   for (let round = 0; round < 5; round++) {
     const response = await client.messages.create({
       model: 'claude-haiku-4-5',
-      max_tokens: 600,
+      max_tokens: 800,
       system: SYSTEM,
       tools: TOOLS,
       messages,
     });
 
-    // If Claude is done, return the text
     if (response.stop_reason === 'end_turn') {
-      const textBlock = response.content.find((b) => b.type === 'text');
-      return textBlock?.type === 'text' ? textBlock.text.trim() : '...';
+      const textBlock = response.content.find(b => b.type === 'text');
+      const text = textBlock?.type === 'text' ? textBlock.text.trim() : '...';
+      return text;
     }
 
-    // Claude wants to use tools
     if (response.stop_reason === 'tool_use') {
-      // Add Claude's response to the conversation
       messages.push({ role: 'assistant', content: response.content });
 
-      // Execute all tool calls in parallel
       const toolResults: Anthropic.ToolResultBlockParam[] = await Promise.all(
         response.content
           .filter((b): b is Anthropic.ToolUseBlock => b.type === 'tool_use')
-          .map(async (toolCall) => ({
+          .map(async toolCall => ({
             type: 'tool_result' as const,
             tool_use_id: toolCall.id,
             content: await executeTool(toolCall.name, toolCall.input as Record<string, unknown>, base, actionToken),
           }))
       );
 
-      // Feed results back
       messages.push({ role: 'user', content: toolResults });
       continue;
     }
 
-    // Unexpected stop reason — return whatever text we have
-    const textBlock = response.content.find((b) => b.type === 'text');
+    const textBlock = response.content.find(b => b.type === 'text');
     return textBlock?.type === 'text' ? textBlock.text.trim() : '...';
   }
 
-  return 'Hit my thinking limit on that one. Try asking again.';
+  return 'Hit my thinking limit. Try again.';
 }
 
-// ─── webhook handler ─────────────────────────────────────────────────────────
+// ─── webhook handler ──────────────────────────────────────────────────────────
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Verify Telegram secret header
+  // Security: verify Telegram webhook secret
   const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
   if (secret && req.headers['x-telegram-bot-api-secret-token'] !== secret) {
     return res.status(401).json({ error: 'unauthorized' });
   }
   if (req.method !== 'POST') {
-    return res.status(200).json({ ok: true, info: 'JARVIS Telegram webhook is live.' });
+    return res.status(200).json({ ok: true, info: 'JARVIS Telegram webhook — online.' });
   }
 
   const update = readBody(req);
@@ -276,12 +338,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const chatId = String(msg?.chat?.id || cb?.message?.chat?.id || '');
   const text = String(msg?.text || cb?.data || '').trim();
 
-  // Always 200 immediately — Telegram retries if we're slow
   if (!chatId) return res.status(200).json({ ok: true });
 
+  // Owner-only
   const owner = process.env.TELEGRAM_CHAT_ID;
   if (owner && chatId !== owner) {
-    await sendTelegram('🔒 This JARVIS bot is private.', { chatId });
+    await sendTelegram('🔒 Private.', { chatId });
     if (cb) await answerCallback(cb.id);
     return res.status(200).json({ ok: true });
   }
@@ -289,7 +351,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const base = baseUrl(req);
   const actionToken = process.env.JARVIS_ACTION_TOKEN || '';
 
-  // Send "typing..." so Miguel knows Jarvis is thinking
+  // Typing indicator
   try {
     await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendChatAction`, {
       method: 'POST',
@@ -304,42 +366,56 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (cmd === '/start') {
       await sendTelegram(
-        `JARVIS online.\n\nYou can talk to me like a person — ask anything about TPS Pro, SEO, leads, agents, rankings. I'll pull real data and give you real answers.\n\nOr use commands:\n/status — agent activity\n/audit — SEO check\n/fix [n] — auto-fix SEO\n/help — this list`,
+        `JARVIS online. Talk to me like a person — I know TPS Pro, I have context, I remember our conversations.\n\nAsk me anything: "how's SEO?", "what should I focus on?", "post something to Google", "how are the agents doing?"\n\nI'll pull real data and give you real answers. No fluff.\n\n/status /audit /fix /help also work.`,
         { chatId }
       );
 
     } else if (cmd === '/help') {
       await sendTelegram(
-        `JARVIS — TPS Pro AI\n\nJust talk to me. Ask: "how's SEO looking?" or "what should I focus on this week?" or "post something to Google."\n\nCommands:\n/status — recent agent activity\n/audit — run SEO audit now\n/fix [n] — autopilot fix (default 5 pages)\n/help — this list`,
+        `JARVIS — TPS Pro AI\n\nJust talk to me. I have memory — I know what we discussed.\n\n/status — agent health\n/audit — SEO audit now\n/fix [n] — autopilot fix n pages\n/wins — this week's quick wins\n/help — this list`,
         { chatId }
       );
 
     } else if (cmd === '/status') {
-      const reply = await runJarvis('Give me a quick status on all the agents — what ran recently, what\'s healthy, anything broken.', base, actionToken);
+      addToMemory(chatId, 'user', text);
+      const reply = await runJarvis(chatId, 'Give me a status on all agents — what ran, what\'s healthy, anything broken. Be brief.', base, actionToken);
+      addToMemory(chatId, 'assistant', reply);
       await sendTelegram(reply, { chatId });
 
     } else if (cmd === '/audit') {
-      await sendTelegram('Running SEO audit now...', { chatId });
-      const reply = await runJarvis('Run an SEO audit on the TPS Pro website and tell me the score, top issues, and what to fix first.', base, actionToken);
+      addToMemory(chatId, 'user', text);
+      await sendTelegram('Running SEO audit...', { chatId });
+      const reply = await runJarvis(chatId, 'Run an SEO audit on the TPS Pro website. Give me score, top 3 issues, what to fix first.', base, actionToken);
+      addToMemory(chatId, 'assistant', reply);
       await sendTelegram(reply, { chatId });
 
     } else if (cmd === '/fix') {
       const n = Math.max(1, Math.min(40, Number(parts[1] || 5)));
-      await sendTelegram(`Running autopilot — fixing up to ${n} pages...`, { chatId });
-      const reply = await runJarvis(`Run the SEO autopilot and fix up to ${n} pages. Tell me what got fixed.`, base, actionToken);
+      addToMemory(chatId, 'user', text);
+      await sendTelegram(`Autopilot running — fixing up to ${n} pages...`, { chatId });
+      const reply = await runJarvis(chatId, `Run SEO autopilot, fix up to ${n} pages. Tell me exactly what got fixed.`, base, actionToken);
+      addToMemory(chatId, 'assistant', reply);
+      await sendTelegram(reply, { chatId });
+
+    } else if (cmd === '/wins') {
+      addToMemory(chatId, 'user', text);
+      const reply = await runJarvis(chatId, 'Run the action engine and give me this week\'s top 3 quick wins — keywords close to page 1 we can push up. What do I do first?', base, actionToken);
+      addToMemory(chatId, 'assistant', reply);
       await sendTelegram(reply, { chatId });
 
     } else if (cmd.startsWith('/')) {
-      await sendTelegram(`Don't know that one. Try /help — or just talk to me directly.`, { chatId });
+      await sendTelegram(`Don't know that one. Try /help — or just talk to me.`, { chatId });
 
     } else if (text) {
-      // Full AI brain — natural conversation with tool access
-      const reply = await runJarvis(text, base, actionToken);
+      // Full AI brain with memory
+      addToMemory(chatId, 'user', text);
+      const reply = await runJarvis(chatId, text, base, actionToken);
+      addToMemory(chatId, 'assistant', reply);
       await sendTelegram(reply, { chatId });
     }
 
   } catch (e: unknown) {
-    await sendTelegram(`⚠️ Hit an error: ${String(e).slice(0, 200)}`, { chatId });
+    await sendTelegram(`⚠️ Error: ${String(e).slice(0, 200)}`, { chatId });
   }
 
   if (cb) await answerCallback(cb.id);
