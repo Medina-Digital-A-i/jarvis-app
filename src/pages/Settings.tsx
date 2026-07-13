@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageHead from '@/components/PageHead';
 import { Panel, PanelHead } from '@/components/Panel';
 import AddSiteModal from '@/components/AddSiteModal';
@@ -9,10 +9,34 @@ const platformBadge = (p: SiteConfig['platform']) =>
     ? { label: 'GITHUB · AUTO-FIX', cls: 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' }
     : { label: p === 'wix' ? 'WIX · AUDIT ONLY' : 'OTHER · AUDIT ONLY', cls: 'text-amber border-amber/30 bg-amber/10' };
 
+// Tri-state so we never fake a green "Connected" when we can't verify it.
+type IntStatus = 'ok' | 'bad' | 'unknown';
+interface AgentStatus { name: string; state: string }
+
 export default function Settings() {
   const { sites, loading, reload } = useSites();
   const [adding, setAdding] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
+
+  // Same real signal AgentOps uses: /api/agent-status derives live connection
+  // states for the Search Console (rank-tracker) and Telegram integrations.
+  const [agents, setAgents] = useState<AgentStatus[] | null>(null);
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/agent-status', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((d) => { if (alive) setAgents(Array.isArray(d.agents) ? d.agents : []); })
+      .catch(() => { if (alive) setAgents([]); });
+    return () => { alive = false; };
+  }, []);
+
+  const agentState = (name: string) => agents?.find((a) => a.name === name)?.state ?? null;
+  // rank-tracker: 'listening' = Search Console responding, 'error' = not responding.
+  const gscState = agentState('jarvis-rank-tracker');
+  const gsc: IntStatus = agents == null ? 'unknown' : gscState === 'listening' ? 'ok' : gscState === 'error' ? 'bad' : 'unknown';
+  // telegram-bot: 'listening' only when TELEGRAM_BOT_TOKEN is set on the server.
+  const tgState = agentState('jarvis-telegram-bot');
+  const telegram: IntStatus = agents == null ? 'unknown' : tgState === 'listening' ? 'ok' : 'bad';
 
   const removeSite = async (id: string) => {
     const token = getActionToken();
@@ -81,11 +105,28 @@ export default function Settings() {
       <Panel>
         <PanelHead title="Integrations" meta="connection status" />
         <div className="p-4 space-y-2 text-[12px]">
-          <Row label="Search Console" ok detail="Connected · live rankings flowing" />
-          <Row label="GitHub" ok detail="Connected · agents can commit fixes" />
-          <Row label="Action token" ok={!!getActionToken()} detail={getActionToken() ? 'Saved in this browser' : 'Not set — needed to add/remove sites'} />
-          <Row label="Telegram bot" ok detail="@Jarvis_183bot · notifications" />
-          <Row label="Google Business Profile" ok={false} detail="Not connected — GBP posting disabled until creds added" />
+          <Row
+            label="Search Console"
+            status={gsc}
+            detail={
+              agents == null ? 'Checking…'
+              : gsc === 'ok' ? 'Connected · Search Console responding'
+              : gsc === 'bad' ? 'Not responding — check GSC credentials'
+              : 'Unknown — not verified'
+            }
+          />
+          <Row label="GitHub" status="unknown" detail="Unknown — not verified from here" />
+          <Row label="Action token" status={getActionToken() ? 'ok' : 'bad'} detail={getActionToken() ? 'Saved in this browser' : 'Not set — needed to add/remove sites'} />
+          <Row
+            label="Telegram bot"
+            status={telegram}
+            detail={
+              agents == null ? 'Checking…'
+              : telegram === 'ok' ? '@Jarvis_183bot · online, awaiting commands'
+              : 'Not connected — bot token not set'
+            }
+          />
+          <Row label="Google Business Profile" status="unknown" detail="Unknown — not verified from here" />
         </div>
       </Panel>
 
@@ -103,10 +144,11 @@ function Cap({ icon, title, body }: { icon: string; title: string; body: string 
   );
 }
 
-function Row({ label, ok, detail }: { label: string; ok: boolean; detail: string }) {
+function Row({ label, status, detail }: { label: string; status: IntStatus; detail: string }) {
+  const dot = status === 'ok' ? 'bg-emerald-400' : status === 'bad' ? 'bg-red-400' : 'bg-ink-dim';
   return (
     <div className="flex items-center gap-3 rounded-lg border border-line bg-white/[0.02] px-4 py-2.5">
-      <span className={`w-2 h-2 rounded-full ${ok ? 'bg-emerald-400' : 'bg-red-400'}`} />
+      <span className={`w-2 h-2 rounded-full ${dot}`} />
       <span className="font-mono text-[12px] text-white w-44 shrink-0">{label}</span>
       <span className="text-ink-soft">{detail}</span>
     </div>

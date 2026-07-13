@@ -9,6 +9,8 @@ export default function TopBar() {
   const navigate = useNavigate();
   const score = health?.score ?? null;
   const scoreColor = score == null ? 'text-ink-dim' : score >= 80 ? 'text-success' : score >= 60 ? 'text-amber' : 'text-alert';
+  // Real last-audit timestamp (set by the SEO Health page). Null until a run exists.
+  const auditAt = formatAuditTime(health?.at);
   useEffect(() => {
     const id = setInterval(() => setClock(formatNow()), 1000);
     return () => clearInterval(id);
@@ -37,13 +39,13 @@ export default function TopBar() {
         </div>
         <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-line bg-bg-mid/60 font-mono text-[10px] text-ink-soft">
           <span className="led" />
-          <span>Last crawl {clock}</span>
+          {auditAt ? <span>Last audit {auditAt}</span> : <span>Time {clock}</span>}
         </div>
       </div>
 
       {/* Quick actions */}
       <div className="hidden md:flex items-center gap-2">
-        <button className="btn" onClick={() => navigate('/')} title="Refresh rankings">⟳ Refresh</button>
+        <button className="btn" onClick={() => window.location.reload()} title="Reload and refetch all data">⟳ Refresh</button>
         <button className="btn btn-primary" onClick={() => navigate('/agents')}>🛰️ Agents</button>
       </div>
 
@@ -66,4 +68,15 @@ function formatNow() {
   const mm = String(d.getMinutes()).padStart(2, '0');
   const ss = String(d.getSeconds()).padStart(2, '0');
   return `${hh}:${mm}:${ss} EDT`;
+}
+
+// Formats the real last-audit timestamp; returns null when unavailable/invalid.
+function formatAuditTime(iso?: string | null): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return null;
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  const sameDay = d.toDateString() === new Date().toDateString();
+  return sameDay ? `${hh}:${mm}` : `${d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} ${hh}:${mm}`;
 }

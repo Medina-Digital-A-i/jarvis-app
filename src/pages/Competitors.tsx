@@ -89,7 +89,7 @@ export default function Competitors() {
     <>
       <PageHead
         title="Competitors"
-        meta={`Target: ${data?.targetKeyword ?? 'commercial cleaning albany ny'}`}
+        meta={`Target: ${data?.targetKeyword ?? '—'}`}
         actions={
           <div className="flex gap-2 items-center flex-wrap">
             <input value={compUrl} onChange={(e) => setCompUrl(e.target.value)} placeholder="rival URL, e.g. acme-cleaning.com"
@@ -230,19 +230,21 @@ export default function Competitors() {
         )}
       </Panel>
 
-      {/* SMS Alert panel */}
-      <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/5 px-5 py-4">
-        <div className="text-sm font-semibold text-emerald-400 mb-1.5">
-          📱 Website Lead Notifications
+      {/* Lead notification panel — phone comes from the active site config, not hardcoded */}
+      {site?.phone && (
+        <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/5 px-5 py-4">
+          <div className="text-sm font-semibold text-emerald-400 mb-1.5">
+            📱 Website Lead Notifications
+          </div>
+          <div className="text-sm text-white/50">
+            Lead alerts for {site.label} go to{' '}
+            <span className="font-mono text-white/70">{site.phone}</span>
+          </div>
+          <div className="text-xs text-white/25 mt-2">
+            Form submissions and contact requests notify this number.
+          </div>
         </div>
-        <div className="text-sm text-white/50">
-          SMS alerts active — contacts go to{' '}
-          <span className="font-mono text-white/70">(518) 948-7156</span>
-        </div>
-        <div className="text-xs text-white/25 mt-2">
-          Form submissions and contact requests trigger an immediate SMS notification.
-        </div>
-      </div>
+      )}
     </>
   );
 }

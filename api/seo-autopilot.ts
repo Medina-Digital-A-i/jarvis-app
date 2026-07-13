@@ -39,7 +39,7 @@ import { markRunning, markDone } from './_lib/heartbeat.js';
 import { resolveSite, type SiteConfig } from './_lib/sites.js';
 import Anthropic from '@anthropic-ai/sdk';
 
-const AI_MODEL = process.env.JARVIS_AI_MODEL || 'claude-sonnet-4-6';
+const AI_MODEL = process.env.JARVIS_AI_MODEL || 'claude-sonnet-5';
 
 // Best-effort: ask Claude for genuinely keyword-optimized title+meta for the pages
 // that need them, in ONE call. Any failure → empty map → the templates take over,
@@ -54,7 +54,7 @@ async function aiMetaFor(
     const list = cands.map((x) => `- slug "${x.slug}": topic "${x.topic}"${x.title ? `, current title "${x.title}"` : ''}`).join('\n');
     const sys = `You write on-page SEO meta for ${c.brand} (${c.region}). For each page slug, write a compelling <title> (50-60 chars, includes the topic + locale where natural) and a meta description (120-160 chars, benefit + soft CTA). Respond ONLY as JSON: {"<slug>":{"title":"...","description":"..."}}. Keep titles 50-60 chars and descriptions 120-160 chars exactly.`;
     const msg = await client.messages.create({
-      model: AI_MODEL, max_tokens: 1500, system: sys,
+      model: AI_MODEL, max_tokens: 1500, thinking: { type: 'disabled' }, system: sys,
       messages: [{ role: 'user', content: `Pages:\n${list}` }],
     }, { timeout: 25000 });
     const txt = msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join('').trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');

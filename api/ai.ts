@@ -14,7 +14,7 @@ import { sendTelegram } from './_lib/telegram.js';
 
 export const config = { maxDuration: 60 };
 
-const MODEL = process.env.JARVIS_AI_MODEL || 'claude-sonnet-4-6';
+const MODEL = process.env.JARVIS_AI_MODEL || 'claude-sonnet-5';
 
 async function listPages(repo: string): Promise<string[]> {
   try {
@@ -105,6 +105,7 @@ Rules:
     const msg = await client.messages.create({
       model: MODEL,
       max_tokens: 4000,
+      thinking: { type: 'disabled' },
       system: sys,
       messages: [{ role: 'user', content: `Change to make: ${instruction}\n\n--- PAGE HTML (/${path}) ---\n${original}` }],
     });
@@ -161,7 +162,7 @@ async function blogWrite(site: SiteConfig, body: Record<string, unknown>, base: 
   const sys = `You are an expert local-SEO content writer for ${site.brand} (${site.domain}${site.region ? ', ' + site.region : ''}). Write one genuinely useful, locally-optimized blog post targeting the keyword. Respond with ONLY JSON:
 {"title":"<55-65 chars, includes the keyword + locale>","slug":"blog-<kebab-case>","metaDescription":"<120-160 chars>","targetKeyword":"<the keyword>","excerpt":"<1 sentence>","content":"<HTML body: <h2>/<h3>/<p>/<ul><li>, 600-900 words, helpful and specific to the area, a soft CTA at the end. NO <html>/<head>/<body>/<h1> tags>"}`;
   const msg = await client.messages.create({
-    model: MODEL, max_tokens: 4000, system: sys,
+    model: MODEL, max_tokens: 4000, thinking: { type: 'disabled' }, system: sys,
     messages: [{ role: 'user', content: `Target keyword: "${keyword}". Local business: ${site.brand}${site.phone ? ', phone ' + site.phone : ''}.` }],
   });
   const post = parseJson(msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join(''));
@@ -190,7 +191,7 @@ async function gbpDrafts(site: SiteConfig, body: Record<string, unknown>, client
 {"posts":[{"type":"<offer|update|tip|event>","text":"<the post, 150-300 chars>","cta":"<LEARN_MORE|CALL|BOOK|ORDER>","imageIdea":"<one line describing a photo to attach>"}]}
 Write 3 varied posts (e.g. a promotion, a helpful tip, a service-area/seasonal update). Local, human, no hashtags spam.`;
   const msg = await client.messages.create({
-    model: MODEL, max_tokens: 1500, system: sys,
+    model: MODEL, max_tokens: 1500, thinking: { type: 'disabled' }, system: sys,
     messages: [{ role: 'user', content: theme ? `Focus theme: ${theme}` : `General weekly posts for ${site.brand} (${site.domain}).` }],
   });
   const out = parseJson(msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join(''));
@@ -211,7 +212,7 @@ async function adsRecommend(site: SiteConfig, base: string, client: Anthropic, r
 {"campaignName":"","dailyBudget":<number USD>,"monthlyEstimate":<number USD>,"location":"","adGroups":[{"name":"","keywords":["keyword (match type)"],"headlines":["<=30 chars"],"descriptions":["<=90 chars"]}],"rationale":"<2 sentences: who we target and why>","projectedClicks":"<rough range/mo>"}
 Rules: 2-3 ad groups; 5-8 keywords each (phrase/exact for intent); 3 headlines + 2 descriptions per group; budget realistic for a local SMB ($10-40/day). No prose outside the JSON.`;
   const msg = await client.messages.create({
-    model: MODEL, max_tokens: 2500, system: sys,
+    model: MODEL, max_tokens: 2500, thinking: { type: 'disabled' }, system: sys,
     messages: [{ role: 'user', content: rows.length ? `Top Search Console queries:\n${kw}` : `No Search Console data yet — base the campaign on the business: ${site.brand}, ${site.region}.` }],
   });
   const campaign = parseJson(msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join(''));
@@ -240,7 +241,7 @@ async function competitorReport(site: SiteConfig, base: string, body: Record<str
 {"summary":"<2 sentences>","gaps":[{"topic":"","why":"","suggestedPage":"<slug or title to create>"}],"keywordOpportunities":["keyword we should target"],"quickActions":["<1-line action>"]}
 Find services/topics/keywords the competitor emphasizes that we are weak on or missing. Be specific and local.`;
   const msg = await client.messages.create({
-    model: MODEL, max_tokens: 2000, system: sys,
+    model: MODEL, max_tokens: 2000, thinking: { type: 'disabled' }, system: sys,
     messages: [{ role: 'user', content: `OUR keywords: ${myKw || '(none yet)'}\n\nCOMPETITOR (${competitorUrl}) homepage text:\n${compText}` }],
   });
   const report = parseJson(msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join(''));

@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
+import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
 import AppLayout from '@/layouts/AppLayout';
 import Rankings from '@/pages/Rankings';
 import SeoHealth from '@/pages/SeoHealth';
@@ -14,8 +15,12 @@ import Competitors from '@/pages/Competitors';
 import Settings from '@/pages/Settings';
 import Stub from '@/pages/Stub';
 
+// When a Clerk publishable key is present the routed content is gated behind
+// sign-in; when it's absent the gate is a no-op and the app renders openly.
+const CLERK_ENABLED = !!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
 export default function App() {
-  return (
+  const routes = (
     <Routes>
       <Route element={<AppLayout />}>
         {/* Main: Rankings Dashboard */}
@@ -45,5 +50,20 @@ export default function App() {
         } />
       </Route>
     </Routes>
+  );
+
+  // Fail-open: no Clerk key configured → render the app openly (unchanged).
+  if (!CLERK_ENABLED) {
+    return routes;
+  }
+
+  // Clerk active → signed-in users see the app; everyone else is redirected to sign in.
+  return (
+    <>
+      <SignedIn>{routes}</SignedIn>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+    </>
   );
 }
