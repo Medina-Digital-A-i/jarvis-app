@@ -50,18 +50,11 @@ export function setActionToken(v: string): void {
   if (typeof window !== 'undefined') localStorage.setItem(ACTION_TOKEN_KEY, v);
 }
 
-/** Auto-bootstrap: fetch token from /api/init if not already in localStorage. */
+/** Auto-bootstrap disabled — /api/init removed (security: was unauthenticated).
+ *  Will be re-enabled behind Clerk login. Token must be pasted manually for now.
+ */
 export async function bootstrapActionToken(): Promise<void> {
-  if (typeof window === 'undefined') return;
-  if (localStorage.getItem(ACTION_TOKEN_KEY)) return; // already set
-  try {
-    const r = await fetch('/api/init', { cache: 'no-store' });
-    if (!r.ok) return;
-    const { token } = await r.json();
-    if (token) localStorage.setItem(ACTION_TOKEN_KEY, token);
-  } catch {
-    // silently fail — user can set manually
-  }
+  // no-op until Clerk login gate is active
 }
 
 /* ---------------- multi-site registry (from /api/sites) ---------------- */
