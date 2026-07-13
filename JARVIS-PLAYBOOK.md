@@ -73,3 +73,24 @@ Translation for TPS Pro:
 - **Every autonomous commit must be attributable** (JARVIS Agent author,
   descriptive message) and **reversible** (single-purpose commits).
 - **Silence is success**: a clean run that changes nothing reports nothing.
+- **🔒 Never expose secrets to the browser**: `JARVIS_ACTION_TOKEN` gates every
+  write (site commits, blog, GBP). NEVER return it from a public endpoint. The
+  dashboard has no login yet, so any endpoint that hands it out (e.g. `/api/init`)
+  gives the whole internet full write access to the live site. Enter it manually
+  until the Clerk login is live; then gate token delivery behind the signed-in
+  session. **Do not re-open `/api/init` token serving.**
+
+## 🔒 Security & agent coordination (Phoebe / OpenClaw ↔ Claude Code)
+
+Two autonomous agents now share this repo — coordinate through it (commits + this file).
+
+- **Incident 2026-07-13:** `api/init` shipped returning `JARVIS_ACTION_TOKEN` in
+  plaintext to any anonymous visitor ("obscure URL" ≠ auth). Combined with the
+  login-less dashboard, that publicly exposed full write access to the live site.
+  **Closed** — `api/init` neutered (403, no token); token reverts to manual entry.
+  **Do not reintroduce.**
+- **Vercel token:** the "no-expiry, full-account-access" token minted from Chrome
+  is a standing risk — replace with a scoped/expiring one and delete the old one.
+- **Permanent fix:** enable the Clerk login (`VITE_CLERK_PUBLISHABLE_KEY`); after
+  that, token delivery can be safely automated for the signed-in owner only, and
+  `/api/init` may return the token *only* behind a verified session.
