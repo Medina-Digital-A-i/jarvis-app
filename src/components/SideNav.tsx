@@ -19,6 +19,7 @@ const GROUPS: Group[] = [
       { to: '/competitors', label: 'Competitors', ico: '🏁' },
       { to: '/blog-manager', label: 'Blog Manager', ico: '✎' },
       { to: '/agent-activity', label: 'Agent Activity', ico: '🤖' },
+      { to: '/site-management', label: 'Site Management', ico: '🛰️', badge: 'NEW' },
     ],
   },
   {

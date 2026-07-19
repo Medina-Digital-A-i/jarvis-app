@@ -1,0 +1,17 @@
+{
+  "//": "Type-checks the Vercel serverless functions under api/ (the main tsconfig only covers src/). Run: npx tsc --noEmit -p tsconfig.api.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "types": ["node"],
+    "noEmit": true
+  },
+  "include": ["api"]
+}

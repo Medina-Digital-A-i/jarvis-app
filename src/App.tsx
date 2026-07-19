@@ -14,6 +14,7 @@ import Ads from '@/pages/Ads';
 import Local from '@/pages/Local';
 import BlogManager from '@/pages/BlogManager';
 import Competitors from '@/pages/Competitors';
+import SiteManagement from '@/pages/SiteManagement';
 import Settings from '@/pages/Settings';
 import Stub from '@/pages/Stub';
 
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="/agent-activity" element={<AgentActivity />} />
         <Route path="/blog-manager" element={<BlogManager />} />
         <Route path="/competitors" element={<Competitors />} />
+        <Route path="/site-management" element={<SiteManagement />} />
 
         {/* Settings */}
         <Route path="/settings" element={<Settings />} />
