@@ -39,7 +39,10 @@ import { markRunning, markDone } from './_lib/heartbeat.js';
 import { resolveSite, type SiteConfig } from './_lib/sites.js';
 import Anthropic from '@anthropic-ai/sdk';
 
-const AI_MODEL = process.env.JARVIS_AI_MODEL || 'claude-sonnet-5';
+// Deterministic meta-rewriting — Haiku 4.5 is the right tier (fast, cheap, no
+// reasoning needed). Decoupled from JARVIS_AI_MODEL (which drives the AI Editor)
+// so this loop stays on Haiku regardless of the shared model env var.
+const AI_MODEL = process.env.JARVIS_AUTOPILOT_MODEL || 'claude-haiku-4-5-20251001';
 
 // Best-effort: ask Claude for genuinely keyword-optimized title+meta for the pages
 // that need them, in ONE call. Any failure → empty map → the templates take over,

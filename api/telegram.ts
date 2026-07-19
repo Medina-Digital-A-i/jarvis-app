@@ -252,8 +252,13 @@ async function runJarvis(
     const response = await client.messages.create({
       model: 'claude-sonnet-4-5',
       max_tokens: 800,
-      system: SYSTEM,
-      tools: TOOLS,
+      // Prompt caching: SYSTEM + TOOLS are static across every round and every
+      // conversation, so cache them (tools render before system — a breakpoint on
+      // each caches the whole stable prefix). Cuts input token cost ~90% on repeats.
+      system: [{ type: 'text', text: SYSTEM, cache_control: { type: 'ephemeral' } }],
+      tools: TOOLS.map((t, i) =>
+        i === TOOLS.length - 1 ? { ...t, cache_control: { type: 'ephemeral' } } : t
+      ),
       messages,
     });
 
