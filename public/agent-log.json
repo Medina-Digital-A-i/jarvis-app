@@ -1,6 +1,20 @@
 {
-  "lastUpdated": "2026-08-27",
+  "lastUpdated": "2026-08-28",
   "entries": [
+    {
+      "timestamp": "2026-08-28T13:38:00.665Z",
+      "agentName": "jarvis-daily-seo-audit",
+      "status": "success",
+      "actions": [
+        "Ran SEO audit against https://totalpropertysolution.net",
+        "Score: 96/100 — errors: 0, warnings: 1",
+        "Autopilot: fixed 0 issue(s) across 0 page(s)"
+      ],
+      "pagesAffected": [
+        "https://totalpropertysolution.net"
+      ],
+      "deployed": false
+    },
     {
       "timestamp": "2026-08-27T13:38:00.759Z",
       "agentName": "jarvis-daily-seo-audit",
@@ -1570,18 +1584,6 @@
       "actions": [
         "Ran daily lead batch for Albany / Troy / Schenectady commercial accounts.",
         "Enriched contacts and queued first-touch outreach."
-      ],
-      "pagesAffected": [],
-      "deployed": false,
-      "blockers": []
-    },
-    {
-      "timestamp": "2026-06-05T13:00:00+00:00",
-      "agentName": "phoebe-lead-gen",
-      "status": "success",
-      "actions": [
-        "Ran daily lead batch; sourced new commercial-cleaning prospects across the Capital Region.",
-        "Logged qualified leads for follow-up."
       ],
       "pagesAffected": [],
       "deployed": false,
