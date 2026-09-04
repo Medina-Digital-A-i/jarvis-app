@@ -1,6 +1,20 @@
 {
-  "lastUpdated": "2026-09-03",
+  "lastUpdated": "2026-09-04",
   "entries": [
+    {
+      "timestamp": "2026-09-04T13:38:00.793Z",
+      "agentName": "jarvis-daily-seo-audit",
+      "status": "success",
+      "actions": [
+        "Ran SEO audit against https://totalpropertysolution.net",
+        "Score: 96/100 — errors: 0, warnings: 1",
+        "Autopilot: fixed 0 issue(s) across 0 page(s)"
+      ],
+      "pagesAffected": [
+        "https://totalpropertysolution.net"
+      ],
+      "deployed": false
+    },
     {
       "timestamp": "2026-09-03T13:38:00.877Z",
       "agentName": "jarvis-daily-seo-audit",
@@ -1561,29 +1575,6 @@
       "deployed": false,
       "blockers": [
         "JARVIS_ACTION_TOKEN not set in environment — autopilot (POST /api/seo-autopilot) was skipped. Set the token in Vercel environment variables and in the scheduled task environment to enable autonomous fixes."
-      ]
-    },
-    {
-      "timestamp": "2026-06-09T09:00:00-04:00",
-      "agentName": "jarvis-daily-seo-audit",
-      "status": "partial",
-      "actions": [
-        "Ran SEO audit against totalpropertysolution.net",
-        "GET https://myjarvis.app/api/seo-audit returned empty response — no score data available",
-        "Score: N/A (API returned no data)",
-        "Critical issues: unknown",
-        "Warnings: unknown"
-      ],
-      "seoAuditScore": null,
-      "criticalIssues": [],
-      "topWarnings": [],
-      "newIssuesSinceLastRun": [],
-      "pagesAffected": [
-        "totalpropertysolution.net"
-      ],
-      "deployed": false,
-      "blockers": [
-        "GSC service account not yet authorized — /api/seo-audit returned empty response. Add jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com as a verified owner or full user in Google Search Console for totalpropertysolution.net to enable live audit data."
       ]
     }
   ]
