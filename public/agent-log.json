@@ -1,6 +1,20 @@
 {
-  "lastUpdated": "2026-09-06",
+  "lastUpdated": "2026-09-07",
   "entries": [
+    {
+      "timestamp": "2026-09-07T13:38:00.732Z",
+      "agentName": "jarvis-daily-seo-audit",
+      "status": "success",
+      "actions": [
+        "Ran SEO audit against https://totalpropertysolution.net",
+        "Score: 96/100 — errors: 0, warnings: 1",
+        "Autopilot: fixed 0 issue(s) across 0 page(s)"
+      ],
+      "pagesAffected": [
+        "https://totalpropertysolution.net"
+      ],
+      "deployed": false
+    },
     {
       "timestamp": "2026-09-06T13:38:00.727Z",
       "agentName": "jarvis-daily-seo-audit",
@@ -1521,35 +1535,6 @@
         "blog-choose-commercial-cleaning-company-albany.html"
       ],
       "deployed": true
-    },
-    {
-      "timestamp": "2026-06-15T08:00:00-04:00",
-      "agentName": "jarvis-weekly-seo-digest",
-      "status": "partial",
-      "actions": [
-        "Fetched GSC data for totalpropertysolution.net — API returned empty response (GSC service account not yet authorized)",
-        "Fetched SEO audit from /api/seo-audit — API returned empty response",
-        "Identified 0 ranking movements (0 up, 0 down) — no GSC data available",
-        "SEO audit score: N/A — endpoint returned no data",
-        "Appended weekly digest entry to agent-log.json"
-      ],
-      "gscSummary": {
-        "topPagesByImpressions": [],
-        "moversUp": [],
-        "moversDown": [],
-        "quickWins": [],
-        "avgPositionTrend": null
-      },
-      "seoAuditScore": null,
-      "topIssues": [],
-      "pagesAffected": [
-        "totalpropertysolution.net"
-      ],
-      "deployed": false,
-      "blockers": [
-        "GET https://myjarvis.app/api/gsc-data returned empty response — GSC service account (jarvis-gsc-reader@jarvis-tpspro-2026.iam.gserviceaccount.com) not yet authorized in Google Search Console for totalpropertysolution.net. Add it as a verified owner or full user to enable live ranking data.",
-        "GET https://myjarvis.app/api/seo-audit returned empty response — same GSC authorization dependency."
-      ]
     }
   ]
 }
