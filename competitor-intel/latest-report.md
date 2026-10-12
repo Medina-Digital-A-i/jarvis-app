@@ -1,82 +1,17 @@
-# JARVIS Competitor Watch — 2026-09-28
+# JARVIS Competitor Watch — 2026-10-12
 
-Tracked: 8 competitors + 5 TPS pages · generated 2026-09-28T18:33:14.303Z
+Tracked: 8 competitors + 5 TPS pages · generated 2026-10-12T20:11:59.115Z
 
 ## Changes since last run
 ### TPS Pro — Home
-- title changed:
-    - was: Commercial Cleaning & Maintenance | Albany, NY Area
-    - now: Commercial Cleaning & Property Maintenance Albany NY | TPS Pro
 - description changed:
-    - was: TPS Pro delivers top-rated commercial cleaning & property maintenance across Albany & the Capital Region. Get a free quote and a cleaner space today.'s one-contract partner for commercial cleaning & property maintenance. Janitorial, student turnovers, post-construction. Bonded & insured, 24/7. (518) 948-7156.
-    - now: Albany's one-contract partner for commercial cleaning, 800-unit student turnovers, renovations & 24/7 property maintenance. Bonded & insured. (518) 948-7156.
-- h1 changed:
-    - was: One company. One contract. Every property solved.
-    - now: One crew. One contract. Every property solved.
-- new schema types: WebSite
-
-### TPS Pro — Student Turnovers
-- title changed:
-    - was: Student Turnover Cleaning Albany NY | TPS Pro
-    - now: Student Housing Turnover Cleaning Albany, NY | TPS Pro
-- description changed:
-    - was: Student housing turnover in Albany & the Capital Region. TPS Pro turns 800+ units a turn — clean, repair, paint & common areas. One experienced crew.
-    - now: 800+ units in a single turn, 5,000+ to date. One crew cleans, repairs, paints and turns common areas for Capital Region student housing. Call (518) 948-7156.
-- h1 changed:
-    - was: The one-stop shop for student housing turns
-    - now: Student housing turnovers. 800+ units in a single turn.
-- ⚠️ NEW WATCH-KEYWORD USE: turnover ticket
-- new schema types: AdministrativeArea, Answer, City, FAQPage, Question, WebPage
+    - was: Albany's one-contract partner for commercial cleaning, 800-unit student turnovers, renovations & 24/7 property maintenance. Bonded & insured. (518) 948-7156.
+    - now: Albany's one-contract partner for commercial cleaning, 800-unit student turnovers, renovations & 24/7 property maintenance. Fully insured. (518) 948-7156.
 
 ### TPS Pro — Commercial Cleaning
-- title changed:
-    - was: Commercial Cleaning in Albany, NY | TPS Pro LLC
-    - now: Commercial Cleaning Services Albany, NY | TPS Pro
 - description changed:
-    - was: Commercial cleaning services in Albany NY — offices, facilities, retail & more. One accountable contract, bonded & insured, 24/7 response. (518) 948-7156.
-    - now: Commercial cleaning in Albany, NY for offices, medical, retail, schools and warehouses. Written scope, our own crews, COI before day one. Call (518) 948-7156.
-- h1 changed:
-    - was: Commercial Cleaning in Albany & the Capital Region
-    - now: Commercial cleaning in Albany, NY — one crew, one contract.
-- new schema types: AdministrativeArea, WebPage
-
-### TPS Pro — Post-Construction
-- title changed:
-    - was: Post-Construction Cleaning Albany NY | TPS Pro
-    - now: Post-Construction Cleaning Albany, NY | TPS Pro
-- description changed:
-    - was: Post-construction cleaning in Albany NY: rough, final & touch-up cleans that make your project handoff-ready. Trusted by local GCs. (518) 948-7156.
-    - now: Post-construction cleaning in Albany, NY for GCs and developers: rough, final and touch-up cleans, handoff-ready on your date. COI before day one. 518-948-7156.
-- h1 changed:
-    - was: Post-Construction Cleaning in Albany & the Capital Region
-    - now: Post-construction cleaning in Albany, handoff-ready on your date.
-- ⚠️ NEW WATCH-KEYWORD USE: one contract
-- new schema types: AdministrativeArea, Answer, City, FAQPage, Question, WebPage
-
-### TPS Pro — Property Management
-- title changed:
-    - was: Commercial & Residential Property Management Albany | TPS Pro
-    - now: Property Management Company Albany, NY | TPS Pro
-- description changed:
-    - was: Commercial & residential property management in Albany NY with 24/7 in-house maintenance, cleaning & renovations. One accountable partner. (518) 948-7156.
-    - now: Commercial and residential property management in Albany with our own 24/7 maintenance, cleaning and turnover crews. One contract for owners. (518) 948-7156.
-- h1 changed:
-    - was: Property management with its own maintenance crew built in
-    - now: Property management with its own maintenance crew built in.
-- ⚠️ NEW WATCH-KEYWORD USE: one contract
-- new schema types: Answer, BreadcrumbList, FAQPage, ListItem, Question, WebPage
-
-### Cleantec (Albany page)
-- title changed:
-    - was: (none)
-    - now: Commercial Cleaning Services Albany, NY - Cleantec Commercial Cleaning
-- description changed:
-    - was: (none)
-    - now: Book best-in-class commercial cleaning in Albany with Cleantec. Request your free quote based on 50 years of experience serving upstate NY.
-- h1 changed:
-    - was: (none)
-    - now: Commercial Cleaning & Janitorial Services In Albany, NY
-- new schema types: BreadcrumbList, EntryPoint, ImageObject, ListItem, Organization, PropertyValueSpecification, ReadAction, SearchAction, WebPage, WebSite
+    - was: Commercial cleaning in Albany, NY for offices, medical, retail, schools and warehouses. Written scope, our own crews, COI before day one. Call (518) 948-7156.
+    - now: Commercial cleaning in Albany, NY for offices, medical, retail, schools and warehouses. Written scope, our crews, COI before day one. Call (518) 948-7156.
 
 ## Keyword encroachment board
 
@@ -96,7 +31,7 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-09-28T18:33:14.303Z
 
 | Metric | TPS Pro (avg of money pages) | Field (avg of reachable competitors) |
 |---|---|---|
-| Word count | 1528 | 1392 |
+| Word count | 1518 | 1391 |
 | Has tel: click-to-call | 100% | 100% |
 | Has lead form | 100% | 71% |
 | Schema types per page | 9 | 7 |
@@ -107,36 +42,36 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-09-28T18:33:14.303Z
 - url: https://totalpropertysolution.net/
 - title (62 ch): Commercial Cleaning & Property Maintenance Albany NY | TPS Pro
 - h1: One crew. One contract. Every property solved.
-- description (157 ch): Albany's one-contract partner for commercial cleaning, 800-unit student turnovers, renovations & 24/7 property maintenance. Bonded & insured. (518) 948-7156.
-- words ~813 · tel:yes · form:yes · schema: AdministrativeArea, City, GeoCoordinates, Offer, OfferCatalog, OpeningHoursSpecification, PostalAddress, Service, WebSite
+- description (154 ch): Albany's one-contract partner for commercial cleaning, 800-unit student turnovers, renovations & 24/7 property maintenance. Fully insured. (518) 948-7156.
+- words ~806 · tel:yes · form:yes · schema: AdministrativeArea, City, GeoCoordinates, Offer, OfferCatalog, OpeningHoursSpecification, PostalAddress, Service, WebSite
 
 ### TPS Pro — Student Turnovers
 - url: https://totalpropertysolution.net/student-turnover-cleaning.html
 - title (54 ch): Student Housing Turnover Cleaning Albany, NY | TPS Pro
 - h1: Student housing turnovers. 800+ units in a single turn.
 - description (157 ch): 800+ units in a single turn, 5,000+ to date. One crew cleans, repairs, paints and turns common areas for Capital Region student housing. Call (518) 948-7156.
-- words ~2204 · tel:yes · form:yes · schema: AdministrativeArea, Answer, BreadcrumbList, City, FAQPage, ListItem, Question, Service, WebPage
+- words ~2199 · tel:yes · form:yes · schema: AdministrativeArea, Answer, BreadcrumbList, City, FAQPage, ListItem, Question, Service, WebPage
 
 ### TPS Pro — Commercial Cleaning
 - url: https://totalpropertysolution.net/commercial-cleaning-albany-ny.html
 - title (49 ch): Commercial Cleaning Services Albany, NY | TPS Pro
 - h1: Commercial cleaning in Albany, NY — one crew, one contract.
-- description (158 ch): Commercial cleaning in Albany, NY for offices, medical, retail, schools and warehouses. Written scope, our own crews, COI before day one. Call (518) 948-7156.
-- words ~1519 · tel:yes · form:yes · schema: AdministrativeArea, Answer, BreadcrumbList, City, FAQPage, ListItem, Question, Service, WebPage
+- description (154 ch): Commercial cleaning in Albany, NY for offices, medical, retail, schools and warehouses. Written scope, our crews, COI before day one. Call (518) 948-7156.
+- words ~1506 · tel:yes · form:yes · schema: AdministrativeArea, Answer, BreadcrumbList, City, FAQPage, ListItem, Question, Service, WebPage
 
 ### TPS Pro — Post-Construction
 - url: https://totalpropertysolution.net/post-construction-cleaning.html
 - title (47 ch): Post-Construction Cleaning Albany, NY | TPS Pro
 - h1: Post-construction cleaning in Albany, handoff-ready on your date.
 - description (160 ch): Post-construction cleaning in Albany, NY for GCs and developers: rough, final and touch-up cleans, handoff-ready on your date. COI before day one. 518-948-7156.
-- words ~1508 · tel:yes · form:yes · schema: AdministrativeArea, Answer, BreadcrumbList, City, FAQPage, ListItem, Question, Service, WebPage
+- words ~1501 · tel:yes · form:yes · schema: AdministrativeArea, Answer, BreadcrumbList, City, FAQPage, ListItem, Question, Service, WebPage
 
 ### TPS Pro — Property Management
 - url: https://totalpropertysolution.net/property-management.html
 - title (48 ch): Property Management Company Albany, NY | TPS Pro
 - h1: Property management with its own maintenance crew built in.
 - description (157 ch): Commercial and residential property management in Albany with our own 24/7 maintenance, cleaning and turnover crews. One contract for owners. (518) 948-7156.
-- words ~1598 · tel:yes · form:yes · schema: AdministrativeArea, Answer, BreadcrumbList, City, FAQPage, ListItem, Question, Service, WebPage
+- words ~1576 · tel:yes · form:yes · schema: AdministrativeArea, Answer, BreadcrumbList, City, FAQPage, ListItem, Question, Service, WebPage
 
 ### MCW Janitorial
 - url: https://mcwjanitorial.com/
@@ -168,7 +103,7 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-09-28T18:33:14.303Z
 - title (78 ch): Commercial Cleaning Services for Your Business Needs - Daigle Cleaning Systems
 - h1: Commercial & Residential Cleaning Built on Standards
 - description (139 ch): Explore our commercial cleaning services with eco-friendly solutions for offices and homes. Experience cleanliness without harsh chemicals.
-- words ~1384 · tel:yes · form:yes · schema: GeoCoordinates, ImageObject, Place, PostalAddress, SearchAction, WebPage, WebSite
+- words ~1383 · tel:yes · form:yes · schema: GeoCoordinates, ImageObject, Place, PostalAddress, SearchAction, WebPage, WebSite
 
 ### Martinez Cleaning (post-construction)
 - url: https://www.martinezcleaningllc.com/services/post-construction-cleaning/
