@@ -1,17 +1,32 @@
-# JARVIS Competitor Watch — 2026-10-12
+# JARVIS Competitor Watch — 2026-10-19
 
-Tracked: 8 competitors + 5 TPS pages · generated 2026-10-12T20:11:59.115Z
+Tracked: 8 competitors + 5 TPS pages · generated 2026-10-19T17:23:54.956Z
 
 ## Changes since last run
 ### TPS Pro — Home
+- title changed:
+    - was: Commercial Cleaning & Property Maintenance Albany NY | TPS Pro
+    - now: Commercial Cleaning & Janitorial Services Albany NY | TPS Pro
 - description changed:
-    - was: Albany's one-contract partner for commercial cleaning, 800-unit student turnovers, renovations & 24/7 property maintenance. Bonded & insured. (518) 948-7156.
-    - now: Albany's one-contract partner for commercial cleaning, 800-unit student turnovers, renovations & 24/7 property maintenance. Fully insured. (518) 948-7156.
+    - was: Albany's one-contract partner for commercial cleaning, 800-unit student turnovers, renovations & 24/7 property maintenance. Fully insured. (518) 948-7156.
+    - now: Commercial cleaning, janitorial, office cleaning and floor care in Albany, NY, plus student turnovers, renovations and 24/7 maintenance. Fully insured. (518) 948-7156.
 
 ### TPS Pro — Commercial Cleaning
+- title changed:
+    - was: Commercial Cleaning Services Albany, NY | TPS Pro
+    - now: Commercial Cleaning Albany NY | Offices, Medical, Retail & Warehouses | TPS Pro
+
+### ABM Albany
+- title changed:
+    - was: Find Facility Maintenance Experts in Albany, NY
+    - now: Facility services in Albany - ABM
 - description changed:
-    - was: Commercial cleaning in Albany, NY for offices, medical, retail, schools and warehouses. Written scope, our own crews, COI before day one. Call (518) 948-7156.
-    - now: Commercial cleaning in Albany, NY for offices, medical, retail, schools and warehouses. Written scope, our crews, COI before day one. Call (518) 948-7156.
+    - was: ABM delivers building maintenance solutions through more than 225 offices throughout the U.S., U.K, and more. Locate our Albany offices.
+    - now: (none)
+- h1 changed:
+    - was: Albany Locations
+    - now: Albany
+- new schema types: City, EntryPoint, ImageObject, Organization, SearchAction, Service, WebSite
 
 ## Keyword encroachment board
 
@@ -31,19 +46,19 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-10-12T20:11:59.115Z
 
 | Metric | TPS Pro (avg of money pages) | Field (avg of reachable competitors) |
 |---|---|---|
-| Word count | 1518 | 1391 |
+| Word count | 1531 | 1406 |
 | Has tel: click-to-call | 100% | 100% |
 | Has lead form | 100% | 71% |
-| Schema types per page | 9 | 7 |
+| Schema types per page | 9 | 8 |
 
 ## Tracked pages (raw)
 
 ### TPS Pro — Home
 - url: https://totalpropertysolution.net/
-- title (62 ch): Commercial Cleaning & Property Maintenance Albany NY | TPS Pro
+- title (61 ch): Commercial Cleaning & Janitorial Services Albany NY | TPS Pro
 - h1: One crew. One contract. Every property solved.
-- description (154 ch): Albany's one-contract partner for commercial cleaning, 800-unit student turnovers, renovations & 24/7 property maintenance. Fully insured. (518) 948-7156.
-- words ~806 · tel:yes · form:yes · schema: AdministrativeArea, City, GeoCoordinates, Offer, OfferCatalog, OpeningHoursSpecification, PostalAddress, Service, WebSite
+- description (167 ch): Commercial cleaning, janitorial, office cleaning and floor care in Albany, NY, plus student turnovers, renovations and 24/7 maintenance. Fully insured. (518) 948-7156.
+- words ~868 · tel:yes · form:yes · schema: AdministrativeArea, City, GeoCoordinates, Offer, OfferCatalog, OpeningHoursSpecification, PostalAddress, Service, WebSite
 
 ### TPS Pro — Student Turnovers
 - url: https://totalpropertysolution.net/student-turnover-cleaning.html
@@ -54,10 +69,10 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-10-12T20:11:59.115Z
 
 ### TPS Pro — Commercial Cleaning
 - url: https://totalpropertysolution.net/commercial-cleaning-albany-ny.html
-- title (49 ch): Commercial Cleaning Services Albany, NY | TPS Pro
+- title (79 ch): Commercial Cleaning Albany NY | Offices, Medical, Retail & Warehouses | TPS Pro
 - h1: Commercial cleaning in Albany, NY — one crew, one contract.
 - description (154 ch): Commercial cleaning in Albany, NY for offices, medical, retail, schools and warehouses. Written scope, our crews, COI before day one. Call (518) 948-7156.
-- words ~1506 · tel:yes · form:yes · schema: AdministrativeArea, Answer, BreadcrumbList, City, FAQPage, ListItem, Question, Service, WebPage
+- words ~1511 · tel:yes · form:yes · schema: AdministrativeArea, Answer, BreadcrumbList, City, FAQPage, ListItem, Question, Service, WebPage
 
 ### TPS Pro — Post-Construction
 - url: https://totalpropertysolution.net/post-construction-cleaning.html
@@ -89,7 +104,7 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-10-12T20:11:59.115Z
 - title (73 ch): Commercial Cleaning Services Albany, NY | JAN-PRO Cleaning & Disinfecting
 - h1: Commercial Cleaning Services Albany, NY
 - description (152 ch): JAN-PRO Cleaning & Disinfecting's commercial cleaning services Albany, NY provides best in class janitorial services in Albany to commercial facilities.
-- words ~1446 · tel:yes · form:yes · schema: none
+- words ~1452 · tel:yes · form:yes · schema: none
 
 ### Clean Method (Albany page)
 - url: https://cleanmethod.com/near-me/new-york/albany/
@@ -103,7 +118,7 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-10-12T20:11:59.115Z
 - title (78 ch): Commercial Cleaning Services for Your Business Needs - Daigle Cleaning Systems
 - h1: Commercial & Residential Cleaning Built on Standards
 - description (139 ch): Explore our commercial cleaning services with eco-friendly solutions for offices and homes. Experience cleanliness without harsh chemicals.
-- words ~1383 · tel:yes · form:yes · schema: GeoCoordinates, ImageObject, Place, PostalAddress, SearchAction, WebPage, WebSite
+- words ~1395 · tel:yes · form:yes · schema: GeoCoordinates, ImageObject, Place, PostalAddress, SearchAction, WebPage, WebSite
 
 ### Martinez Cleaning (post-construction)
 - url: https://www.martinezcleaningllc.com/services/post-construction-cleaning/
@@ -114,10 +129,10 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-10-12T20:11:59.115Z
 
 ### ABM Albany
 - url: https://locations.abm.com/ny/albany/
-- title (47 ch): Find Facility Maintenance Experts in Albany, NY
-- h1: Albany Locations
-- description (136 ch): ABM delivers building maintenance solutions through more than 225 offices throughout the U.S., U.K, and more. Locate our Albany offices.
-- words ~1763 · tel:yes · form:yes · schema: BreadcrumbList, ListItem, LocalBusiness, WebPage
+- title (33 ch): Facility services in Albany - ABM
+- h1: Albany
+- description (0 ch): (none)
+- words ~1845 · tel:yes · form:yes · schema: BreadcrumbList, City, EntryPoint, ImageObject, ListItem, Organization, SearchAction, Service, WebPage, WebSite
 
 ### Olsen's Property Maintenance
 - url: https://olsensproperty.com/commercial/
