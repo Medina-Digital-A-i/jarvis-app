@@ -1,37 +1,25 @@
-# JARVIS Competitor Watch — 2026-10-19
+# JARVIS Competitor Watch — 2026-10-26
 
-Tracked: 8 competitors + 5 TPS pages · generated 2026-10-19T17:23:54.956Z
+Tracked: 8 competitors + 5 TPS pages · generated 2026-10-26T17:14:18.288Z
 
 ## Changes since last run
-### TPS Pro — Home
+### MCW Janitorial
 - title changed:
-    - was: Commercial Cleaning & Property Maintenance Albany NY | TPS Pro
-    - now: Commercial Cleaning & Janitorial Services Albany NY | TPS Pro
+    - was: 403 - Forbidden
+    - now: Janitorial Services Albany NY | Commercial Cleaning Service Albany NY | MCW Janitorial Services
 - description changed:
-    - was: Albany's one-contract partner for commercial cleaning, 800-unit student turnovers, renovations & 24/7 property maintenance. Fully insured. (518) 948-7156.
-    - now: Commercial cleaning, janitorial, office cleaning and floor care in Albany, NY, plus student turnovers, renovations and 24/7 maintenance. Fully insured. (518) 948-7156.
-
-### TPS Pro — Commercial Cleaning
-- title changed:
-    - was: Commercial Cleaning Services Albany, NY | TPS Pro
-    - now: Commercial Cleaning Albany NY | Offices, Medical, Retail & Warehouses | TPS Pro
-
-### ABM Albany
-- title changed:
-    - was: Find Facility Maintenance Experts in Albany, NY
-    - now: Facility services in Albany - ABM
-- description changed:
-    - was: ABM delivers building maintenance solutions through more than 225 offices throughout the U.S., U.K, and more. Locate our Albany offices.
-    - now: (none)
+    - was: (none)
+    - now: Professional Janitorial Services MCW Janitorial implemented our ‘Continuous Improvement Program’ to raise the quality of our service every single day. We follow these steps from Day #1 to ensure you never have to worry and saving you time. The Top Reasons to work with MCW Decades of Experience Highly Trained Staff State of The Art
 - h1 changed:
-    - was: Albany Locations
-    - now: Albany
-- new schema types: City, EntryPoint, ImageObject, Organization, SearchAction, Service, WebSite
+    - was: 403 - Forbidden
+    - now: (none)
+- new schema types: BreadcrumbList, ListItem, Organization, WebPage, WebSite
 
 ## Keyword encroachment board
 
 | Competitor | Watch keywords found on tracked page |
 |---|---|
+| MCW Janitorial | — |
 | Cleantec (Albany page) | — |
 | JAN-PRO Capital District | property management |
 | Clean Method (Albany page) | property management |
@@ -46,9 +34,9 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-10-19T17:23:54.956Z
 
 | Metric | TPS Pro (avg of money pages) | Field (avg of reachable competitors) |
 |---|---|---|
-| Word count | 1531 | 1406 |
-| Has tel: click-to-call | 100% | 100% |
-| Has lead form | 100% | 71% |
+| Word count | 1531 | 1345 |
+| Has tel: click-to-call | 100% | 88% |
+| Has lead form | 100% | 75% |
 | Schema types per page | 9 | 8 |
 
 ## Tracked pages (raw)
@@ -90,7 +78,10 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-10-19T17:23:54.956Z
 
 ### MCW Janitorial
 - url: https://mcwjanitorial.com/
-- ❌ unreachable (status 403)
+- title (95 ch): Janitorial Services Albany NY | Commercial Cleaning Service Albany NY | MCW Janitorial Services
+- h1: (none)
+- description (332 ch): Professional Janitorial Services MCW Janitorial implemented our ‘Continuous Improvement Program’ to raise the quality of our service every single day. We follow these steps from Day #1 to ensure you never have to worry and saving you time. The Top Reasons to work with MCW Decades of Experience Highly Trained Staff State of The Art
+- words ~934 · tel:NO · form:yes · schema: BreadcrumbList, ListItem, Organization, WebPage, WebSite
 
 ### Cleantec (Albany page)
 - url: https://www.cleantec.us/service-areas/albany/
@@ -132,7 +123,7 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-10-19T17:23:54.956Z
 - title (33 ch): Facility services in Albany - ABM
 - h1: Albany
 - description (0 ch): (none)
-- words ~1845 · tel:yes · form:yes · schema: BreadcrumbList, City, EntryPoint, ImageObject, ListItem, Organization, SearchAction, Service, WebPage, WebSite
+- words ~1834 · tel:yes · form:yes · schema: BreadcrumbList, City, EntryPoint, ImageObject, ListItem, Organization, SearchAction, Service, WebPage, WebSite
 
 ### Olsen's Property Maintenance
 - url: https://olsensproperty.com/commercial/
