@@ -1,25 +1,24 @@
-# JARVIS Competitor Watch — 2026-10-26
+# JARVIS Competitor Watch — 2026-11-02
 
-Tracked: 8 competitors + 5 TPS pages · generated 2026-10-26T17:14:18.288Z
+Tracked: 8 competitors + 5 TPS pages · generated 2026-11-02T20:42:11.834Z
 
 ## Changes since last run
 ### MCW Janitorial
 - title changed:
-    - was: 403 - Forbidden
-    - now: Janitorial Services Albany NY | Commercial Cleaning Service Albany NY | MCW Janitorial Services
+    - was: Janitorial Services Albany NY | Commercial Cleaning Service Albany NY | MCW Janitorial Services
+    - now: mcwjanitorial.com | 520: Web server is returning an unknown error
 - description changed:
-    - was: (none)
-    - now: Professional Janitorial Services MCW Janitorial implemented our ‘Continuous Improvement Program’ to raise the quality of our service every single day. We follow these steps from Day #1 to ensure you never have to worry and saving you time. The Top Reasons to work with MCW Decades of Experience Highly Trained Staff State of The Art
-- h1 changed:
-    - was: 403 - Forbidden
+    - was: Professional Janitorial Services MCW Janitorial implemented our ‘Continuous Improvement Program’ to raise the quality of our service every single day. We follow these steps from Day #1 to ensure you never have to worry and saving you time. The Top Reasons to work with MCW Decades of Experience Highly Trained Staff State of The Art
     - now: (none)
-- new schema types: BreadcrumbList, ListItem, Organization, WebPage, WebSite
+- h1 changed:
+    - was: (none)
+    - now: Web server is returning an unknown error Error code 520
+- site DOWN or blocked (status 520)
 
 ## Keyword encroachment board
 
 | Competitor | Watch keywords found on tracked page |
 |---|---|
-| MCW Janitorial | — |
 | Cleantec (Albany page) | — |
 | JAN-PRO Capital District | property management |
 | Clean Method (Albany page) | property management |
@@ -34,9 +33,9 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-10-26T17:14:18.288Z
 
 | Metric | TPS Pro (avg of money pages) | Field (avg of reachable competitors) |
 |---|---|---|
-| Word count | 1531 | 1345 |
-| Has tel: click-to-call | 100% | 88% |
-| Has lead form | 100% | 75% |
+| Word count | 1531 | 1404 |
+| Has tel: click-to-call | 100% | 100% |
+| Has lead form | 100% | 71% |
 | Schema types per page | 9 | 8 |
 
 ## Tracked pages (raw)
@@ -78,10 +77,7 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-10-26T17:14:18.288Z
 
 ### MCW Janitorial
 - url: https://mcwjanitorial.com/
-- title (95 ch): Janitorial Services Albany NY | Commercial Cleaning Service Albany NY | MCW Janitorial Services
-- h1: (none)
-- description (332 ch): Professional Janitorial Services MCW Janitorial implemented our ‘Continuous Improvement Program’ to raise the quality of our service every single day. We follow these steps from Day #1 to ensure you never have to worry and saving you time. The Top Reasons to work with MCW Decades of Experience Highly Trained Staff State of The Art
-- words ~934 · tel:NO · form:yes · schema: BreadcrumbList, ListItem, Organization, WebPage, WebSite
+- ❌ unreachable (status 520)
 
 ### Cleantec (Albany page)
 - url: https://www.cleantec.us/service-areas/albany/
@@ -109,7 +105,7 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-10-26T17:14:18.288Z
 - title (78 ch): Commercial Cleaning Services for Your Business Needs - Daigle Cleaning Systems
 - h1: Commercial & Residential Cleaning Built on Standards
 - description (139 ch): Explore our commercial cleaning services with eco-friendly solutions for offices and homes. Experience cleanliness without harsh chemicals.
-- words ~1395 · tel:yes · form:yes · schema: GeoCoordinates, ImageObject, Place, PostalAddress, SearchAction, WebPage, WebSite
+- words ~1392 · tel:yes · form:yes · schema: GeoCoordinates, ImageObject, Place, PostalAddress, SearchAction, WebPage, WebSite
 
 ### Martinez Cleaning (post-construction)
 - url: https://www.martinezcleaningllc.com/services/post-construction-cleaning/
