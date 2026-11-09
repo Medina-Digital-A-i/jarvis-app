@@ -1,19 +1,9 @@
-# JARVIS Competitor Watch — 2026-11-02
+# JARVIS Competitor Watch — 2026-11-09
 
-Tracked: 8 competitors + 5 TPS pages · generated 2026-11-02T20:42:11.834Z
+Tracked: 8 competitors + 5 TPS pages · generated 2026-11-09T21:22:03.725Z
 
 ## Changes since last run
-### MCW Janitorial
-- title changed:
-    - was: Janitorial Services Albany NY | Commercial Cleaning Service Albany NY | MCW Janitorial Services
-    - now: mcwjanitorial.com | 520: Web server is returning an unknown error
-- description changed:
-    - was: Professional Janitorial Services MCW Janitorial implemented our ‘Continuous Improvement Program’ to raise the quality of our service every single day. We follow these steps from Day #1 to ensure you never have to worry and saving you time. The Top Reasons to work with MCW Decades of Experience Highly Trained Staff State of The Art
-    - now: (none)
-- h1 changed:
-    - was: (none)
-    - now: Web server is returning an unknown error Error code 520
-- site DOWN or blocked (status 520)
+_No changes detected across the tracked set._
 
 ## Keyword encroachment board
 
@@ -119,7 +109,7 @@ Tracked: 8 competitors + 5 TPS pages · generated 2026-11-02T20:42:11.834Z
 - title (33 ch): Facility services in Albany - ABM
 - h1: Albany
 - description (0 ch): (none)
-- words ~1834 · tel:yes · form:yes · schema: BreadcrumbList, City, EntryPoint, ImageObject, ListItem, Organization, SearchAction, Service, WebPage, WebSite
+- words ~1833 · tel:yes · form:yes · schema: BreadcrumbList, City, EntryPoint, ImageObject, ListItem, Organization, SearchAction, Service, WebPage, WebSite
 
 ### Olsen's Property Maintenance
 - url: https://olsensproperty.com/commercial/
