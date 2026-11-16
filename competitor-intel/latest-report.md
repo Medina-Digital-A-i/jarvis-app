@@ -1,9 +1,15 @@
-# JARVIS Competitor Watch — 2026-11-09
+# JARVIS Competitor Watch — 2026-11-16
 
-Tracked: 8 competitors + 5 TPS pages · generated 2026-11-09T21:22:03.725Z
+Tracked: 8 competitors + 5 TPS pages · generated 2026-11-16T20:53:30.395Z
 
 ## Changes since last run
-_No changes detected across the tracked set._
+### Daigle Cleaning Systems
+- title changed:
+    - was: Commercial Cleaning Services for Your Business Needs - Daigle Cleaning Systems
+    - now: Commercial Cleaning Services in Albany, NY | Daigle Cleaning
+
+### Martinez Cleaning (post-construction)
+- new schema types: GeoCoordinates
 
 ## Keyword encroachment board
 
@@ -23,7 +29,7 @@ _No changes detected across the tracked set._
 
 | Metric | TPS Pro (avg of money pages) | Field (avg of reachable competitors) |
 |---|---|---|
-| Word count | 1531 | 1404 |
+| Word count | 1531 | 1405 |
 | Has tel: click-to-call | 100% | 100% |
 | Has lead form | 100% | 71% |
 | Schema types per page | 9 | 8 |
@@ -92,17 +98,17 @@ _No changes detected across the tracked set._
 
 ### Daigle Cleaning Systems
 - url: https://daigleclean.com/
-- title (78 ch): Commercial Cleaning Services for Your Business Needs - Daigle Cleaning Systems
+- title (60 ch): Commercial Cleaning Services in Albany, NY | Daigle Cleaning
 - h1: Commercial & Residential Cleaning Built on Standards
 - description (139 ch): Explore our commercial cleaning services with eco-friendly solutions for offices and homes. Experience cleanliness without harsh chemicals.
-- words ~1392 · tel:yes · form:yes · schema: GeoCoordinates, ImageObject, Place, PostalAddress, SearchAction, WebPage, WebSite
+- words ~1386 · tel:yes · form:yes · schema: GeoCoordinates, ImageObject, Place, PostalAddress, SearchAction, WebPage, WebSite
 
 ### Martinez Cleaning (post-construction)
 - url: https://www.martinezcleaningllc.com/services/post-construction-cleaning/
 - title (105 ch): Martinez Cleaning | Post Construction Cleaning Services for Albany, Troy, Schenectady & Saratoga New York
 - h1: Post Construction Cleaning Services
 - description (204 ch): Martinez Cleaning, LLC offers post-construction cleaning services in Albany for house and commercial buildings, Our team will make your living environment clean after a construction or renovation project.
-- words ~1289 · tel:yes · form:yes · schema: AdministrativeArea, AggregateRating, Article, BreadcrumbList, City, ImageObject, ListItem, LocalBusiness, OpeningHoursSpecification, Organization, Person, PostalAddress, Service, WebPage, WebSite
+- words ~1307 · tel:yes · form:yes · schema: AdministrativeArea, AggregateRating, Article, BreadcrumbList, City, GeoCoordinates, ImageObject, ListItem, LocalBusiness, OpeningHoursSpecification, Organization, Person, PostalAddress, Service, WebPage, WebSite
 
 ### ABM Albany
 - url: https://locations.abm.com/ny/albany/
